@@ -28,6 +28,7 @@ public class MongoTest extends IotApplicationTests{
         Query query = new Query(Criteria.where("name").is("lxc"));
         TestForMongo result = mongoTemplate.findOne(query, TestForMongo.class);
         assertNotNull(result);
+        System.out.println(result);
         assertEquals("test", result.getInfo());
     }
 }
