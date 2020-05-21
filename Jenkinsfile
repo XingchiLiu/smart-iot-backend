@@ -3,7 +3,9 @@ pipeline{
 
     stages{
         stage('git clone'){
-                git branch: 'master', credentialsId: 'edd7519f-35d1-4dc9-a28e-06536efa2d97', url: 'https://github.com/XingchiLiu/smart-iot-backend.git'
+                steps{
+                    git branch: 'master', credentialsId: 'edd7519f-35d1-4dc9-a28e-06536efa2d97', url: 'https://github.com/XingchiLiu/smart-iot-backend.git'
+                }
             }
             stage('mvn build'){
                 steps{
