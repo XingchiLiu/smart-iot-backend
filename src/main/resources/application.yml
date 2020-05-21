@@ -2,8 +2,6 @@ server:
   port: 8081
 
 spring:
-  jooq:
-    sql-dialect: org.hibernate.dialect.MySQLDialect
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://101.37.80.37:3306/smart_iot?useSSL=false&&serverTimezone=GMT%2B8&useLegacyDatetimeCode=false
@@ -13,3 +11,6 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+  data:
+    mongodb:
+      uri: mongodb://root:123456@101.37.80.37:27017/smart_iot?authSource=admin
