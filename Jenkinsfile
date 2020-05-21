@@ -6,7 +6,9 @@ node{
         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'edd7519f-35d1-4dc9-a28e-06536efa2d97', url: 'https://github.com/XingchiLiu/smart-iot-backend.git']]])
     }
     stage('mvn build'){
-        sh "mvn clean install -Dmaven.test.skip=true"
+        steps{
+            sh "mvn clean install -Dmaven.test.skip=true"
+        }
     }
     stage('mvn run'){
 		withEnv(['JENKINS_NODE_COOKIE=dontkillme']) {
