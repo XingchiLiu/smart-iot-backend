@@ -19,7 +19,7 @@ public class InfoController {
 
     @GetMapping("/")
     public String index(){
-        return "info";
+        return "redirect:/swagger-ui.html";
     }
 
     @GetMapping("/info")
