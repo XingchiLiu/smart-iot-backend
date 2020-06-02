@@ -8,16 +8,16 @@ import lombok.Data;
  * @author: lxc
  * @email 171250576@smail.nju.edu.cn
  * @date: 2020/5/25
- * @description:创建设备模板的格式
+ * @description:创建设备的格式
  */
 @Data
 @ApiModel
-public class TemplateForm {
+public class DeviceForm {
 
-    @ApiModelProperty(value = "模板名，唯一")
+    @ApiModelProperty(value = "设备名，模板内唯一", required = false)
     private String name;
-    @ApiModelProperty(value = "连接方式，MQTT或者HTTP")
-    private String connectionType;
+    @ApiModelProperty(value = "模板id")
+    private int templateId;
     @ApiModelProperty(value = "描述", required = false)
     private String description;
 }

@@ -1,24 +1,21 @@
-package com.example.iot.domain;
+package com.example.iot.controller.VO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import java.util.Date;
 
 /**
  * @author: lxc
  * @email 171250576@smail.nju.edu.cn
- * @date: 2020/5/22
- * @description:设备模板
+ * @date: 2020/5/27
+ * @description:
  */
-@Entity
 @Data
-public class DeviceTemplate {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TemplateVO {
     private int id;
     //模板名字
-    @Column(unique = true)
     private String name;
     //产品品类。目前为默认值common
     private String classification;
@@ -31,9 +28,9 @@ public class DeviceTemplate {
     //描述
     private String description;
 
-    //创建时间
+    //创建时间，系统自动修改
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;
-    //更新时间
+    //更新时间，系统自动修改
     private Date updateTime;
-
 }

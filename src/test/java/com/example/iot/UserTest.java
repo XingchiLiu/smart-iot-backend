@@ -1,5 +1,6 @@
 package com.example.iot;
 
+import com.example.iot.domain.User;
 import com.example.iot.repository.UserRepository;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,6 +21,12 @@ public class UserTest extends IotApplicationTests{
     @Test(timeout = 1000)
     public void test1(){
         assertEquals("123456", userRepository.findByAccount("root").getPassword());
+    }
+
+    @Test
+    public void test2(){
+        User user = new User();
+        System.out.println(user);
     }
 
 }
