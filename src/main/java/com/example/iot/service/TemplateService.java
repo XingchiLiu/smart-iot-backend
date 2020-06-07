@@ -22,6 +22,11 @@ public class TemplateService {
     TemplateRepository templateRepository;
     @Autowired
     GroupService groupService;
+    @Autowired
+    ChannelService channelService;
+    @Autowired
+    ChannelDataFieldService channelDataFieldService;
+
 
     public int addTemplate(TemplateForm templateForm){
         DeviceTemplate deviceTemplate = new DeviceTemplate();
@@ -38,6 +43,21 @@ public class TemplateService {
         DeviceTemplate result = templateRepository.save(deviceTemplate);
         //创建产品组
         groupService.createProductGroup(result);
+
+        //如果设置了数据通道
+        if(templateForm.getChannelType() != -1) {
+            //获得设备模板id
+            int templateId = result.getId();
+
+            // 创建数据通道
+            int channelId = channelService.addTemplateChannel(templateForm.getChannelType(), templateId);
+
+            // 创建数据通道里的字段
+            if(templateForm.getChannelData() != null && !templateForm.getChannelData().isEmpty()) {
+                channelDataFieldService.addDataFields(templateForm.getChannelData(), channelId, 0);
+            }
+        }
+
         return result.getId();
     }
 

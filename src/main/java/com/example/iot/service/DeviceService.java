@@ -27,6 +27,8 @@ public class DeviceService {
     TemplateRepository templateRepository;
     @Autowired
     DeviceRepository deviceRepository;
+    @Autowired
+    ChannelService channelService;
 
     public ResultVO<Integer> addDevice(DeviceForm deviceForm){
         int templateId = deviceForm.getTemplateId();
@@ -58,6 +60,9 @@ public class DeviceService {
          */
 
         Device result = deviceRepository.save(device);
+
+        channelService.addChannelsToNewlyAddedDevice(result.getId(), templateId);
+
         return ResultVO.getSuccess("创建成功", result.getId());
     }
 }
