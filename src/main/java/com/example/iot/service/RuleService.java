@@ -23,16 +23,32 @@ public class RuleService {
     }
 
     public int addRule(RuleForm ruleForm) {
+        Rule rule = createRuleFromRuleForm(ruleForm);
+
+        Rule result =  ruleRepository.save(rule);
+        return result.getId();
+    }
+
+    public int updateRule(RuleForm ruleForm) {
+        Rule rule = createRuleFromRuleForm(ruleForm);
+        rule.setId(ruleForm.getId());
+
+        Rule result =  ruleRepository.save(rule);
+        return result.getId();
+    }
+
+    private Rule createRuleFromRuleForm(RuleForm ruleForm){
         Rule rule = new Rule();
         rule.setDeviceId(ruleForm.getDeviceId());
         rule.setName(ruleForm.getName());
         rule.setDescription(ruleForm.getDescription());
-        rule.setCreateTime(new Date());
-        rule.setUpdateTime(new Date());
         rule.setRuleType(ruleForm.getRuleType());
         rule.setFieldName(ruleForm.getFieldName());
         rule.setThresholdVal(ruleForm.getThresholdVal());
-        Rule result =  ruleRepository.save(rule);
-        return result.getId();
+        return rule;
+    }
+
+    public void deleteRule(int ruleId) {
+        ruleRepository.deleteById(ruleId);
     }
 }

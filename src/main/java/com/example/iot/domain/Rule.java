@@ -2,6 +2,10 @@ package com.example.iot.domain;
 
 import com.example.iot.util.RuleType;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +16,8 @@ import java.util.Date;
  */
 @Entity
 @Data
+@DynamicUpdate
+@EntityListeners(AuditingEntityListener.class)
 public class Rule {
     //规则id
     @Id
@@ -28,9 +34,12 @@ public class Rule {
     @Column(length=100)
     private String description;
     //创建时间
-    @Column(nullable=false)
+    @Column(updatable = false, nullable = false)
+    @CreatedDate
     private Date createTime;
     //最后更新时间
+    @LastModifiedDate
+    @Column(nullable = false)
     private Date updateTime;
     //规则类型
     @Enumerated(EnumType.STRING)

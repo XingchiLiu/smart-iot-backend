@@ -16,6 +16,9 @@ import java.util.Date;
 @Data
 @ApiModel
 public class RuleForm {
+    //规则id
+    @ApiModelProperty(value = "当前规则id")
+    private int id;
     //设备id
     @ApiModelProperty(value = "应用规则的设备id")
     private int deviceId;
