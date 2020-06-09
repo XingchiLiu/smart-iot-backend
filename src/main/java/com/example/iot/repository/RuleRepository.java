@@ -18,6 +18,4 @@ import java.util.ArrayList;
 public interface RuleRepository extends JpaRepository<Rule, Integer> {
 
     ArrayList<Rule> getAllByDeviceId(int deviceId);
-
-    //TODO 补充规则的CRUD
 }

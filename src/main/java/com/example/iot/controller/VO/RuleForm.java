@@ -1,5 +1,6 @@
 package com.example.iot.controller.VO;
 
+import com.example.iot.util.RuleActionType;
 import com.example.iot.util.RuleType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,4 +38,10 @@ public class RuleForm {
     //阈值
     @ApiModelProperty(value = "规则阈值")
     private double thresholdVal;
+    //满足条件时的行为类型
+    @ApiModelProperty(value = "触发行为类型")
+    private RuleActionType ruleActionType;
+    //行为目标
+    @ApiModelProperty(value = "行为目标")
+    private String target;
 }
