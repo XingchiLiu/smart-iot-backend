@@ -1,5 +1,6 @@
 package com.example.iot.service;
 
+import com.example.iot.controller.VO.ChannelDataFieldForm;
 import com.example.iot.controller.VO.ResultVO;
 import com.example.iot.domain.ChannelDataField;
 import com.example.iot.repository.ChannelDataFieldRepository;
@@ -41,5 +42,38 @@ public class ChannelDataFieldService {
     public List<ChannelDataField> getDataFieldsByChannelId(int channelId){
         List<ChannelDataField> result = channelDataFieldRepository.getAllByChannelId(channelId);
         return result;
+    }
+
+    public int addDataField(String fieldName, int fieldType, int channelId, int channelType){
+        ChannelDataField channelDataField = new ChannelDataField();
+        channelDataField.setFieldName(fieldName);
+        channelDataField.setFieldType(fieldType);
+        channelDataField.setChannelId(channelId);
+        channelDataField.setChannelType(channelType);
+        return addDataField(channelDataField);
+    }
+
+    public int addDataField(ChannelDataFieldForm channelDataFieldForm){
+        ChannelDataField channelDataField = createChannelDataField(channelDataFieldForm);
+        return addDataField(channelDataField);
+    }
+
+    public int updateDataField(ChannelDataFieldForm channelDataFieldForm){
+        ChannelDataField channelDataField = createChannelDataField(channelDataFieldForm);
+        channelDataField.setId(channelDataFieldForm.getId());
+        return addDataField(channelDataField);
+    }
+
+    public void deleteDataField(int id){
+        channelDataFieldRepository.deleteById(id);
+    }
+
+    public ChannelDataField createChannelDataField(ChannelDataFieldForm channelDataFieldForm){
+        ChannelDataField channelDataField = new ChannelDataField();
+        channelDataField.setChannelType(channelDataFieldForm.getChannelType());
+        channelDataField.setChannelId(channelDataFieldForm.getChannelId());
+        channelDataField.setFieldType(channelDataFieldForm.getFieldType());
+        channelDataField.setFieldName(channelDataFieldForm.getFieldName());
+        return channelDataField;
     }
 }
