@@ -6,10 +6,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import java.util.Date;
-
 /**
  * @author Karson
  * @CreateDate 2020/6/7 19:56

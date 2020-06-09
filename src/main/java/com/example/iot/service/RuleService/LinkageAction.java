@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
  * @CreateDate 2020/6/10 0:45
  */
 public class LinkageAction extends Action {
-    public LinkageAction(String target, JSONObject data){
+    public LinkageAction(String target, JSONObject data) {
         super(target, data);
     }
 

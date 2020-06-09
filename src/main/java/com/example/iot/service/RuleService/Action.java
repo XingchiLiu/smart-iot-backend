@@ -10,9 +10,10 @@ public abstract class Action {
     protected String target;
     protected JSONObject data;
 
-    public Action(String target, JSONObject data){
+    public Action(String target, JSONObject data) {
         this.target = target;
         this.data = data;
     }
+
     public abstract void execute();
 }

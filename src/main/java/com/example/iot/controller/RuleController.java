@@ -21,40 +21,40 @@ public class RuleController {
     RuleService ruleService;
 
     @GetMapping("/get/{deviceId}")
-    public ResultVO get(@PathVariable int deviceId){
-        return ResultVO.getSuccess("成功",ruleService.getAllByDeviceId(deviceId));
+    public ResultVO get(@PathVariable int deviceId) {
+        return ResultVO.getSuccess("成功", ruleService.getAllByDeviceId(deviceId));
     }
 
     @PostMapping("/add")
-    public ResultVO add(@RequestBody RuleForm ruleForm){
+    public ResultVO add(@RequestBody RuleForm ruleForm) {
         int id;
         try {
             id = ruleService.addRule(ruleForm);
-            return ResultVO.getSuccess("添加成功",id);
-        } catch (Exception e){
+            return ResultVO.getSuccess("添加成功", id);
+        } catch (Exception e) {
             return ResultVO.getFailed("添加失败", e);
         }
     }
 
     @PostMapping("/modify/{ruleId}")
-    public ResultVO modify(@PathVariable int ruleId, @RequestBody RuleForm ruleForm){
-        if(ruleId != ruleForm.getId()){
+    public ResultVO modify(@PathVariable int ruleId, @RequestBody RuleForm ruleForm) {
+        if (ruleId != ruleForm.getId()) {
             return ResultVO.getFailed("请求出错，规则ID不符。");
         }
-        try{
+        try {
             int id = ruleService.updateRule(ruleForm);
             return ResultVO.getSuccess("更新成功", id);
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResultVO.getFailed("更新失败");
         }
     }
 
     @DeleteMapping("/delete/{ruleId}")
-    public ResultVO delete(@PathVariable int ruleId){
-        try{
+    public ResultVO delete(@PathVariable int ruleId) {
+        try {
             ruleService.deleteRule(ruleId);
             return ResultVO.getSuccess("删除成功");
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResultVO.getFailed("删除失败");
         }
     }

@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class ForwardAction extends Action {
 
-    public ForwardAction(String target, JSONObject data){
+    public ForwardAction(String target, JSONObject data) {
         super(target, data);
     }
 

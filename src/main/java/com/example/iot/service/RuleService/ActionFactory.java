@@ -9,8 +9,8 @@ import com.example.iot.util.RuleActionType;
  */
 public class ActionFactory {
 
-    public static Action getAction(RuleActionType ruleActionType, String target, JSONObject data) throws Exception{
-        switch(ruleActionType){
+    public static Action getAction(RuleActionType ruleActionType, String target, JSONObject data) throws Exception {
+        switch (ruleActionType) {
             case FORWARD:
                 return new ForwardAction(target, data);
             case LINKAGE:
