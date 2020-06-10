@@ -15,5 +15,7 @@ public class ForwardAction extends Action {
     @Override
     public void execute() {
         //TODO:向数据库转发数据。
+
+        System.out.println("targetDB: " + target + ", data: " + data);
     }
 }
