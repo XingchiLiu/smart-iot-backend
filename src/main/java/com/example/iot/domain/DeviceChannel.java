@@ -22,4 +22,7 @@ public class DeviceChannel {
 
     //此通道所属的模板通道id，-1说明没有模板通道
     private int templateChannelId;
+
+    // 用来表示的通道名字
+    private String channelName;
 }

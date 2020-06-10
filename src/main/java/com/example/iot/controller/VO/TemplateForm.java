@@ -27,4 +27,6 @@ public class TemplateForm {
     private int channelType = -1;
     @ApiModelProperty(value = "数据通道所需的字段", required = false)
     private HashMap<String, Integer> channelData = new HashMap<String, Integer>();
+    @ApiModelProperty(value = "数据通道名", required = false)
+    private String channelName;
 }

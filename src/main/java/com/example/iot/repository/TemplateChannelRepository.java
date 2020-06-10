@@ -11,4 +11,5 @@ public interface TemplateChannelRepository extends JpaRepository<TemplateChannel
     ArrayList<TemplateChannel> getAllByChannelType(int channelType);
 
     ArrayList<TemplateChannel> getAllByTemplateId(int templateId);
+
 }

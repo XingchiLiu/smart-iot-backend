@@ -19,4 +19,7 @@ public class TemplateChannel {
 
     // 此通道所属的设备模板id
     private int templateId;
+
+    // 同来标识的通道名
+    private String channelName;
 }

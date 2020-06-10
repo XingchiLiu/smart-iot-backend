@@ -65,7 +65,7 @@ public class TemplateService {
             int templateId = result.getId();
 
             // 创建数据通道
-            int channelId = channelService.addTemplateChannel(templateForm.getChannelType(), templateId);
+            int channelId = channelService.addTemplateChannel(templateForm.getChannelType(), templateId, templateForm.getChannelName());
 
             // 创建数据通道里的字段
             if(templateForm.getChannelData() != null && !templateForm.getChannelData().isEmpty()) {
