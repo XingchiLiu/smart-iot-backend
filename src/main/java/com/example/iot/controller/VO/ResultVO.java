@@ -48,7 +48,7 @@ public class ResultVO<T> {
     }
 
     public static <T> ResultVO getSuccess(T data){
-        return new ResultVO(1,"成功");
+        return new ResultVO(1,"成功", data);
     }
 
     /**

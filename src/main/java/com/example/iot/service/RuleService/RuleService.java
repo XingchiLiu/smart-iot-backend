@@ -5,7 +5,6 @@ import com.example.iot.controller.VO.RuleForm;
 import com.example.iot.domain.Rule;
 import com.example.iot.repository.RuleRepository;
 import com.example.iot.util.CompareUtil;
-import com.example.iot.util.RuleActionType;
 import com.example.iot.util.RuleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,8 @@ public class RuleService {
         ArrayList<Rule> rules = ruleRepository.getAllByDeviceId(deviceId);
         for (Rule rule : rules) {
             double val = data.getDoubleValue(rule.getFieldName());
-            double threshold = data.getDoubleValue("thresholdVal");
-            RuleType ruleType = RuleType.valueOf(data.getString("ruleType"));
+            double threshold = rule.getThresholdVal();
+            RuleType ruleType = rule.getRuleType();
             Method compare = null;
             boolean result = false;
             try {
@@ -36,7 +35,7 @@ public class RuleService {
                 result = (boolean) compare.invoke(CompareUtil.class, val, threshold);
 
                 if (result) {
-                    Action action = ActionFactory.getAction(RuleActionType.valueOf(data.getString("ruleActionType")), data.getString("target"), data);
+                    Action action = ActionFactory.getAction(rule.getRuleActionType(), rule.getTarget(), data);
                     action.execute();
                 }
             } catch (Exception e) {

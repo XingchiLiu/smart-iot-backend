@@ -1,14 +1,16 @@
 package com.example.iot.controller;
 
 import com.example.iot.controller.VO.DeviceForm;
+import com.example.iot.controller.VO.DeviceVO;
 import com.example.iot.controller.VO.ResultVO;
 import com.example.iot.service.DeviceService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author: lxc
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date: 2020/5/24
  * @description:
  */
+@Api
 @Controller
 @ResponseBody
 @RequestMapping("/device")
@@ -28,4 +31,35 @@ public class DeviceController {
     public ResultVO<Integer> add(@RequestBody DeviceForm deviceForm){
         return deviceService.addDevice(deviceForm);
     }
+
+    @GetMapping("/delete/{id}")
+    public void delete(@PathVariable int id){
+        deviceService.deleteDevice(id);
+    }
+
+    /*
+    修改设备，但是只允许修改设备的名称和描述
+     */
+    @PostMapping("/update/{id}")
+    public ResultVO update(@PathVariable int id, DeviceForm deviceForm){
+        return deviceService.updateDevice(id, deviceForm);
+    }
+
+    @GetMapping("/get/{id}")
+    public DeviceVO get(@PathVariable int id){
+        return deviceService.getDeviceById(id);
+    }
+
+    @GetMapping("/list")
+    public Page<DeviceVO> list(@RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+        return deviceService.getDeviceList(page, pageSize);
+    }
+
+    @GetMapping("/search")
+    public List<DeviceVO> searchByName(@RequestParam("name") String name){
+        return deviceService.getDeviceListByName(name);
+    }
+
+
 }

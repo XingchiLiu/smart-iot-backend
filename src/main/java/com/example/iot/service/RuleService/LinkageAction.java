@@ -14,8 +14,10 @@ public class LinkageAction extends Action {
     @Override
     public void execute() {
         //TODO:调用数据通道向设备发送数据。
-        String[] array = target.split(":", 1);
+        String[] array = target.split(":", 2);
         int deviceId = Integer.parseInt(array[0]);
         String message = array[1];
+
+        System.out.println("targetDevice: " + deviceId + ", message: " + message);
     }
 }
