@@ -9,4 +9,6 @@ public interface ChannelDataFieldRepository extends JpaRepository<ChannelDataFie
     ChannelDataField getChannelDataFieldById(int id);
 
     List<ChannelDataField> getAllByChannelId(int channelId);
+
+    void deleteAllByChannelIdAndChannelType(int channelId, int channelType);
 }

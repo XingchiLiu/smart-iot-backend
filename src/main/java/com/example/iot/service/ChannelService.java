@@ -2,6 +2,7 @@ package com.example.iot.service;
 
 import com.example.iot.controller.VO.DeviceChannelForm;
 import com.example.iot.controller.VO.TemplateChannelForm;
+import com.example.iot.domain.ChannelDataField;
 import com.example.iot.domain.DeviceChannel;
 import com.example.iot.domain.TemplateChannel;
 import com.example.iot.repository.DeviceChannelRepository;
@@ -19,6 +20,8 @@ public class ChannelService {
     DeviceChannelRepository deviceChannelRepository;
     @Autowired
     TemplateChannelRepository templateChannelRepository;
+    @Autowired
+    ChannelDataFieldService channelDataFieldService;
 
     public int addDeviceChannel(DeviceChannel deviceChannel){
         DeviceChannel result = deviceChannelRepository.save(deviceChannel);
@@ -111,14 +114,16 @@ public class ChannelService {
         ArrayList<DeviceChannel> deviceChannels = deviceChannelRepository.getAllByTemplateChannelId(templateChannelId);
         if(deviceChannels != null & deviceChannels.size() > 0){
             for(int i = 0; i < deviceChannels.size(); i++){
-                deleteDeviceChannel(deviceChannels.get(i).getId());
+                deviceChannelRepository.deleteById(deviceChannels.get(i).getId());
             }
         }
+        channelDataFieldService.deleteChannelRelatedFields(templateChannelId, 0);
         templateChannelRepository.deleteById(templateChannelId);
     }
 
     public void deleteDeviceChannel(int deviceChannelId){
         deviceChannelRepository.deleteById(deviceChannelId);
+        channelDataFieldService.deleteChannelRelatedFields(deviceChannelId, 1);
     }
 
     private TemplateChannel createTemplateChannel(TemplateChannelForm templateChannelForm){

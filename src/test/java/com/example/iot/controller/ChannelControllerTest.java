@@ -135,8 +135,8 @@ class ChannelControllerTest extends IotApplicationTests {
         assertNotNull(channelService.getDeviceChannelById(deviceChannelId));
 
         channelController.deleteTemplateChannel(id);
-        assertNull(channelService.getTemplateChannelById(id));
         assertNull(channelService.getDeviceChannelById(deviceChannelId));
+        assertNull(channelService.getTemplateChannelById(id));
     }
 
     @Test

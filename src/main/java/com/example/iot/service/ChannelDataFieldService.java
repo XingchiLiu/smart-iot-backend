@@ -7,6 +7,7 @@ import com.example.iot.repository.ChannelDataFieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,10 @@ public class ChannelDataFieldService {
 
     public void deleteDataField(int id){
         channelDataFieldRepository.deleteById(id);
+    }
+
+    public void deleteChannelRelatedFields(int channelId, int channelType){
+        channelDataFieldRepository.deleteAllByChannelIdAndChannelType(channelId, channelType);
     }
 
     public ChannelDataField createChannelDataField(ChannelDataFieldForm channelDataFieldForm){
