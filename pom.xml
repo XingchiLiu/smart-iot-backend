@@ -121,6 +121,8 @@
             <scope>test</scope>
         </dependency>
 
+<!--        swagger的两个包-->
+
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>

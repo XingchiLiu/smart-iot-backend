@@ -35,4 +35,20 @@ public class TemplateTest extends IotApplicationTests{
     public void test2(){
         System.out.println(templateRepository.findById(3));
     }
+
+    /**
+     * 用来测试模板的按名查找功能
+     */
+    @Test
+    public void test3(){
+        System.out.println(templateService.getTemplateListByName("est"));
+    }
+
+    /**
+     * 测试模板的分页功能
+     */
+    @Test
+    public void test4(){
+        System.out.println(templateService.getTemplateList(0,5).getContent());
+    }
 }
