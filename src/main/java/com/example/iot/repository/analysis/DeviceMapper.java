@@ -1,4 +1,4 @@
-package com.example.iot.repository;
+package com.example.iot.repository.analysis;
 
 import com.example.iot.domain.DeviceData;
 import org.apache.ibatis.annotations.Mapper;
