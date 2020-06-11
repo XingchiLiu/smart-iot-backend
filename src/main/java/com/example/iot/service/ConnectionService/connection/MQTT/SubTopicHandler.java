@@ -3,11 +3,9 @@ package com.example.iot.service.ConnectionService.connection.MQTT;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+
 
 public class SubTopicHandler {
     private static MqttClient mqttClient = null;
@@ -27,12 +25,22 @@ public class SubTopicHandler {
         int[] addedQoses = new int[addedTopics.length];
         Arrays.fill(addedQoses, addedQos);
 
-        topics.addAll(Arrays.asList(addedTopics));
-        for(int i = 0; i < addedQoses.length; i++){
-            qoses.add(addedQoses[i]);
+        for(int i = 0; i < addedTopics.length; i++){
+            if(!topics.contains(addedTopics[i])){
+                topics.add(addedTopics[i]);
+                qoses.add(addedQos);
+            }
         }
 
         mqttClient.subscribe(addedTopics, addedQoses);
+    }
+
+    public static void addSub(String addedTopic, int addedQos) throws MqttException {
+        if(!topics.contains(addedTopic)){
+            topics.add(addedTopic);
+            qoses.add(addedQos);
+        }
+        mqttClient.subscribe(addedTopic, addedQos);
     }
 
     public static void removeSub(String[] removedTopics) throws MqttException {
@@ -44,6 +52,15 @@ public class SubTopicHandler {
             }
         }
         mqttClient.unsubscribe(removedTopics);
+    }
+
+    public static void removeSub(String removedTopic) throws MqttException {
+        int index = topics.indexOf(removedTopic);
+        if(index != -1){
+            topics.remove(removedTopic);
+            qoses.remove(index);
+        }
+        mqttClient.unsubscribe(removedTopic);
     }
 
     public static void reSub() throws MqttException {

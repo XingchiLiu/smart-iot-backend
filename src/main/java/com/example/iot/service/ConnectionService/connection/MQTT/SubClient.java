@@ -5,8 +5,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.util.Arrays;
-
 public class SubClient {
     private static final String HOST = "tcp://101.37.80.37:1883";
     private static final String CLIENTID = "subClient";
@@ -37,7 +35,15 @@ public class SubClient {
         SubTopicHandler.addSub(topics, qos);
     }
 
+    public void addSub(String topic, int qos) throws MqttException{
+        SubTopicHandler.addSub(topic, qos);
+    }
+
     public void removeSub(String[] topics) throws MqttException {
+        SubTopicHandler.removeSub(topics);
+    }
+
+    public void removeSub(String topics) throws MqttException {
         SubTopicHandler.removeSub(topics);
     }
 }

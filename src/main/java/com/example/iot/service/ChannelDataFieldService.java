@@ -31,8 +31,7 @@ public class ChannelDataFieldService {
     }
 
     public int addDataField(ChannelDataField channelDataField){
-        ChannelDataField result = channelDataFieldRepository.save(channelDataField);
-        return result.getId();
+        return channelDataFieldRepository.save(channelDataField).getId();
     }
 
     public ChannelDataField getDataFieldById(int id) {
@@ -51,18 +50,18 @@ public class ChannelDataFieldService {
         channelDataField.setFieldType(fieldType);
         channelDataField.setChannelId(channelId);
         channelDataField.setChannelType(channelType);
-        return addDataField(channelDataField);
+        return channelDataFieldRepository.save(channelDataField).getId();
     }
 
     public int addDataField(ChannelDataFieldForm channelDataFieldForm){
         ChannelDataField channelDataField = createChannelDataField(channelDataFieldForm);
-        return addDataField(channelDataField);
+        return channelDataFieldRepository.save(channelDataField).getId();
     }
 
     public int updateDataField(ChannelDataFieldForm channelDataFieldForm){
         ChannelDataField channelDataField = createChannelDataField(channelDataFieldForm);
         channelDataField.setId(channelDataFieldForm.getId());
-        return addDataField(channelDataField);
+        return channelDataFieldRepository.save(channelDataField).getId();
     }
 
     public void deleteDataField(int id){
@@ -70,7 +69,13 @@ public class ChannelDataFieldService {
     }
 
     public void deleteChannelRelatedFields(int channelId, int channelType){
-        channelDataFieldRepository.deleteAllByChannelIdAndChannelType(channelId, channelType);
+        ArrayList<ChannelDataField> channelDataFields = (ArrayList<ChannelDataField>)
+                channelDataFieldRepository.getAllByChannelIdAndChannelType(channelId,channelType);
+        if(channelDataFields != null && channelDataFields.size() > 0){
+            for(int i = 0; i < channelDataFields.size(); i++){
+                channelDataFieldRepository.deleteById(channelDataFields.get(i).getId());
+            }
+        }
     }
 
     public ChannelDataField createChannelDataField(ChannelDataFieldForm channelDataFieldForm){

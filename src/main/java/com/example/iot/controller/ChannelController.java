@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value="数据通道")
@@ -24,6 +25,7 @@ public class ChannelController {
     ChannelDataFieldService channelDataFieldService;
     @Autowired
     ChannelService channelService;
+
 
     @PostMapping("/add/field")
     public ResultVO<Integer> addDataField(@RequestBody ChannelDataFieldForm channelDataFieldForm){
@@ -66,7 +68,7 @@ public class ChannelController {
         return channelService.getAllDeviceChannels();
     }
 
-    // 可以修改 fieldName 和 fieldType
+    // 可以修改 fieldName
     @PostMapping("/modify/data/{dataFieldId}")
     public ResultVO<Integer> modifyDataField(@PathVariable int dataFieldId, @RequestBody ChannelDataFieldForm channelDataFieldForm){
         if(dataFieldId != channelDataFieldForm.getId()){

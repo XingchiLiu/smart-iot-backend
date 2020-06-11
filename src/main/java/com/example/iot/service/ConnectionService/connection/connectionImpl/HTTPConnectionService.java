@@ -5,10 +5,10 @@ import com.example.iot.service.ConnectionService.connection.ConnectionManagement
 import com.example.iot.service.ConnectionService.connection.HTTP.HttpClient;
 import com.example.iot.service.ConnectionService.connection.HTTP.HttpServer;
 
-public class HTTPConnectionImpl implements ConnectionManagement {
+public class HTTPConnectionService implements ConnectionManagement {
     HttpServer httpServer;
 
-    public HTTPConnectionImpl(){
+    public HTTPConnectionService(){
         httpServer = new HttpServer();
     }
 

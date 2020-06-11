@@ -10,6 +10,7 @@ import com.example.iot.domain.DeviceChannel;
 import com.example.iot.domain.TemplateChannel;
 import com.example.iot.service.ChannelDataFieldService;
 import com.example.iot.service.ChannelService;
+import com.example.iot.service.ConnectionService.connection.connectionImpl.MQTTConnectionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +23,8 @@ class ChannelControllerTest extends IotApplicationTests {
     ChannelDataFieldService channelDataFieldService;
     @Autowired
     ChannelService channelService;
+    @Autowired
+    MQTTConnectionService mqttConnectionService;
 
     @Test
     void addDataFieldToTemplateChannel() {
@@ -38,6 +41,8 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void addTemplateChannel() {
+        mqttConnectionService.getConnection();
+
         TemplateChannelForm templateChannelForm = createTemplateChannelForm(0, 1, "test");
         ResultVO<Integer> resultVO = channelController.addTemplateChannel(templateChannelForm);
         TemplateChannel result = channelService.getTemplateChannelById(resultVO.getData());
@@ -49,6 +54,8 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void addDeviceChannel() {
+        mqttConnectionService.getConnection();
+
         DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
         ResultVO<Integer> resultVO = channelController.addDeviceChannel(deviceChannelForm);
         DeviceChannel result = channelService.getDeviceChannelById(resultVO.getData());
@@ -77,6 +84,8 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void modifyNameOfTemplateChannel(){
+        mqttConnectionService.getConnection();
+
         TemplateChannelForm templateChannelForm = createTemplateChannelForm(0, 1, "test");
         int id = channelController.addTemplateChannel(templateChannelForm).getData();
 
@@ -99,6 +108,8 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void modifyNameOfDeviceChannel() {
+        mqttConnectionService.getConnection();
+
         DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
         int id = channelController.addDeviceChannel(deviceChannelForm).getData();
 
@@ -125,22 +136,32 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void deleteTemplateChannel(){
+        mqttConnectionService.getConnection();
+
         TemplateChannelForm templateChannelForm = createTemplateChannelForm(0, 1, "test");
         int id = channelController.addTemplateChannel(templateChannelForm).getData();
 
         DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,id, "test");
+        deviceChannelForm.setDeviceName("test");
         int deviceChannelId = channelController.addDeviceChannel(deviceChannelForm).getData();
+
+        ChannelDataFieldForm channelDataFieldForm = createChannelDataFieldForm("field",0,id,0);
+        int dataFieldId = channelController.addDataField(channelDataFieldForm).getData();
 
         assertNotNull(channelService.getTemplateChannelById(id));
         assertNotNull(channelService.getDeviceChannelById(deviceChannelId));
+        assertNotNull(channelDataFieldService.getDataFieldById(dataFieldId));
 
         channelController.deleteTemplateChannel(id);
         assertNull(channelService.getDeviceChannelById(deviceChannelId));
         assertNull(channelService.getTemplateChannelById(id));
+        assertNull(channelDataFieldService.getDataFieldById(dataFieldId));
     }
 
     @Test
     void deleteDeviceChannel() {
+        mqttConnectionService.getConnection();
+
         DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
         int id = channelController.addDeviceChannel(deviceChannelForm).getData();
         assertNotNull(channelService.getDeviceChannelById(id));

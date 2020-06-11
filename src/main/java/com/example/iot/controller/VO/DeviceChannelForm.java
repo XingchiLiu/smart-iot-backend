@@ -19,6 +19,10 @@ public class DeviceChannelForm {
     @ApiModelProperty(value = "此通道所属的设备id")
     private int deviceId;
 
+    // 此通道所属的设备名称
+    @ApiModelProperty(value = "此通道所属的设备名称")
+    private String deviceName;
+
     //此通道所属的模板通道id，-1说明没有模板通道
     @ApiModelProperty(value = "此通道所属的模板通道id")
     private int templateChannelId;
