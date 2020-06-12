@@ -1,5 +1,6 @@
 package com.example.iot.service.RuleService;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.controller.VO.RuleForm;
 import com.example.iot.domain.Rule;
@@ -25,7 +26,14 @@ public class RuleService {
         int deviceId = data.getIntValue("deviceId");
         ArrayList<Rule> rules = ruleRepository.getAllByDeviceId(deviceId);
         for (Rule rule : rules) {
-            double val = data.getDoubleValue(rule.getFieldName());
+            JSONArray messages = data.getJSONArray("messages");
+            double val = 0;
+            String key = rule.getFieldName();
+            for(int i = 0; i < messages.size(); i++){
+                JSONObject message = messages.getJSONObject(i);
+                val = message.containsKey(key) ? message.getDoubleValue(key) : val;
+            }
+            
             double threshold = rule.getThresholdVal();
             RuleType ruleType = rule.getRuleType();
             Method compare = null;
