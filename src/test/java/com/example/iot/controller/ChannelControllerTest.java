@@ -26,6 +26,15 @@ class ChannelControllerTest extends IotApplicationTests {
     @Autowired
     MQTTConnectionService mqttConnectionService;
 
+    boolean connectionEnabled = false;
+
+    private void enableMqttConnection(){
+        if(!connectionEnabled){
+            mqttConnectionService.getConnection();
+            connectionEnabled = true;
+        }
+    }
+
     @Test
     void addDataFieldToTemplateChannel() {
         ChannelDataFieldForm channelDataFieldForm = createChannelDataFieldForm("test", 2, 1, 0);
@@ -41,7 +50,7 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void addTemplateChannel() {
-        mqttConnectionService.getConnection();
+        enableMqttConnection();
 
         TemplateChannelForm templateChannelForm = createTemplateChannelForm(0, 1, "test");
         ResultVO<Integer> resultVO = channelController.addTemplateChannel(templateChannelForm);
@@ -54,7 +63,7 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void addDeviceChannel() {
-        mqttConnectionService.getConnection();
+        enableMqttConnection();
 
         DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
         ResultVO<Integer> resultVO = channelController.addDeviceChannel(deviceChannelForm);
@@ -84,7 +93,7 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void modifyNameOfTemplateChannel(){
-        mqttConnectionService.getConnection();
+        enableMqttConnection();
 
         TemplateChannelForm templateChannelForm = createTemplateChannelForm(0, 1, "test");
         int id = channelController.addTemplateChannel(templateChannelForm).getData();
@@ -108,7 +117,7 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void modifyNameOfDeviceChannel() {
-        mqttConnectionService.getConnection();
+        enableMqttConnection();
 
         DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
         int id = channelController.addDeviceChannel(deviceChannelForm).getData();
@@ -136,7 +145,7 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void deleteTemplateChannel(){
-        mqttConnectionService.getConnection();
+        enableMqttConnection();
 
         TemplateChannelForm templateChannelForm = createTemplateChannelForm(0, 1, "test");
         int id = channelController.addTemplateChannel(templateChannelForm).getData();
@@ -160,7 +169,7 @@ class ChannelControllerTest extends IotApplicationTests {
 
     @Test
     void deleteDeviceChannel() {
-        mqttConnectionService.getConnection();
+        enableMqttConnection();
 
         DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
         int id = channelController.addDeviceChannel(deviceChannelForm).getData();
