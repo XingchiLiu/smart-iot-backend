@@ -162,6 +162,17 @@
             <version>2.6.1</version>
         </dependency>
 
+        <!-- 通过PMML部署不同语言训练出的机器学习模型 -->
+        <dependency>
+            <groupId>org.jpmml</groupId>
+            <artifactId>pmml-evaluator</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jpmml</groupId>
+            <artifactId>pmml-evaluator-extension</artifactId>
+            <version>1.5.1</version>
+        </dependency>
     </dependencies>
 
     <build>
