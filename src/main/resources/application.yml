@@ -15,10 +15,16 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:123456@101.37.80.37:27017/smart_iot?authSource=admin
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+logging:
+  file:
+    name: log/iot.log
 
 mybatis:
   mapper-locations: classpath:mapper/*
-
 mqtt:
   username: test
   password: test
