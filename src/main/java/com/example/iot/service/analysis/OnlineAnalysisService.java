@@ -1,6 +1,8 @@
 package com.example.iot.service.analysis;
 
 import com.example.iot.controller.VO.analysis.ModelVO;
+import com.example.iot.controller.VO.analysis.OperatorForm;
+import com.example.iot.controller.VO.analysis.OperatorVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -35,4 +37,36 @@ public interface OnlineAnalysisService {
      * @return true表示删除成功
      */
     boolean deletePMMLModel(Integer modelId);
+
+    /**
+     * 获取所有算子
+     *
+     * @return 算子列表，{@link OperatorVO}
+     */
+    List<OperatorVO> getAllOperator();
+
+    /**
+     * 保存算子
+     *
+     * @param operatorForm 算子
+     * @return 保存结果
+     */
+    boolean saveOperator(OperatorForm operatorForm);
+
+    /**
+     * 修改算子
+     *
+     * @param operatorId 算子id
+     * @param operatorForm   算子
+     * @return 修改结果
+     */
+    boolean modifyOperator(Integer operatorId, OperatorForm operatorForm);
+
+    /**
+     * 删除算子
+     *
+     * @param operatorId 算子id
+     * @return 删除结果
+     */
+    boolean deleteOperator(Integer operatorId);
 }

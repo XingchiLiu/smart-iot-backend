@@ -1,9 +1,13 @@
 package com.example.iot.service.analysis.impl;
 
 import com.example.iot.controller.VO.analysis.ModelVO;
+import com.example.iot.controller.VO.analysis.OperatorForm;
+import com.example.iot.controller.VO.analysis.OperatorVO;
 import com.example.iot.domain.analysis.Model;
 import com.example.iot.domain.analysis.ModelField;
+import com.example.iot.domain.analysis.Operator;
 import com.example.iot.repository.analysis.ModelMapper;
+import com.example.iot.repository.analysis.OperatorMapper;
 import com.example.iot.service.analysis.OnlineAnalysisService;
 import lombok.extern.slf4j.Slf4j;
 import org.jpmml.evaluator.Evaluator;
@@ -28,6 +32,10 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
 
     @Resource
     private ModelMapper modelMapper;
+    @Resource
+    private OperatorMapper operatorMapper;
+
+    /*------ 模型 ------*/
 
     @Override
     public boolean fileExists(String filename) {
@@ -81,7 +89,7 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
             } catch (Exception e) {
                 // 尝试删除磁盘上的PMML模型文件
                 int cnt = 3;
-                while (cnt > 0 && deletePMMLModelOnDisk(filename)) {
+                while (cnt > 0 && !deletePMMLModelOnDisk(filename)) {
                     --cnt;
                 }
                 log.error("将模型保存到数据库时发生错误: " + model.toString());
@@ -94,7 +102,7 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
             } catch (Exception e) {
                 // 尝试删除磁盘上的PMML模型文件和数据库中的模型记录
                 int cnt = 3;
-                while (cnt > 0 && deletePMMLModel(model.getModelId())) {
+                while (cnt > 0 && !deletePMMLModel(model.getModelId())) {
                     --cnt;
                 }
                 log.error("将模型输入字段保存到数据库时发生错误: " + model.toString());
@@ -151,5 +159,67 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
         return true;
     }
 
+    /*------ 算子 ------*/
 
+    @Override
+    public List<OperatorVO> getAllOperator() {
+        try {
+            List<Operator> operators = operatorMapper.getAllOperator();
+            if (operators == null) {
+                return null;
+            }
+            return operators.stream().map(OperatorVO::new).collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Server Error: getAllOperator()");
+            return null;
+        }
+    }
+
+    @Override
+    public boolean saveOperator(OperatorForm operatorForm) {
+        try {
+            Operator operator = new Operator(operatorForm);
+            Integer affectedLines = operatorMapper.insertOperator(operator);
+            if (affectedLines <= 0) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Server Error: saveOperator(" + operatorForm.toString() + ")");
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean modifyOperator(Integer operatorId, OperatorForm operatorForm) {
+        try {
+            Operator operator = new Operator(operatorId, operatorForm);
+            Integer affectedLines = operatorMapper.updateOperator(operator);
+            if (affectedLines <= 0) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Server Error: saveOperator(" + operatorId + ", " + operatorForm.toString() + ")");
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteOperator(Integer operatorId) {
+        try {
+            Integer affectedLines = operatorMapper.deleteOperator(operatorId);
+            if (affectedLines <= 0) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Server Error: deleteOperator(" + operatorId + ")");
+            return false;
+        }
+        return true;
+    }
 }

@@ -1,8 +1,10 @@
 package com.example.iot.controller.VO.analysis;
 
+import com.example.iot.domain.analysis.Operator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 /**
  * @author zhm
@@ -10,7 +12,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OperatorForm {
+public class OperatorVO {
+    /**
+     * 算子id
+     */
+    private Integer operatorId;
     /**
      * 算子名称
      */
@@ -20,7 +26,11 @@ public class OperatorForm {
      */
     private String description;
     /**
-     * javascript代码
+     * 算子javascript代码
      */
     private String jsCode;
+
+    public OperatorVO(Operator operator) {
+        BeanUtils.copyProperties(operator, this);
+    }
 }
