@@ -2,12 +2,11 @@ package com.example.iot.service;
 
 import com.example.iot.controller.VO.DeviceChannelForm;
 import com.example.iot.controller.VO.TemplateChannelForm;
-import com.example.iot.domain.Device;
 import com.example.iot.domain.DeviceChannel;
 import com.example.iot.domain.TemplateChannel;
 import com.example.iot.repository.DeviceChannelRepository;
 import com.example.iot.repository.TemplateChannelRepository;
-import com.example.iot.service.ConnectionService.connection.connectionImpl.MQTTConnectionService;
+import com.example.iot.service.ConnectionService.MqttService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class ChannelService {
     @Autowired
     ChannelDataFieldService channelDataFieldService;
     @Autowired
-    MQTTConnectionService mqttConnectionService;
+    InMessageService inMessageService;
     @Autowired
     DeviceService deviceService;
 
@@ -60,9 +59,9 @@ public class ChannelService {
         deviceChannel.setTemplateChannelId(templateChannelId);
         deviceChannel.setChannelName(channelName);
 
-        String deviceName = deviceService.getDeviceById(deviceId).getName();
-        mqttConnectionService.addSub("/" + deviceName + "/" + channelName, 0);
-        return addDeviceChannel(deviceChannel);
+        int id = addDeviceChannel(deviceChannel);
+        inMessageService.addSub(String.valueOf(id), 0);
+        return id;
     }
 
     public int addTemplateChannel(TemplateChannelForm templateChannelForm){
@@ -73,10 +72,9 @@ public class ChannelService {
 
     public int addDeviceChannel(DeviceChannelForm deviceChannelForm){
         DeviceChannel deviceChannel = createDeviceChannel(deviceChannelForm);
-        String deviceName = deviceService.getDeviceById(deviceChannelForm.getDeviceId()).getName();
-
-        mqttConnectionService.addSub("/" + deviceName + "/" + deviceChannelForm.getChannelName(),0);
-        return addDeviceChannel(deviceChannel);
+        int deviceChannelId = addDeviceChannel(deviceChannel);
+        inMessageService.addSub(String.valueOf(deviceChannelId),0);
+        return deviceChannelId;
     }
 
     /**
@@ -86,18 +84,17 @@ public class ChannelService {
      */
     public void addChannelsToNewlyAddedDevice(int deviceId, int templateId){
         ArrayList<String> topicsToAdd = new ArrayList<>();
-        String deviceName = deviceService.getDeviceById(deviceId).getName();
 
         ArrayList<TemplateChannel> templateChannels = getTemplateChannelsByTemplateId(templateId);
         if(templateChannels != null && templateChannels.size() > 0){
             for(int i = 0; i < templateChannels.size(); i++){
-                addDeviceChannel(templateChannels.get(i).getChannelType(),
+                int deviceChannelId = addDeviceChannel(templateChannels.get(i).getChannelType(),
                         deviceId, templateChannels.get(i).getId(),
                         templateChannels.get(i).getChannelName());
-                topicsToAdd.add("/" + deviceName + "/" + templateChannels.get(i).getChannelName());
+                topicsToAdd.add(String.valueOf(deviceChannelId));
             }
         }
-        mqttConnectionService.addSub(topicsToAdd.toArray(new String[topicsToAdd.size()]),0);
+        inMessageService.addSub(topicsToAdd.toArray(new String[topicsToAdd.size()]),0);
     }
 
     public ArrayList<TemplateChannel> getTemplateChannelsByTemplateId(int templateId){
@@ -130,11 +127,6 @@ public class ChannelService {
      * @return
      */
     public int updateTemplateChannel(TemplateChannelForm templateChannelForm){
-        ArrayList<String> topicsToDelete = new ArrayList<>();
-        ArrayList<String> topicsToAdd = new ArrayList<>();
-
-        String oldChannelName = getTemplateChannelById(templateChannelForm.getId()).getChannelName();
-        String newChannelName = templateChannelForm.getChannelName();
 
         TemplateChannel templateChannel = createTemplateChannel(templateChannelForm);
         templateChannel.setId(templateChannelForm.getId());
@@ -143,14 +135,7 @@ public class ChannelService {
             for(int i = 0; i < deviceChannels.size(); i++){
                 deviceChannels.get(i).setChannelName(templateChannelForm.getChannelName());
                 addDeviceChannel(deviceChannels.get(i));
-
-                String deviceName = deviceService.getDeviceById(deviceChannels.get(i).getDeviceId()).getName();
-                topicsToAdd.add("/" + deviceName + "/" + newChannelName);
-                topicsToDelete.add("/" + deviceName + "/" + oldChannelName);
             }
-
-            mqttConnectionService.removeSub(topicsToDelete.toArray(new String[topicsToDelete.size()]));
-            mqttConnectionService.addSub(topicsToAdd.toArray(new String[topicsToAdd.size()]), 0);
         }
         return addTemplateChannel(templateChannel);
     }
@@ -161,15 +146,8 @@ public class ChannelService {
      * @return
      */
     public int updateDeviceChannel(DeviceChannelForm deviceChannelForm){
-        String originalName = getDeviceChannelById(deviceChannelForm.getId()).getChannelName();
-        String newName = deviceChannelForm.getChannelName();
-        String deviceName = deviceService.getDeviceById(deviceChannelForm.getDeviceId()).getName();
-
         DeviceChannel deviceChannel = createDeviceChannel(deviceChannelForm);
         deviceChannel.setId(deviceChannelForm.getId());
-
-        mqttConnectionService.removeSub("/" + deviceName + "/" + originalName);
-        mqttConnectionService.addSub("/" + deviceName + "/" + newName,0);
         return addDeviceChannel(deviceChannel);
     }
 
@@ -180,19 +158,19 @@ public class ChannelService {
     public void deleteTemplateChannel(int templateChannelId){
         ArrayList<String> topicsToDelete = new ArrayList<>();
 
+        // 删掉对应的设备数据通道
         ArrayList<DeviceChannel> deviceChannels = deviceChannelRepository.getAllByTemplateChannelId(templateChannelId);
         if(deviceChannels != null & deviceChannels.size() > 0){
             for(int i = 0; i < deviceChannels.size(); i++){
-                String deviceName = deviceService.getDeviceById(deviceChannels.get(i).getDeviceId()).getName();
-                topicsToDelete.add("/" + deviceName + "/" + deviceChannels.get(i).getChannelName());
-
                 deviceChannelRepository.deleteById(deviceChannels.get(i).getId());
+                topicsToDelete.add(String.valueOf(deviceChannels.get(i).getId()));
             }
         }
+
         channelDataFieldService.deleteChannelRelatedFields(templateChannelId, 0);
         templateChannelRepository.deleteById(templateChannelId);
 
-        mqttConnectionService.removeSub(topicsToDelete.toArray(new String[topicsToDelete.size()]));
+        inMessageService.removeSub(topicsToDelete.toArray(new String[topicsToDelete.size()]));
     }
 
     /**
@@ -200,12 +178,9 @@ public class ChannelService {
      * @param deviceChannelId
      */
     public void deleteDeviceChannel(int deviceChannelId){
-        DeviceChannel deviceChannel= getDeviceChannelById(deviceChannelId);
-        String deviceName = deviceService.getDeviceById(deviceChannel.getDeviceId()).getName();
-
         deviceChannelRepository.deleteById(deviceChannelId);
         channelDataFieldService.deleteChannelRelatedFields(deviceChannelId, 1);
-        mqttConnectionService.removeSub("/" + deviceName + "/" + deviceChannel.getChannelName());
+        inMessageService.removeSub(String.valueOf(deviceChannelId));
     }
 
     private TemplateChannel createTemplateChannel(TemplateChannelForm templateChannelForm){

@@ -97,6 +97,20 @@
             <version>1.2.0</version>
         </dependency>
 
+        <!--Apache http client-->
+        <!--Only for test use-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+        </dependency>
+
+        <!--http消息发送-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!--json数据转换的包-->
         <dependency>
             <groupId>com.alibaba</groupId>

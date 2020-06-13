@@ -10,7 +10,7 @@ import com.example.iot.domain.DeviceChannel;
 import com.example.iot.domain.TemplateChannel;
 import com.example.iot.service.ChannelDataFieldService;
 import com.example.iot.service.ChannelService;
-import com.example.iot.service.ConnectionService.connection.connectionImpl.MQTTConnectionService;
+import com.example.iot.service.ConnectionService.MqttService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,13 +24,13 @@ class ChannelControllerTest extends IotApplicationTests {
     @Autowired
     ChannelService channelService;
     @Autowired
-    MQTTConnectionService mqttConnectionService;
+    MqttService mqttService;
 
     boolean connectionEnabled = false;
 
     private void enableMqttConnection(){
         if(!connectionEnabled){
-            mqttConnectionService.getConnection();
+            mqttService.getConnection();
             connectionEnabled = true;
         }
     }

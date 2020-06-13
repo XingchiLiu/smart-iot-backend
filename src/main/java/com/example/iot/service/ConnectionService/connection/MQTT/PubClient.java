@@ -2,8 +2,14 @@ package com.example.iot.service.ConnectionService.connection.MQTT;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class PubClient {
+@Component
+public class PubClient{
+    @Autowired
+    PubCallback pubCallback;
+
     private static final String HOST = "tcp://101.37.80.37:1883";
     private static final String CLIENTID = "pubClient";
     private static final String USERNAME = "test";
@@ -23,7 +29,7 @@ public class PubClient {
 
         options.setWill("close", "offline".getBytes(),0,true);
 
-        mqttClient.setCallback(new PubCallback());
+        mqttClient.setCallback(pubCallback);
         mqttClient.connect(options);
     }
 

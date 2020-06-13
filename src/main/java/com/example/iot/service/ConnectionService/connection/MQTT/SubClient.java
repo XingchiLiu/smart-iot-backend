@@ -4,8 +4,14 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SubClient {
+    @Autowired
+    SubCallBack subCallBack;
+
     private static final String HOST = "tcp://101.37.80.37:1883";
     private static final String CLIENTID = "subClient";
     private static final String USERNAME = "test";
@@ -27,7 +33,7 @@ public class SubClient {
 
         options.setWill("close", "offline".getBytes(),0,true);
 
-        mqttClient.setCallback(new SubCallBack());
+        mqttClient.setCallback(subCallBack);
         mqttClient.connect(options);
     }
 

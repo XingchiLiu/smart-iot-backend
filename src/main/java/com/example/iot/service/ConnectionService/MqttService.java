@@ -1,21 +1,20 @@
-package com.example.iot.service.ConnectionService.connection.connectionImpl;
+package com.example.iot.service.ConnectionService;
 
 
-import com.example.iot.service.ConnectionService.connection.ConnectionManagement;
 import com.example.iot.service.ConnectionService.connection.MQTT.PubClient;
 import com.example.iot.service.ConnectionService.connection.MQTT.SubClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MQTTConnectionService implements ConnectionManagement {
+public class MqttService implements ApplicationRunner {
+    @Autowired
     private PubClient pubClient;
+    @Autowired
     private SubClient subClient;
-
-    public MQTTConnectionService(){
-        pubClient = new PubClient();
-        subClient = new SubClient();
-    }
 
     public void getConnection() {
         try {
@@ -84,5 +83,10 @@ public class MQTTConnectionService implements ConnectionManagement {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        this.getConnection();
     }
 }

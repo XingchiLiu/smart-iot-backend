@@ -14,3 +14,14 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:123456@101.37.80.37:27017/smart_iot?authSource=admin
+
+mqtt:
+  username: test
+  password: test
+  url: tcp://101.37.80.37:1883
+  sender:
+    clientId: sender
+    defaultTopic: default
+  receiver:
+    clientId: receiver
+    defaultTopic: default

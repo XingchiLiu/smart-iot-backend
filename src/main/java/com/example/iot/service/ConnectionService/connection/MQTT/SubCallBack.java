@@ -5,8 +5,13 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SubCallBack implements MqttCallbackExtended {
+    @Autowired
+    MessageReceiver messageReceiver;
 
     public void connectComplete(boolean reconnect, String s) {
         if(reconnect){
@@ -31,7 +36,7 @@ public class SubCallBack implements MqttCallbackExtended {
     public void messageArrived(String s, MqttMessage mqttMessage){
         System.out.println("Sub: Get message topic: " + s);
         System.out.println("Sub: Get message content:" + mqttMessage);
-        MessageReceiver.returnResponse(s,mqttMessage.toString());
+        messageReceiver.returnResponse(s,mqttMessage.toString());
     }
 
     public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
