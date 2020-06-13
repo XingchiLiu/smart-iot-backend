@@ -1,6 +1,6 @@
 package com.example.iot.controller.VO.analysis;
 
-import com.example.iot.domain.ChannelData;
+import com.example.iot.domain.analysis.ChannelData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

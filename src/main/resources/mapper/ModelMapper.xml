@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.iot.repository.analysis.ModelMapper">
+    <!--     model      -->
+    <select id="getAllModels" resultMap="Model">
+        select *
+        from model m;
+    </select>
+
+    <select id="getModelById" resultMap="Model">
+        select *
+        from model m
+        where m.model_id = #{modelId};
+    </select>
+
+    <insert id="insertModel" useGeneratedKeys="true" keyProperty="modelId">
+        insert into model(model_name, model_description, filename)
+        values (#{name}, #{description}, #{filename});
+    </insert>
+
+    <delete id="deleteModel">
+        delete from model
+        where model_id = #{modelId};
+    </delete>
+
+    <resultMap id="Model" type="com.example.iot.domain.analysis.Model">
+        <id property="modelId" column="model_id"/>
+        <result property="name" column="model_name"/>
+        <result property="description" column="model_description"/>
+        <result property="filename" column="filename"/>
+    </resultMap>
+
+    <!--     model_input_field      -->
+    <select id="getInputFieldsByModelId" resultMap="ModelField">
+        select *
+        from model_input_field mif
+        where mif.model_id = #{modelId};
+    </select>
+
+    <select id="getInputFieldById" resultMap="ModelField">
+        select *
+        from model_input_field mif
+        where mif.field_id = #{fieldId};
+    </select>
+
+    <insert id="insertInputFields" useGeneratedKeys="true" keyProperty="fieldId">
+        insert into model_input_field(model_id, field_name, data_type, op_type) values
+        <foreach collection="fields" item="field" index="index" separator=",">
+            (#{field.modelId}, #{field.fieldName}, #{field.dataType}, #{field.opType})
+        </foreach>;
+    </insert>
+
+    <resultMap id="ModelField" type="com.example.iot.domain.analysis.ModelField">
+        <id property="fieldId" column="field_id"/>
+        <result property="modelId" column="model_id"/>
+        <result property="fieldName" column="field_name"/>
+        <result property="dataType" column="data_type"/>
+        <result property="opType" column="op_type"/>
+    </resultMap>
+</mapper>

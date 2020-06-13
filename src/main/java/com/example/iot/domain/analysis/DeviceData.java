@@ -1,5 +1,6 @@
-package com.example.iot.domain;
+package com.example.iot.domain.analysis;
 
+import com.example.iot.domain.Device;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
