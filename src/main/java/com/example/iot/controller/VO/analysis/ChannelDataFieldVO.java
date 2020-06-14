@@ -18,7 +18,7 @@ public class ChannelDataFieldVO {
     private FieldType fieldType;
 
     public ChannelDataFieldVO(ChannelDataField channelDataField) {
-        this.fieldId = channelDataField.getChannelId();
+        this.fieldId = channelDataField.getId();
         this.fieldName = channelDataField.getFieldName();
         this.fieldType = FieldType.valueOf(channelDataField.getFieldType());
     }

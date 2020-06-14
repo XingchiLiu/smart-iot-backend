@@ -34,24 +34,26 @@ public class TimingAnalysisController {
 
     /**
      * 使用折线图显示根据时间段聚合后的设备信息
+     *
      * @param form 时序分析表单，{@link TimingAnalysisForm}
      * @return 折线图数据，{@link LineChartVO}
      */
     @PostMapping("/line-chart")
     public ResultVO analysisByLineChart(@RequestBody TimingAnalysisForm form) {
-        if (form.getInterval() <= 0) {
+        if (form.getInterval() == null || form.getInterval() <= 0) {
             return ResultVO.getFailed(TIME_INTERVAL_PARAM_ERROR);
         }
-        if (form.getStartTime().isAfter(form.getEndTime())) {
+        if (form.getStartTime() == null || form.getEndTime() == null
+                || form.getStartTime().isAfter(form.getEndTime())) {
             return ResultVO.getFailed(TIME_PARAM_ERROR);
         }
-        if (!form.getMeasurePoints().stream()
-                .allMatch(e -> e.getDeviceId() > 0 && e.getChannelId() > 0
-                        && e.getFieldId() > 0 && e.getAggregationType() != null)) {
+        if (form.hasIdsError()) {
             return ResultVO.getFailed(MEASURE_POINT_PARAM_ERROR);
         }
+
         LineChartVO lineChart = timingAnalysisService.analysisByLineChart(form);
-        if(lineChart == null) {
+
+        if (lineChart == null) {
             return ResultVO.getFailed(TIMING_ANALYSIS_ERROR);
         }
         return ResultVO.getSuccess(form);

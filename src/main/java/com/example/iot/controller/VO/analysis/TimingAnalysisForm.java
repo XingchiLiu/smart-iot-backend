@@ -52,4 +52,19 @@ public class TimingAnalysisForm {
             this.aggregationType = AggregationType.valueOf(aggregationType);
         }
     }
+
+    /**
+     * 验证表单id
+     *
+     * @return true表示存在id错误
+     */
+    public boolean hasIdsError() {
+        return measurePoints == null || measurePoints.stream()
+                .anyMatch(e -> {
+                    boolean deviceIdError = e.getDeviceId() == null || e.getDeviceId() <= 0;
+                    boolean channelIdError = e.getChannelId() == null || e.getChannelId() <= 0;
+                    boolean fieldIdError = e.getFieldId() == null || e.getFieldId() <= 0;
+                    return deviceIdError || channelIdError || fieldIdError || e.getAggregationType() == null;
+                });
+    }
 }
