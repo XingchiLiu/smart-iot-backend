@@ -1,8 +1,7 @@
 package com.example.iot.service.ConnectionService;
 
 import com.example.iot.controller.VO.MessageForm;
-import com.example.iot.domain.ReceivedMessage;
-import com.example.iot.service.MongoDeviceMessageService;
+import com.example.iot.service.DeviceMessageAndDemandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,15 +12,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
 public class HttpService {
     @Autowired
-    MongoDeviceMessageService mongoDeviceMessageService;
+    DeviceMessageAndDemandService deviceMessageAndDemandService;
 
     public void sendMessageToDevice(MessageForm messageForm){
         RestTemplate restTemplate = new RestTemplate();
@@ -41,13 +37,7 @@ public class HttpService {
         ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
         System.out.println(response.getBody());
 
-        ReceivedMessage receivedMessage = new ReceivedMessage();
-        receivedMessage.setTopic(messageForm.getTopic());
-        receivedMessage.setChannelId(messageForm.getChannelId());
-        receivedMessage.setDate(messageForm.getDate());
-        receivedMessage.setData(messageForm.getData());
-        receivedMessage.setDeviceId(messageForm.getDeviceId());
-        mongoDeviceMessageService.saveMessage(receivedMessage);
+        deviceMessageAndDemandService.generateAndSaveDemandMessageFromMessageForm(messageForm);
     }
 
 }

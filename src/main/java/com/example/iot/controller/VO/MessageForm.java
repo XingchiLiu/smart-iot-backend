@@ -21,6 +21,10 @@ public class MessageForm {
     @ApiModelProperty(value = "发送的时间")
     private Date date;
 
+    @ApiModelProperty(value = "数据的发送方向")
+    // 如果是 0，为设备 -->平台，如果是 1，为平台 --> 设备
+    private int direction;
+
     @ApiModelProperty(value = "要发送的数据")
     private List<Map<String,Object>> data;
 
