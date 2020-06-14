@@ -1,12 +1,9 @@
 package com.example.iot.service.analysis.impl;
 
-import com.example.iot.controller.VO.analysis.ModelVO;
-import com.example.iot.controller.VO.analysis.OperatorForm;
-import com.example.iot.controller.VO.analysis.OperatorVO;
-import com.example.iot.domain.analysis.Model;
-import com.example.iot.domain.analysis.ModelField;
-import com.example.iot.domain.analysis.Operator;
+import com.example.iot.controller.VO.analysis.*;
+import com.example.iot.domain.analysis.*;
 import com.example.iot.repository.analysis.ModelMapper;
+import com.example.iot.repository.analysis.OnlineAnalysisMapper;
 import com.example.iot.repository.analysis.OperatorMapper;
 import com.example.iot.service.analysis.OnlineAnalysisService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +31,8 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
     private ModelMapper modelMapper;
     @Resource
     private OperatorMapper operatorMapper;
+    @Resource
+    private OnlineAnalysisMapper onlineAnalysisMapper;
 
     /*------ 模型 ------*/
 
@@ -44,8 +43,8 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
             File file = new File(filePath);
             return file.exists();
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Server Error: getAllPMMLModel(" + filename + ")");
+            e.printStackTrace();
             return true;
         }
     }
@@ -59,8 +58,8 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
             }
             return models.stream().map(ModelVO::new).collect(Collectors.toList());
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Server Error: getAllPMMLModel()");
+            e.printStackTrace();
             return null;
         }
     }
@@ -143,8 +142,8 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
             modelMapper.deleteModel(modelId);
             deletePMMLModelOnDisk(deletedModel.getFilename());
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Server Error: deletePMMLModel(" + modelId + ")");
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -170,8 +169,8 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
             }
             return operators.stream().map(OperatorVO::new).collect(Collectors.toList());
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Server Error: getAllOperator()");
+            e.printStackTrace();
             return null;
         }
     }
@@ -185,8 +184,8 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Server Error: saveOperator(" + operatorForm.toString() + ")");
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -201,8 +200,8 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
                 return false;
             }
         } catch (Exception e) {
+            log.error("Server Error: modifyOperator(" + operatorId + ", " + operatorForm.toString() + ")");
             e.printStackTrace();
-            log.error("Server Error: saveOperator(" + operatorId + ", " + operatorForm.toString() + ")");
             return false;
         }
         return true;
@@ -216,10 +215,137 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Server Error: deleteOperator(" + operatorId + ")");
+            e.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    /*------ 实时分析任务 ------*/
+
+    @Override
+    public List<OnlineAnalysisTaskVO> getAllTask() {
+        try {
+            List<OnlineAnalysisTask> tasks = onlineAnalysisMapper.getAllTask();
+            if (tasks == null) {
+                return null;
+            }
+            return tasks.stream().map(OnlineAnalysisTaskVO::new).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Server Error: getAllTask()");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public OnlineAnalysisTaskDetailVO getTaskDetail(Integer taskId) {
+        try {
+            //Step 1: 实时分析任务基本信息
+            OnlineAnalysisTaskDetail taskDetail = onlineAnalysisMapper.getTaskDetail(taskId);
+            if (taskDetail == null || taskDetail.getModel() == null
+                    || taskDetail.getChannels() == null) {
+                return null;
+            }
+            //Step 2: 根据taskId和modelId获取输入字段
+            List<OnlineAnalysisTaskDetail.InputField> inputFields = onlineAnalysisMapper
+                    .getTaskInputFields(taskId, taskDetail.getModel().getModelId());
+            if(inputFields == null) {
+                return null;
+            }
+            taskDetail.setInputFields(inputFields);
+            return new OnlineAnalysisTaskDetailVO(taskDetail);
+        } catch (Exception e) {
+            log.error("Server Error: getTaskDetail(" + taskId + ")");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean saveTask(OnlineAnalysisTaskForm taskForm) {
+        try {
+            return saveTask(null, taskForm);
+        } catch (Exception e) {
+            log.error("Server Error: saveTask(" + taskForm.toString() + ")");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean modifyTask(Integer taskId, OnlineAnalysisTaskForm taskForm) {
+        try {
+            //Step 1: 删除旧任务
+            boolean deleteSuccess = deleteTask(taskId);
+            //Step 2: 插入修改后的任务，并保持id一致性
+            if (!deleteSuccess) {
+                return false;
+            }
+            return saveTask(taskId, taskForm);
+        } catch (Exception e) {
+            deleteTask(taskId);
+            log.error("Server Error: modifyTask(" + taskId + ", " + taskForm.toString() + ")");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean saveTask(Integer taskId, OnlineAnalysisTaskForm taskForm) {
+        // Step 1: 保存任务基本信息
+        OnlineAnalysisTask task = new OnlineAnalysisTask(taskForm);
+        Integer affectedLines;
+        if (taskId == null) {
+            affectedLines = onlineAnalysisMapper.insertTask(task);
+        } else {
+            task.setTaskId(taskId);
+            affectedLines = onlineAnalysisMapper.insertTaskWithId(task);
+        }
+
+        if (affectedLines <= 0) {
+            return false;
+        }
+        Integer finalTaskId = task.getTaskId();
+        try {
+            // Step 2: 保存任务关联的数据通道
+            onlineAnalysisMapper.insertTaskDataChannels(finalTaskId, taskForm.getChannelIds());
+            // Step 3: 保存输入字段对应的算子
+            List<TaskOperator> taskOperators = taskForm.getFunctions().stream()
+                    .map(function -> new TaskOperator(finalTaskId, function.getInputFieldId(), function.getOperatorId()))
+                    .collect(Collectors.toList());
+            onlineAnalysisMapper.insertTaskOperators(taskOperators);
+            // Step 4: 保存输入字段对应的数据通道字段
+            List<FuncParam> funcParams = taskForm.getFunctions().stream()
+                    .map(function -> new FuncParam(finalTaskId, function.getInputFieldId(), function.getChannelFieldIds()))
+                    .collect(Collectors.toList());
+            onlineAnalysisMapper.insertFuncParams(funcParams);
+        } catch (Exception e) {
+            deleteTask(finalTaskId);
+            log.error("Server Error: saveTask(" + taskId + ", " + taskForm.toString() + ")");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteTask(Integer taskId) {
+        try {
+            Integer affectedLines = onlineAnalysisMapper.deleteTask(taskId);
+            if (affectedLines <= 0) {
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("Server Error: deleteTask(" + taskId + ")");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public OnlineAnalysisTaskResult executeTask(Integer taskId) {
+        return null;
     }
 }

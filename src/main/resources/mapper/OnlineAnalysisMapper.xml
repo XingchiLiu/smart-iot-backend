@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.iot.repository.analysis.OnlineAnalysisMapper">
+    <!--     online_analysis_task      -->
+    <select id="getAllTask" resultMap="OnlineAnalysisTask">
+        select *
+        from online_analysis_task;
+    </select>
+
+    <insert id="insertTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into online_analysis_task(model_id, task_name, task_description)
+        values (#{modelId}, #{name}, #{description});
+    </insert>
+
+    <insert id="insertTaskWithId">
+        insert into online_analysis_task(task_id, model_id, task_name, task_description)
+        values (#{taskId}, #{modelId}, #{name}, #{description});
+    </insert>
+
+    <delete id="deleteTask">
+        delete from online_analysis_task
+        where task_id = #{taskId};
+    </delete>
+
+    <resultMap id="OnlineAnalysisTask" type="com.example.iot.domain.analysis.OnlineAnalysisTask">
+        <id property="taskId" column="task_id"/>
+        <result property="modelId" column="model_id"/>
+        <result property="name" column="task_name"/>
+        <result property="description" column="task_description"/>
+    </resultMap>
+
+    <!--     oa_task_data_channels      -->
+    <insert id="insertTaskDataChannels">
+        insert into oa_task_data_channels(task_id, channel_id) values
+        <foreach collection="channelIds" item="channelId" separator=",">
+            (#{taskId}, #{channelId})
+        </foreach>;
+    </insert>
+
+    <!--     oa_task_operators      -->
+    <insert id="insertTaskOperators">
+        insert into oa_task_operators(task_id, input_field_id, operator_id) values
+        <foreach collection="taskOperators" item="taskOperator" separator=",">
+            (#{taskOperator.taskId}, #{taskOperator.inputFieldId}, #{taskOperator.operatorId})
+        </foreach>;
+    </insert>
+
+    <!--     oa_task_func_params      -->
+    <insert id="insertFuncParams">
+        insert into oa_task_func_params(task_id, input_field_id, channel_field_id, param_index) values
+        <foreach collection="funcParams" item="funcParam" separator=",">
+            <foreach collection="funcParam.channelFieldIds" item="channelFieldId" index="index" separator=",">
+                (#{funcParam.taskId}, #{funcParam.inputFieldId}, #{channelFieldId}, #{index})
+            </foreach>
+        </foreach>
+        ;
+    </insert>
+
+    <!--     task detail      -->
+    <select id="getTaskDetail" resultMap="OnlineAnalysisTaskDetail">
+        select
+        <include refid="onlineAnalysisTaskColumns">
+            <property name="alias" value="t"/>
+        </include>
+        ,
+        <include refid="modelColumns">
+            <property name="alias" value="m"/>
+        </include>
+        ,
+        <include refid="deviceChannelColumns">
+            <property name="alias" value="dc"/>
+        </include>
+        from (select *
+        from online_analysis_task task
+        where task.task_id = #{taskId}) t
+        left join model m on m.model_id = t.model_id
+        left join oa_task_data_channels oatdc on oatdc.task_id = t.task_id
+        left join device_channel dc on dc.id = oatdc.channel_id;
+    </select>
+
+    <sql id="onlineAnalysisTaskColumns">
+        ${alias}.task_id as task_id,
+        ${alias}.task_name as task_name,
+        ${alias}.task_description as task_description,
+        ${alias}.model_id as task_model_id
+    </sql>
+
+    <resultMap id="OnlineAnalysisTaskDetail" type="com.example.iot.domain.analysis.OnlineAnalysisTaskDetail">
+        <id property="taskId" column="task_id"/>
+        <result property="name" column="task_name"/>
+        <result property="description" column="task_description"/>
+        <association property="model" resultMap="Model"/>
+        <collection property="channels" resultMap="DeviceChannel"/>
+    </resultMap>
+
+    <sql id="modelColumns">
+        ${alias}.model_id as model_id,
+        ${alias}.model_name as model_name,
+        ${alias}.model_description as model_description,
+        ${alias}.filename as model_filename
+    </sql>
+
+    <resultMap id="Model" type="com.example.iot.domain.analysis.Model">
+        <id property="modelId" column="model_id"/>
+        <result property="name" column="model_name"/>
+        <result property="description" column="model_description"/>
+        <result property="filename" column="model_filename"/>
+    </resultMap>
+
+    <sql id="deviceChannelColumns">
+        ${alias}.id as channel_id,
+        ${alias}.channel_type as channel_type,
+        ${alias}.device_id as channel_device_id,
+        ${alias}.template_channel_id as channel_template_id,
+        ${alias}.channel_name as channel_name
+    </sql>
+
+    <resultMap id="DeviceChannel" type="com.example.iot.domain.DeviceChannel">
+        <id property="id" column="channel_id"/>
+        <result property="channelType" column="channel_type"/>
+        <result property="deviceId" column="channel_device_id"/>
+        <result property="templateChannelId" column="channel_template_id"/>
+        <result property="channelName" column="channel_name"/>
+    </resultMap>
+
+
+    <select id="getTaskInputFields" resultMap="InputField">
+        select ins.field_id as input_field_id,
+            ins.model_id as input_model_id,
+            ins.field_name as input_field_name,
+            ins.data_type as input_data_type,
+            ins.op_type as input_op_type,
+            op.operator_id as operator_id,
+            op.operator_name as operator_name,
+            op.operator_description as operator_description,
+            op.js_code as operator_js_code,
+            params.param_index as param_index,
+            cfields.id as param_field_id,
+            cfields.field_name as param_field_name
+        from (select *
+            from model_input_field fields
+            where fields.model_id = #{modelId}) ins
+        left join oa_task_operators ops on ops.task_id = #{taskId} and ops.input_field_id = ins.field_id
+        left join operator op on op.operator_id = ops.operator_id
+        left join oa_task_func_params params on params.task_id = #{taskId} and params.input_field_id = ins.field_id
+        left join channel_data_field cfields on cfields.id = params.channel_field_id;
+    </select>
+
+    <resultMap id="InputField" type="com.example.iot.domain.analysis.OnlineAnalysisTaskDetail$InputField">
+        <constructor>
+            <idArg column="input_field_id" javaType="Integer"/>
+        </constructor>
+        <association property="inputField" resultMap="ModelField"/>
+        <association property="operator" resultMap="Operator"/>
+        <collection property="channelDataFields" resultMap="FuncField"/>
+    </resultMap>
+
+    <resultMap id="ModelField" type="com.example.iot.domain.analysis.ModelField">
+        <id property="fieldId" column="input_field_id"/>
+        <result property="modelId" column="input_model_id"/>
+        <result property="fieldName" column="input_field_name"/>
+        <result property="dataType" column="input_data_type"/>
+        <result property="opType" column="input_op_type"/>
+    </resultMap>
+
+    <resultMap id="Operator" type="com.example.iot.domain.analysis.Operator">
+        <id property="operatorId" column="operator_id"/>
+        <result property="name" column="operator_name"/>
+        <result property="description" column="operator_description"/>
+        <result property="jsCode" column="operator_js_code"/>
+    </resultMap>
+
+    <resultMap id="FuncField" type="com.example.iot.domain.analysis.OnlineAnalysisTaskDetail$FuncField">
+        <result property="index" column="param_index"/>
+        <result property="fieldId" column="param_field_id"/>
+        <result property="fieldName" column="param_field_name"/>
+    </resultMap>
+</mapper>

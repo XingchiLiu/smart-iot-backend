@@ -1,9 +1,7 @@
 package com.example.iot.controller.analysis;
 
 import com.example.iot.controller.VO.ResultVO;
-import com.example.iot.controller.VO.analysis.ModelVO;
-import com.example.iot.controller.VO.analysis.OperatorForm;
-import com.example.iot.controller.VO.analysis.OperatorVO;
+import com.example.iot.controller.VO.analysis.*;
 import com.example.iot.service.analysis.OnlineAnalysisService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +46,8 @@ public class OnlineAnalysisController {
         this.onlineAnalysisService = onlineAnalysisService;
     }
 
+    /*------ 模型 ------*/
+
     /**
      * 获取所有PMML模型
      *
@@ -66,13 +66,15 @@ public class OnlineAnalysisController {
     /**
      * 保存PMML模型文件
      *
-     * @param file PMML模型，类型为xml文件
+     * @param file        PMML模型，类型为xml文件
+     * @param name        自定义模型名称
+     * @param description 模型描述
      * @return 保存结果
      */
     @PostMapping("/model/save")
     public ResultVO savePMMLModel(@RequestParam("file") MultipartFile file,
                                   @RequestParam("name") String name,
-                                  @RequestParam(value = "description" ,defaultValue = "") String description) {
+                                  @RequestParam(value = "description", defaultValue = "") String description) {
         if (name == null || "".equals(name)) {
             return ResultVO.getFailed(NAME_EMPTY_ERROR);
         }
@@ -118,6 +120,8 @@ public class OnlineAnalysisController {
         return ResultVO.getSuccess(DELETE_SUCCESS);
     }
 
+    /*------ 算子 ------*/
+
     /**
      * 获取所有算子
      *
@@ -136,7 +140,7 @@ public class OnlineAnalysisController {
     /**
      * 保存算子
      *
-     * @param operatorForm 算子
+     * @param operatorForm 算子表单
      * @return 保存结果
      */
     @PostMapping("/operator/create")
@@ -166,7 +170,7 @@ public class OnlineAnalysisController {
      * 修改算子
      *
      * @param operatorId   算子id
-     * @param operatorForm 算子
+     * @param operatorForm 算子表单
      * @return 修改结果
      */
     @PostMapping("/operator/modify")
@@ -185,9 +189,9 @@ public class OnlineAnalysisController {
         if (operatorForm.getDescription() == null) {
             operatorForm.setDescription("");
         }
-        boolean saveSuccess = onlineAnalysisService.modifyOperator(operatorId, operatorForm);
+        boolean modifySuccess = onlineAnalysisService.modifyOperator(operatorId, operatorForm);
 
-        if (!saveSuccess) {
+        if (!modifySuccess) {
             return ResultVO.getFailed(MODIFY_ERROR);
         }
         return ResultVO.getSuccess(MODIFY_SUCCESS);
@@ -213,29 +217,128 @@ public class OnlineAnalysisController {
         return ResultVO.getSuccess(DELETE_SUCCESS);
     }
 
+    /*------ 实时分析任务 ------*/
 
+    /**
+     * 获取所有实时分析任务
+     *
+     * @return 实时分析任务列表，{@link OnlineAnalysisTaskVO}
+     */
     @GetMapping("/task/all")
-    public ResultVO getAllTask() {
-        return null;
+    public ResultVO getAllTaskBrief() {
+        List<OnlineAnalysisTaskVO> tasks = onlineAnalysisService.getAllTask();
+
+        if (tasks == null) {
+            return ResultVO.getFailed(SERVER_ERROR);
+        }
+        return ResultVO.getSuccess(tasks);
     }
 
+    /**
+     * 获取任务详情
+     *
+     * @param taskId 任务id
+     * @return 实时分析任务详情，{@link OnlineAnalysisTaskDetailVO}
+     */
+    @GetMapping("/task/detail")
+    public ResultVO getTaskDetail(@RequestParam("taskId") Integer taskId) {
+        if (taskId == null || taskId <= 0) {
+            return ResultVO.getFailed(ID_ERROR);
+        }
+
+        OnlineAnalysisTaskDetailVO taskDetail = onlineAnalysisService.getTaskDetail(taskId);
+
+        if (taskDetail == null) {
+            return ResultVO.getFailed(SERVER_ERROR);
+        }
+        return ResultVO.getSuccess(taskDetail);
+    }
+
+    /**
+     * 创建实时分析任务
+     *
+     * @param taskForm 实时分析任务表单
+     * @return 创建结果
+     */
     @PostMapping("/task/create")
-    public ResultVO createTask() {
-        return null;
+    public ResultVO createTask(@RequestBody OnlineAnalysisTaskForm taskForm) {
+        if (taskForm.getName() == null || "".equals(taskForm.getName())) {
+            return ResultVO.getFailed(NAME_EMPTY_ERROR);
+        }
+        if (taskForm.hasIdsError()) {
+            return ResultVO.getFailed(ID_ERROR);
+        }
+
+        if (taskForm.getDescription() == null) {
+            taskForm.setDescription("");
+        }
+        boolean saveSuccess = onlineAnalysisService.saveTask(taskForm);
+
+        if (!saveSuccess) {
+            return ResultVO.getFailed(UPLOAD_ERROR);
+        }
+        return ResultVO.getSuccess(UPLOAD_SUCCESS);
     }
 
+    /**
+     * 修改实时分析任务
+     *
+     * @param taskId   任务id
+     * @param taskForm 实时分析任务表单
+     * @return 修改结果
+     */
     @PostMapping("/task/modify")
-    public ResultVO modifyTask() {
-        return null;
+    public ResultVO modifyTask(@RequestParam("taskId") Integer taskId,
+                               @RequestBody OnlineAnalysisTaskForm taskForm) {
+        if (taskId == null || taskId <= 0) {
+            return ResultVO.getFailed(ID_ERROR);
+        }
+        if (taskForm.getName() == null || "".equals(taskForm.getName())) {
+            return ResultVO.getFailed(NAME_EMPTY_ERROR);
+        }
+        if (taskForm.hasIdsError()) {
+            return ResultVO.getFailed(ID_ERROR);
+        }
+
+        if (taskForm.getDescription() == null) {
+            taskForm.setDescription("");
+        }
+        boolean modifySuccess = onlineAnalysisService.modifyTask(taskId, taskForm);
+
+        if (!modifySuccess) {
+            return ResultVO.getFailed(MODIFY_ERROR);
+        }
+        return ResultVO.getSuccess(MODIFY_SUCCESS);
     }
 
+    /**
+     * 删除实时分析任务
+     *
+     * @param taskId 任务id
+     * @return 删除结果
+     */
     @GetMapping("/task/delete")
-    public ResultVO deleteTask() {
-        return null;
+    public ResultVO deleteTask(@RequestParam("taskId") Integer taskId) {
+        if (taskId == null || taskId <= 0) {
+            return ResultVO.getFailed(ID_ERROR);
+        }
+
+        boolean deleteSuccess = onlineAnalysisService.deleteTask(taskId);
+
+        if (!deleteSuccess) {
+            return ResultVO.getFailed(DELETE_ERROR);
+        }
+        return ResultVO.getSuccess(DELETE_SUCCESS);
     }
 
+    /**
+     * 执行实时分析任务
+     *
+     * @param taskId 任务id
+     * @return 任务执行结果
+     */
     @GetMapping("/task/execute")
-    public ResultVO executeTask() {
+    public ResultVO executeTask(@RequestParam("taskId") Integer taskId) {
         return null;
     }
 }
