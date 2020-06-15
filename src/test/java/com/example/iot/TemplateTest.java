@@ -49,6 +49,6 @@ public class TemplateTest extends IotApplicationTests {
      */
     @Test
     public void test4() {
-        System.out.println(templateService.getTemplateList(0, 5).getContent());
+        System.out.println(templateService.getTemplateList(0, 5).getData().getContent());
     }
 }

@@ -109,27 +109,27 @@ public class TemplateService {
      * @param templateId
      * @return 模板的展示形式
      */
-    public TemplateVO getTemplate(int templateId) {
+    public ResultVO<TemplateVO> getTemplate(int templateId) {
         DeviceTemplate template = templateRepository.getOne(templateId);
         TemplateVO templateVO = new TemplateVO();
         BeanUtils.copyProperties(template, templateVO);
-        return templateVO;
+        return ResultVO.getSuccess(templateVO);
     }
 
-    public Page<TemplateVO> getTemplateList(int page, int pageSize) {
+    public ResultVO<Page<TemplateVO>> getTemplateList(int page, int pageSize) {
         //id降序排列，即新创建的排在前面
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "id");
         Page<DeviceTemplate> templatePage = templateRepository.findAll(pageable);
-        return templatePage.map(this::deviceTemplateToVO);
+        return ResultVO.getSuccess(templatePage.map(this::deviceTemplateToVO));
     }
 
-    public List<TemplateVO> getTemplateListByName(String name) {
+    public ResultVO<List<TemplateVO>> getTemplateListByName(String name) {
         List<DeviceTemplate> templateList = templateRepository.findByNameLike(name);
         List<TemplateVO> result = new ArrayList<>();
         templateList.forEach(t -> {
             result.add(deviceTemplateToVO(t));
         });
-        return result;
+        return ResultVO.getSuccess(result);
     }
 
     private TemplateVO deviceTemplateToVO(DeviceTemplate deviceTemplate) {

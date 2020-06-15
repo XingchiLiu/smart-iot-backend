@@ -33,8 +33,9 @@ public class TemplateController {
     }
 
     @GetMapping("/delete/{id}")
-    public void delete(@PathVariable(name = "id") int id) {
+    public ResultVO delete(@PathVariable(name = "id") int id) {
         templateService.deleteTemplate(id);
+        return ResultVO.getSuccess("删除成功");
     }
 
     /*
@@ -47,20 +48,20 @@ public class TemplateController {
 
     //返回模板信息
     @GetMapping("/get/{id}")
-    public TemplateVO get(@PathVariable(name = "id") int id) {
+    public ResultVO<TemplateVO> get(@PathVariable(name = "id") int id) {
 
         return templateService.getTemplate(id);
     }
 
     //备注：page从0开始
     @GetMapping("/list")
-    public Page<TemplateVO> list(@RequestParam(value = "page", defaultValue = "0") int page,
+    public ResultVO<Page<TemplateVO>> list(@RequestParam(value = "page", defaultValue = "0") int page,
                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return templateService.getTemplateList(page, pageSize);
     }
 
     @GetMapping("/search")
-    public List<TemplateVO> searchByName(@RequestParam("name") String name) {
+    public ResultVO<List<TemplateVO>> searchByName(@RequestParam("name") String name) {
         return templateService.getTemplateListByName(name);
     }
 }

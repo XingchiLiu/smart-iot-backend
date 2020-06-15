@@ -128,8 +128,8 @@ public class DeviceService {
      *
      * @return
      */
-    public DeviceVO getDeviceById(int id) {
-        return deviceToVO(deviceRepository.findById(id).get());
+    public ResultVO<DeviceVO> getDeviceById(int id) {
+        return ResultVO.getSuccess(deviceToVO(deviceRepository.findById(id).get()));
     }
 
     /**
@@ -139,10 +139,10 @@ public class DeviceService {
      * @param pageSize
      * @return
      */
-    public Page<DeviceVO> getDeviceList(int page, int pageSize) {
+    public ResultVO<Page<DeviceVO>> getDeviceList(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "id");
         Page<Device> devicePage = deviceRepository.findAll(pageable);
-        return devicePage.map(this::deviceToVO);
+        return ResultVO.getSuccess(devicePage.map(this::deviceToVO));
     }
 
     /**
@@ -151,13 +151,13 @@ public class DeviceService {
      * @param name
      * @return
      */
-    public List<DeviceVO> getDeviceListByName(String name) {
+    public ResultVO<List<DeviceVO>> getDeviceListByName(String name) {
         List<DeviceVO> result = new ArrayList<>();
         List<Device> found = deviceRepository.findAllByNameContaining(name);
         found.forEach(device -> {
             result.add(deviceToVO(device));
         });
-        return result;
+        return ResultVO.getSuccess(result);
     }
 
     private DeviceVO deviceToVO(Device device) {
