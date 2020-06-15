@@ -1,4 +1,4 @@
-package com.example.iot.repository.analysis;
+package com.example.iot.repository.analysis.mapper;
 
 import com.example.iot.domain.analysis.FuncParam;
 import com.example.iot.domain.analysis.OnlineAnalysisTask;
@@ -85,6 +85,6 @@ public interface OnlineAnalysisMapper {
      * @param modelId 模型id
      * @return 任务的输入字段列表
      */
-    List<OnlineAnalysisTaskDetail.InputField> getTaskInputFields(@Param("taskId") Integer taskId,
-                                                                 @Param("modelId") Integer modelId);
+    List<OnlineAnalysisTaskDetail.InputFunc> getTaskInputFields(@Param("taskId") Integer taskId,
+                                                                @Param("modelId") Integer modelId);
 }

@@ -29,6 +29,7 @@ public class OnlineAnalysisController {
     public static final String FILE_EXTENSION_ERROR = "文件后缀名错误";
     public static final String MODEL_ALREADY_EXIST = "同名的模型已存在";
     public static final String OPERATOR_CODE_EMPTY_ERROR = "算子代码不能为空";
+    public static final String OPERATOR_FUNC_EMPTY_ERROR = "算子函数名不能为空";
     public static final String OPERATOR_CODE_FORMAT_ERROR = "算子格式错误";
     public static final String UPLOAD_ERROR = "上传失败";
     public static final String UPLOAD_SUCCESS = "上传成功";
@@ -154,6 +155,9 @@ public class OnlineAnalysisController {
         if (operatorForm.getJsCode() == null || "".equals(operatorForm.getJsCode())) {
             return ResultVO.getFailed(OPERATOR_CODE_EMPTY_ERROR);
         }
+        if (operatorForm.getFuncName() == null || "".equals(operatorForm.getFuncName())) {
+            return ResultVO.getFailed(OPERATOR_FUNC_EMPTY_ERROR);
+        }
 
         if (operatorForm.getDescription() == null) {
             operatorForm.setDescription("");
@@ -184,6 +188,9 @@ public class OnlineAnalysisController {
         }
         if (operatorForm.getJsCode() == null || "".equals(operatorForm.getJsCode())) {
             return ResultVO.getFailed(OPERATOR_CODE_EMPTY_ERROR);
+        }
+        if (operatorForm.getFuncName() == null || "".equals(operatorForm.getFuncName())) {
+            return ResultVO.getFailed(OPERATOR_FUNC_EMPTY_ERROR);
         }
 
         if (operatorForm.getDescription() == null) {
@@ -232,26 +239,6 @@ public class OnlineAnalysisController {
             return ResultVO.getFailed(SERVER_ERROR);
         }
         return ResultVO.getSuccess(tasks);
-    }
-
-    /**
-     * 获取任务详情
-     *
-     * @param taskId 任务id
-     * @return 实时分析任务详情，{@link OnlineAnalysisTaskDetailVO}
-     */
-    @GetMapping("/task/detail")
-    public ResultVO getTaskDetail(@RequestParam("taskId") Integer taskId) {
-        if (taskId == null || taskId <= 0) {
-            return ResultVO.getFailed(ID_ERROR);
-        }
-
-        OnlineAnalysisTaskDetailVO taskDetail = onlineAnalysisService.getTaskDetail(taskId);
-
-        if (taskDetail == null) {
-            return ResultVO.getFailed(SERVER_ERROR);
-        }
-        return ResultVO.getSuccess(taskDetail);
     }
 
     /**
@@ -332,6 +319,26 @@ public class OnlineAnalysisController {
     }
 
     /**
+     * 获取任务详情
+     *
+     * @param taskId 任务id
+     * @return 实时分析任务详情，{@link OnlineAnalysisTaskDetailVO}
+     */
+    @GetMapping("/task/detail")
+    public ResultVO getTaskDetail(@RequestParam("taskId") Integer taskId) {
+        if (taskId == null || taskId <= 0) {
+            return ResultVO.getFailed(ID_ERROR);
+        }
+
+        OnlineAnalysisTaskDetailVO taskDetail = onlineAnalysisService.getTaskDetail(taskId);
+
+        if (taskDetail == null) {
+            return ResultVO.getFailed(SERVER_ERROR);
+        }
+        return ResultVO.getSuccess(taskDetail);
+    }
+
+    /**
      * 执行实时分析任务
      *
      * @param taskId 任务id
@@ -339,6 +346,15 @@ public class OnlineAnalysisController {
      */
     @GetMapping("/task/execute")
     public ResultVO executeTask(@RequestParam("taskId") Integer taskId) {
-        return null;
+        if (taskId == null || taskId <= 0) {
+            return ResultVO.getFailed(ID_ERROR);
+        }
+
+        OnlineAnalysisTaskResult taskResult = onlineAnalysisService.executeTask(taskId);
+
+        if (taskResult == null) {
+            return ResultVO.getFailed(SERVER_ERROR);
+        }
+        return ResultVO.getSuccess(taskResult);
     }
 }

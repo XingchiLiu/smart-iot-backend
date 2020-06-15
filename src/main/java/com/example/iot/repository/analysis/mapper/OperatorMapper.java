@@ -1,4 +1,4 @@
-package com.example.iot.repository.analysis;
+package com.example.iot.repository.analysis.mapper;
 
 import com.example.iot.domain.analysis.Operator;
 import org.apache.ibatis.annotations.Mapper;

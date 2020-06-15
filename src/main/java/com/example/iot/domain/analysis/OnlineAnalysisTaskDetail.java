@@ -1,6 +1,5 @@
 package com.example.iot.domain.analysis;
 
-import com.example.iot.domain.ChannelDataField;
 import com.example.iot.domain.DeviceChannel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class OnlineAnalysisTaskDetail {
     private String description;
     private Model model;
     private List<DeviceChannel> channels;
-    private List<InputField> inputFields;
+    private List<InputFunc> inputFuncs;
 
     /**
      * 模型输入字段对应的算子和参数
@@ -28,14 +27,14 @@ public class OnlineAnalysisTaskDetail {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class InputField {
+    public static class InputFunc {
         private Integer inputFieldId;
 
         private ModelField inputField;
         private Operator operator;
         private List<FuncField> channelDataFields;
 
-        public InputField(Integer inputFieldId) {
+        public InputFunc(Integer inputFieldId) {
             this.inputFieldId = inputFieldId;
         }
     }
@@ -50,5 +49,6 @@ public class OnlineAnalysisTaskDetail {
         private Integer index;
         private Integer fieldId;
         private String fieldName;
+        private Integer channelId;
     }
 }

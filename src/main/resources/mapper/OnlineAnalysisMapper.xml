@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.iot.repository.analysis.OnlineAnalysisMapper">
+<mapper namespace="com.example.iot.repository.analysis.mapper.OnlineAnalysisMapper">
     <!--     online_analysis_task      -->
     <select id="getAllTask" resultMap="OnlineAnalysisTask">
         select *
@@ -134,9 +134,11 @@
             op.operator_name as operator_name,
             op.operator_description as operator_description,
             op.js_code as operator_js_code,
+            op.func_name as operator_func_name,
             params.param_index as param_index,
             cfields.id as param_field_id,
-            cfields.field_name as param_field_name
+            cfields.field_name as param_field_name,
+            cfields.channel_id as param_channel_id
         from (select *
             from model_input_field fields
             where fields.model_id = #{modelId}) ins
@@ -146,7 +148,7 @@
         left join channel_data_field cfields on cfields.id = params.channel_field_id;
     </select>
 
-    <resultMap id="InputField" type="com.example.iot.domain.analysis.OnlineAnalysisTaskDetail$InputField">
+    <resultMap id="InputField" type="com.example.iot.domain.analysis.OnlineAnalysisTaskDetail$InputFunc">
         <constructor>
             <idArg column="input_field_id" javaType="Integer"/>
         </constructor>
@@ -168,11 +170,13 @@
         <result property="name" column="operator_name"/>
         <result property="description" column="operator_description"/>
         <result property="jsCode" column="operator_js_code"/>
+        <result property="funcName" column="operator_func_name"/>
     </resultMap>
 
     <resultMap id="FuncField" type="com.example.iot.domain.analysis.OnlineAnalysisTaskDetail$FuncField">
         <result property="index" column="param_index"/>
         <result property="fieldId" column="param_field_id"/>
         <result property="fieldName" column="param_field_name"/>
+        <result property="channelId" column="param_channel_id"/>
     </resultMap>
 </mapper>

@@ -23,4 +23,8 @@ public class OperatorForm {
      * javascript代码
      */
     private String jsCode;
+    /**
+     * 函数名称
+     */
+    private String funcName;
 }

@@ -86,14 +86,6 @@ public interface OnlineAnalysisService {
     List<OnlineAnalysisTaskVO> getAllTask();
 
     /**
-     * 获取任务详情
-     *
-     * @param taskId 任务id
-     * @return 实时分析任务详情，{@link OnlineAnalysisTaskDetailVO}
-     */
-    OnlineAnalysisTaskDetailVO getTaskDetail(Integer taskId);
-
-    /**
      * 创建实时分析任务
      *
      * @param taskForm 实时分析任务表单
@@ -117,6 +109,14 @@ public interface OnlineAnalysisService {
      * @return 删除结果
      */
     boolean deleteTask(Integer taskId);
+
+    /**
+     * 获取任务详情
+     *
+     * @param taskId 任务id
+     * @return 实时分析任务详情，{@link OnlineAnalysisTaskDetailVO}
+     */
+    OnlineAnalysisTaskDetailVO getTaskDetail(Integer taskId);
 
     /**
      * 执行实时分析任务

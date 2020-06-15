@@ -1,6 +1,5 @@
 package com.example.iot.controller.VO.analysis;
 
-import com.example.iot.domain.ChannelDataField;
 import com.example.iot.domain.DeviceChannel;
 import com.example.iot.domain.analysis.OnlineAnalysisTaskDetail;
 import com.example.iot.domain.analysis.OnlineAnalysisTaskDetail.*;
@@ -42,7 +41,7 @@ public class OnlineAnalysisTaskDetailVO {
     /**
      * 输入字段算子
      */
-    private List<InputFieldVO> inputFields;
+    private List<InputFuncVO> inputFields;
 
     /**
      * 数据通道
@@ -84,7 +83,7 @@ public class OnlineAnalysisTaskDetailVO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class InputFieldVO {
+    public static class InputFuncVO {
         /**
          * PMML模型输入字段id
          */
@@ -102,11 +101,11 @@ public class OnlineAnalysisTaskDetailVO {
          */
         private List<ChannelField> channelFields;
 
-        public InputFieldVO(InputField inputField) {
-            this.inputFieldId = inputField.getInputField().getFieldId();
-            this.inputFieldName = inputField.getInputField().getFieldName();
-            this.operator = new OperatorVO(inputField.getOperator());
-            this.channelFields = inputField.getChannelDataFields().stream()
+        public InputFuncVO(InputFunc inputFunc) {
+            this.inputFieldId = inputFunc.getInputField().getFieldId();
+            this.inputFieldName = inputFunc.getInputField().getFieldName();
+            this.operator = new OperatorVO(inputFunc.getOperator());
+            this.channelFields = inputFunc.getChannelDataFields().stream()
                     .map(ChannelField::new)
                     .sorted(Comparator.comparing(ChannelField::getIndex))
                     .collect(Collectors.toList());
@@ -121,8 +120,8 @@ public class OnlineAnalysisTaskDetailVO {
         this.channels = taskDetail.getChannels().stream()
                 .map(DataChannel::new)
                 .collect(Collectors.toList());
-        this.inputFields = taskDetail.getInputFields().stream()
-                .map(InputFieldVO::new)
+        this.inputFields = taskDetail.getInputFuncs().stream()
+                .map(InputFuncVO::new)
                 .collect(Collectors.toList());
     }
 }

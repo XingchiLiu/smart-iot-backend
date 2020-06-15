@@ -2,7 +2,7 @@ package com.example.iot.service.analysis.impl;
 
 import com.example.iot.controller.VO.analysis.DeviceDataVO;
 import com.example.iot.domain.analysis.DeviceData;
-import com.example.iot.repository.analysis.DeviceMapper;
+import com.example.iot.repository.analysis.mapper.DeviceMapper;
 import com.example.iot.service.analysis.AnalysisUtilService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -11,7 +11,7 @@ public enum FieldType {
     /**
      * 数字类型
      */
-    INTEGER(1),
+    DECIMAL(1),
     /**
      * 字符串类型
      */
@@ -28,7 +28,7 @@ public enum FieldType {
             case 0:
                 return BOOLEAN;
             case 1:
-                return INTEGER;
+                return DECIMAL;
             case 2:
                 return STRING;
             default:

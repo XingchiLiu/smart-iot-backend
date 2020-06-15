@@ -29,6 +29,10 @@ public class Operator {
      * 算子javascript代码
      */
     private String jsCode;
+    /**
+     * 函数名称
+     */
+    private String funcName;
 
     public Operator(OperatorForm operatorForm) {
         BeanUtils.copyProperties(operatorForm, this);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.iot.repository.analysis.OperatorMapper">
+<mapper namespace="com.example.iot.repository.analysis.mapper.OperatorMapper">
     <select id="getAllOperator" resultMap="Operator">
         select *
         from operator;
@@ -13,13 +13,14 @@
     </select>
 
     <insert id="insertOperator" useGeneratedKeys="true" keyProperty="operatorId">
-        insert into operator(operator_name, operator_description, js_code)
-        values (#{name}, #{description}, #{jsCode});
+        insert into operator(operator_name, operator_description, js_code, func_name)
+        values (#{name}, #{description}, #{jsCode}, #{funcName});
     </insert>
 
     <update id="updateOperator">
         update operator o
-        set o.operator_name = #{name}, o.operator_description = #{description}, o.js_code = #{jsCode}
+        set o.operator_name = #{name}, o.operator_description = #{description},
+            o.js_code = #{jsCode}, o.func_name = #{funcName}
         where o.operator_id = #{operatorId}
     </update>
 
@@ -33,5 +34,6 @@
         <result property="name" column="operator_name"/>
         <result property="description" column="operator_description"/>
         <result property="jsCode" column="js_code"/>
+        <result property="funcName" column="func_name"/>
     </resultMap>
 </mapper>

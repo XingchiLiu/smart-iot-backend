@@ -1,21 +1,29 @@
 package com.example.iot.service.analysis.impl;
 
 import com.example.iot.controller.VO.analysis.*;
+import com.example.iot.domain.DeviceMessage;
 import com.example.iot.domain.analysis.*;
-import com.example.iot.repository.analysis.ModelMapper;
-import com.example.iot.repository.analysis.OnlineAnalysisMapper;
-import com.example.iot.repository.analysis.OperatorMapper;
+import com.example.iot.domain.analysis.ModelField;
+import com.example.iot.domain.analysis.OnlineAnalysisTaskDetail.*;
+import com.example.iot.repository.analysis.mapper.ModelMapper;
+import com.example.iot.repository.analysis.mapper.OnlineAnalysisMapper;
+import com.example.iot.repository.analysis.mapper.OperatorMapper;
+import com.example.iot.repository.analysis.repo.DeviceMessageRepo;
 import com.example.iot.service.analysis.OnlineAnalysisService;
+import com.example.iot.util.Parameter;
 import lombok.extern.slf4j.Slf4j;
-import org.jpmml.evaluator.Evaluator;
-import org.jpmml.evaluator.InputField;
-import org.jpmml.evaluator.LoadingModelEvaluatorBuilder;
+import org.dmg.pmml.FieldName;
+import org.jpmml.evaluator.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.*;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +41,13 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
     private OperatorMapper operatorMapper;
     @Resource
     private OnlineAnalysisMapper onlineAnalysisMapper;
+
+    private DeviceMessageRepo deviceMessageRepo;
+
+    @Autowired
+    public OnlineAnalysisServiceImpl(DeviceMessageRepo deviceMessageRepo) {
+        this.deviceMessageRepo = deviceMessageRepo;
+    }
 
     /*------ 模型 ------*/
 
@@ -240,30 +255,6 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
     }
 
     @Override
-    public OnlineAnalysisTaskDetailVO getTaskDetail(Integer taskId) {
-        try {
-            //Step 1: 实时分析任务基本信息
-            OnlineAnalysisTaskDetail taskDetail = onlineAnalysisMapper.getTaskDetail(taskId);
-            if (taskDetail == null || taskDetail.getModel() == null
-                    || taskDetail.getChannels() == null) {
-                return null;
-            }
-            //Step 2: 根据taskId和modelId获取输入字段
-            List<OnlineAnalysisTaskDetail.InputField> inputFields = onlineAnalysisMapper
-                    .getTaskInputFields(taskId, taskDetail.getModel().getModelId());
-            if(inputFields == null) {
-                return null;
-            }
-            taskDetail.setInputFields(inputFields);
-            return new OnlineAnalysisTaskDetailVO(taskDetail);
-        } catch (Exception e) {
-            log.error("Server Error: getTaskDetail(" + taskId + ")");
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
     public boolean saveTask(OnlineAnalysisTaskForm taskForm) {
         try {
             return saveTask(null, taskForm);
@@ -345,7 +336,148 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
     }
 
     @Override
+    public OnlineAnalysisTaskDetailVO getTaskDetail(Integer taskId) {
+        try {
+            OnlineAnalysisTaskDetail taskDetail = getTaskDetailInfo(taskId);
+            if (taskDetail == null) {
+                return null;
+            }
+            return new OnlineAnalysisTaskDetailVO(taskDetail);
+        } catch (Exception e) {
+            log.error("Server Error: getTaskDetail(" + taskId + ")");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private OnlineAnalysisTaskDetail getTaskDetailInfo(Integer taskId) {
+        //Step 1: 实时分析任务基本信息
+        OnlineAnalysisTaskDetail taskDetail = onlineAnalysisMapper.getTaskDetail(taskId);
+        if (taskDetail == null || taskDetail.getModel() == null
+                || taskDetail.getChannels() == null) {
+            return null;
+        }
+        //Step 2: 根据taskId和modelId获取输入字段
+        List<InputFunc> inputFuncs = onlineAnalysisMapper
+                .getTaskInputFields(taskId, taskDetail.getModel().getModelId());
+        if (inputFuncs == null) {
+            return null;
+        }
+        taskDetail.setInputFuncs(inputFuncs);
+        return taskDetail;
+    }
+
+    @Override
     public OnlineAnalysisTaskResult executeTask(Integer taskId) {
-        return null;
+        OnlineAnalysisTaskResult result;
+        try {
+            OnlineAnalysisTaskDetail taskDetail = getTaskDetailInfo(taskId);
+            if (taskDetail == null) {
+                return null;
+            }
+            // Step 1: 获取数据通道最近的数据
+            if (taskDetail.getChannels() == null) {
+                return null;
+            }
+            Map<String, DeviceMessage> channelMsgs = new HashMap<>();
+            try {
+                List<String> channelIds = taskDetail.getChannels().stream()
+                        .map(deviceChannel -> String.valueOf(deviceChannel.getId()))
+                        .collect(Collectors.toList());
+
+                for (String channelId : channelIds) {
+                    DeviceMessage msg = deviceMessageRepo.getLastMsgByTopic(channelId);
+                    if (msg == null) {
+                        return null;
+                    }
+                    channelMsgs.put(channelId, msg);
+                }
+            } catch (Exception e) {
+                log.error("Server Error: executeTask(" + taskId + ") - get device message error");
+                e.printStackTrace();
+                return null;
+            }
+
+            // Step 2: 加载PMML模型
+            if (taskDetail.getModel() == null || taskDetail.getModel().getFilename() == null) {
+                return null;
+            }
+            Evaluator evaluator;
+            try {
+                String filePath = SAVE_DIRECTORY + SEPARATOR + taskDetail.getModel().getFilename();
+                evaluator = new LoadingModelEvaluatorBuilder().load(new File(filePath)).build();
+                evaluator.verify();
+            } catch (Exception e) {
+                log.error("Server Error: executeTask(" + taskId + ") - load pmml model error");
+                e.printStackTrace();
+                return null;
+            }
+            // Step 3: 通过算子对数据通道字段进行预处理
+            if (taskDetail.getInputFuncs() == null) {
+                return null;
+            }
+            Map<FieldName, FieldValue> arguments = new LinkedHashMap<>();
+            try {
+                List<? extends InputField> inputFields = evaluator.getInputFields();
+                Map<String, InputFunc> inputFuncs = taskDetail.getInputFuncs().stream()
+                        .collect(Collectors.toMap(
+                                inputFunc -> inputFunc.getInputField().getFieldName(),
+                                inputFunc -> inputFunc));
+                for (InputField inputField : inputFields) {
+                    FieldName inputFieldName = inputField.getName();
+                    InputFunc inputFunc = inputFuncs.get(inputFieldName.getValue());
+                    if (inputFunc == null || inputFunc.getOperator() == null
+                            || inputFunc.getChannelDataFields() == null) {
+                        return null;
+                    }
+                    // 转换算子的输入参数
+                    List<Parameter> parameters = inputFunc.getChannelDataFields().stream()
+                            .map(funcField -> {
+                                DeviceMessage msg = channelMsgs.get(funcField.getChannelId().toString());
+                                if (msg == null) {
+                                    return null;
+                                }
+                                Object param = msg.getDataMap().get(funcField.getFieldName());
+                                if (param == null) {
+                                    return null;
+                                }
+                                return new Parameter(funcField.getIndex(), param);
+                            })
+                            .collect(Collectors.toList());
+                    Object jsResult = runJsCode(inputFunc.getOperator().getFuncName(),
+                            inputFunc.getOperator().getJsCode(), parameters);
+                    FieldValue inputFieldValue = FieldValue
+                            .create(inputField.getDataType(), inputField.getOpType(), jsResult);
+                    arguments.put(inputFieldName, inputFieldValue);
+                }
+            } catch (Exception e) {
+                log.error("Server Error: executeTask(" + taskId + ") - execute operator error");
+                e.printStackTrace();
+                return null;
+            }
+            // Step 4: 运行PMML模型，获得任务结果
+            Map<FieldName, ?> results = evaluator.evaluate(arguments);
+            Map<String, ?> resultRecord = EvaluatorUtil.decodeAll(results);
+            result = new OnlineAnalysisTaskResult(resultRecord);
+        } catch (Exception e) {
+            log.error("Server Error: executeTask(" + taskId + ")");
+            e.printStackTrace();
+            return null;
+        }
+        return result;
+    }
+
+
+    private Object runJsCode(String funcName, String jsCode, List<Parameter> parameters) throws Exception {
+        List<Object> params = new ArrayList<>(parameters.size());
+        parameters.sort(Comparator.comparing(Parameter::getIndex));
+        for (Parameter p : parameters) {
+            params.add(p.getParam());
+        }
+
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+        engine.eval(jsCode);
+        Invocable invocable = (Invocable) engine;
+        return invocable.invokeFunction(funcName, params.toArray());
     }
 }

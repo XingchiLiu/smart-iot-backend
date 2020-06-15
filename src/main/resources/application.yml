@@ -25,6 +25,7 @@ logging:
 
 mybatis:
   mapper-locations: classpath:mapper/*
+
 mqtt:
   username: test
   password: test

@@ -29,6 +29,10 @@ public class OperatorVO {
      * 算子javascript代码
      */
     private String jsCode;
+    /**
+     * 函数名称
+     */
+    private String funcName;
 
     public OperatorVO(Operator operator) {
         BeanUtils.copyProperties(operator, this);

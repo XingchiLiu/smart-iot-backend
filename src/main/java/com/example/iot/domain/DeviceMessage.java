@@ -4,9 +4,8 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Document(collection = "device_message")
 @Data
@@ -27,4 +26,9 @@ public class DeviceMessage implements Serializable {
     // 要发送的数据
     private List<Map<String, Object>> data;
 
+    public Map<String, Object> getDataMap() {
+        return data.stream()
+                .flatMap(map -> map.entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
 }
