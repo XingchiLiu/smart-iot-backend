@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
  * @author: lxc
  * @email 171250576@smail.nju.edu.cn
  * @date: 2020/2/20
- * @description:
- * 实现CommandLineRunner接口，会随项目启动的时候运行run函数
+ * @description: 实现CommandLineRunner接口，会随项目启动的时候运行run函数
  */
 @Component
 public class DbLoader implements CommandLineRunner {
@@ -30,7 +29,7 @@ public class DbLoader implements CommandLineRunner {
 //        new Thread(this::loadUser).start();
     }
 
-    public void loadUser(){
+    public void loadUser() {
 
     }
 

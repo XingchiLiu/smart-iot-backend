@@ -1,14 +1,21 @@
 package com.example.iot.service.ConnectionService.connectionCore;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.iot.service.DeviceMessageAndDemandService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+@Component
 public class MessageReceiver {
-    private static ArrayList<JSONObject> receivedMessages = new ArrayList<>();
+    @Autowired
+    DeviceMessageAndDemandService deviceMessageAndDemandService;
+
+    private ArrayList<JSONObject> receivedMessages = new ArrayList<>();
 //    private static ArrayList<String> receivedRawMessages = new ArrayList<>();
 
-    public static JSONObject returnResponse(String topic, String response) {
+    public JSONObject returnResponse(String topic, String response) {
         System.out.println("Core: response received!");
 
         new Thread(new Runnable() {
@@ -18,11 +25,16 @@ public class MessageReceiver {
                 System.out.println("Received Message: " + message);
                 receivedMessages.add(message);
                 System.out.println("Received Message Size: " + receivedMessages.size());
+
+
+                deviceMessageAndDemandService.generateAndSaveMessageFromJson(message);
             }
 
         }).start();
 
         return JSONObject.parseObject(response);
     }
+
+
 }
 

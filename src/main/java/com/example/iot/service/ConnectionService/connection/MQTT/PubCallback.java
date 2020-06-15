@@ -3,7 +3,9 @@ package com.example.iot.service.ConnectionService.connection.MQTT;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PubCallback implements MqttCallbackExtended {
     public void connectComplete(boolean b, String s) {
         System.out.println("Pub: Connection Ready!");

@@ -5,7 +5,8 @@ import com.example.iot.domain.ChannelDataField;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ChannelDataFieldServiceTest extends IotApplicationTests {
     @Autowired

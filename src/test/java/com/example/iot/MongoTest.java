@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author: lxc
@@ -14,13 +16,13 @@ import static org.junit.Assert.*;
  * @date: 2020/5/21
  * @description:
  */
-public class MongoTest extends IotApplicationTests{
+public class MongoTest extends IotApplicationTests {
 
     @Autowired
     MongoTemplate mongoTemplate;
 
     @Test
-    public void test1(){
+    public void test1() {
         TestForMongo test = new TestForMongo();
         test.setName("lxc");
         test.setInfo("test");

@@ -17,7 +17,7 @@ public class GroupTest extends IotApplicationTests {
     GroupRepository groupRepository;
 
     @Test
-    public void test1(){
+    public void test1() {
         DeviceGroup group = new DeviceGroup();
         group.setTemplateId(6);
         group.setName("test");

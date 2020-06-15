@@ -31,7 +31,7 @@ public class CORSConfiguration {
         corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
-         corsConfiguration.setAllowCredentials(true); // 跨域session共享
+        corsConfiguration.setAllowCredentials(true); // 跨域session共享
         source.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(source);
     }

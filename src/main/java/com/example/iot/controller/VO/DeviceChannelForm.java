@@ -8,11 +8,11 @@ import lombok.Data;
 @ApiModel
 public class DeviceChannelForm {
 
-    @ApiModelProperty(value="id",required = false)
+    @ApiModelProperty(value = "id", required = false)
     private int id;
 
     // 数据通道的类型 0：向上 1：向下
-    @ApiModelProperty(value="数据通道的类型")
+    @ApiModelProperty(value = "数据通道的类型")
     private int channelType;
 
     // 此通道所属的设备id

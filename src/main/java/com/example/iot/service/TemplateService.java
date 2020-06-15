@@ -23,7 +23,6 @@ import java.util.Optional;
  * @email 171250576@smail.nju.edu.cn
  * @date: 2020/5/24
  * @description:设备模板
- *
  */
 @Service
 public class TemplateService {
@@ -38,10 +37,10 @@ public class TemplateService {
     ChannelDataFieldService channelDataFieldService;
 
 
-    public ResultVO addTemplate(TemplateForm templateForm){
+    public ResultVO addTemplate(TemplateForm templateForm) {
         //判断模板名字是否重复
         Optional<DeviceTemplate> optionalDeviceTemplate = templateRepository.findByName(templateForm.getName());
-        if(optionalDeviceTemplate.isPresent()){
+        if (optionalDeviceTemplate.isPresent()) {
             return ResultVO.getFailed("创建失败，有相同名字的模板");
         }
         DeviceTemplate deviceTemplate = new DeviceTemplate();
@@ -60,7 +59,7 @@ public class TemplateService {
         groupService.createProductGroup(result);
 
         //如果设置了数据通道
-        if(templateForm.getChannelType() != -1) {
+        if (templateForm.getChannelType() != -1) {
             //获得设备模板id
             int templateId = result.getId();
 
@@ -68,7 +67,7 @@ public class TemplateService {
             int channelId = channelService.addTemplateChannel(templateForm.getChannelType(), templateId, templateForm.getChannelName());
 
             // 创建数据通道里的字段
-            if(templateForm.getChannelData() != null && !templateForm.getChannelData().isEmpty()) {
+            if (templateForm.getChannelData() != null && !templateForm.getChannelData().isEmpty()) {
                 channelDataFieldService.addDataFields(templateForm.getChannelData(), channelId, 0);
             }
         }
@@ -79,25 +78,23 @@ public class TemplateService {
     /*
     删除模板，但不会删除其对应的设备
      */
-    public void deleteTemplate(int id){
+    public void deleteTemplate(int id) {
         templateRepository.deleteById(id);
     }
 
     /**
-     *
      * @param templateForm
      * @return 只返回成功还是失败
      */
-    public ResultVO updateTemplate(int templateId, TemplateForm templateForm){
+    public ResultVO updateTemplate(int templateId, TemplateForm templateForm) {
         DeviceTemplate deviceTemplate = templateRepository.findById(templateId).get();
         //设置名字
-        if(deviceTemplate.getName().equals(templateForm.getName())){
+        if (deviceTemplate.getName().equals(templateForm.getName())) {
             //do nothing
-        }
-        else{
+        } else {
             //名字查重
             Optional<DeviceTemplate> optionalDeviceTemplate = templateRepository.findByName(templateForm.getName());
-            if(optionalDeviceTemplate.isPresent()){
+            if (optionalDeviceTemplate.isPresent()) {
                 return ResultVO.getFailed("更新失败，有相同名字的模板");
             }
             deviceTemplate.setName(templateForm.getName());
@@ -109,34 +106,33 @@ public class TemplateService {
     }
 
     /**
-     *
      * @param templateId
      * @return 模板的展示形式
      */
-    public TemplateVO getTemplate(int templateId){
+    public TemplateVO getTemplate(int templateId) {
         DeviceTemplate template = templateRepository.getOne(templateId);
         TemplateVO templateVO = new TemplateVO();
         BeanUtils.copyProperties(template, templateVO);
         return templateVO;
     }
 
-    public Page<TemplateVO> getTemplateList(int page, int pageSize){
+    public Page<TemplateVO> getTemplateList(int page, int pageSize) {
         //id降序排列，即新创建的排在前面
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "id");
         Page<DeviceTemplate> templatePage = templateRepository.findAll(pageable);
         return templatePage.map(this::deviceTemplateToVO);
     }
 
-    public List<TemplateVO> getTemplateListByName(String name){
+    public List<TemplateVO> getTemplateListByName(String name) {
         List<DeviceTemplate> templateList = templateRepository.findByNameLike(name);
         List<TemplateVO> result = new ArrayList<>();
-        templateList.forEach(t->{
+        templateList.forEach(t -> {
             result.add(deviceTemplateToVO(t));
         });
         return result;
     }
 
-    private TemplateVO deviceTemplateToVO(DeviceTemplate deviceTemplate){
+    private TemplateVO deviceTemplateToVO(DeviceTemplate deviceTemplate) {
         TemplateVO result = new TemplateVO();
         BeanUtils.copyProperties(deviceTemplate, result);
         return result;

@@ -3,7 +3,6 @@ package com.example.iot.controller.VO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.util.Date;
 
 /**
@@ -29,7 +28,7 @@ public class TemplateVO {
     private String description;
 
     //创建时间，系统自动修改
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
     //更新时间，系统自动修改
     private Date updateTime;

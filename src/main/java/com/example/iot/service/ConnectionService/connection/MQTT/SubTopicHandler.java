@@ -13,20 +13,22 @@ public class SubTopicHandler {
     private static ArrayList<String> topics = new ArrayList<>();
     private static ArrayList<Integer> qoses = new ArrayList<>();
 
-    public static void setMqttClient(MqttClient client){mqttClient = client;}
-
-    public SubTopicHandler(MqttClient mqttClient){
-        this.mqttClient = mqttClient;
+    public SubTopicHandler(MqttClient mqttClient) {
+        SubTopicHandler.mqttClient = mqttClient;
         topics = new ArrayList<>();
         qoses = new ArrayList<>();
+    }
+
+    public static void setMqttClient(MqttClient client) {
+        mqttClient = client;
     }
 
     public static void addSub(String[] addedTopics, int addedQos) throws MqttException {
         int[] addedQoses = new int[addedTopics.length];
         Arrays.fill(addedQoses, addedQos);
 
-        for(int i = 0; i < addedTopics.length; i++){
-            if(!topics.contains(addedTopics[i])){
+        for (int i = 0; i < addedTopics.length; i++) {
+            if (!topics.contains(addedTopics[i])) {
                 topics.add(addedTopics[i]);
                 qoses.add(addedQos);
             }
@@ -36,7 +38,7 @@ public class SubTopicHandler {
     }
 
     public static void addSub(String addedTopic, int addedQos) throws MqttException {
-        if(!topics.contains(addedTopic)){
+        if (!topics.contains(addedTopic)) {
             topics.add(addedTopic);
             qoses.add(addedQos);
         }
@@ -44,9 +46,9 @@ public class SubTopicHandler {
     }
 
     public static void removeSub(String[] removedTopics) throws MqttException {
-        for(int i = 0; i < removedTopics.length; i++){
+        for (int i = 0; i < removedTopics.length; i++) {
             int index = topics.indexOf(removedTopics[i]);
-            if(index != -1){
+            if (index != -1) {
                 topics.remove(index);
                 qoses.remove(index);
             }
@@ -56,7 +58,7 @@ public class SubTopicHandler {
 
     public static void removeSub(String removedTopic) throws MqttException {
         int index = topics.indexOf(removedTopic);
-        if(index != -1){
+        if (index != -1) {
             topics.remove(removedTopic);
             qoses.remove(index);
         }
@@ -65,9 +67,9 @@ public class SubTopicHandler {
 
     public static void reSub() throws MqttException {
         int size = topics.size();
-        String[] addedTopics = (String[]) topics.toArray(new String[size]);
+        String[] addedTopics = topics.toArray(new String[size]);
         int[] addedQoses = new int[size];
-        for(int i = 0; i < qoses.size(); i++){
+        for (int i = 0; i < qoses.size(); i++) {
             addedQoses[i] = qoses.get(i);
         }
         mqttClient.subscribe(addedTopics, addedQoses);

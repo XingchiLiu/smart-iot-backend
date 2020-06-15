@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date: 2020/6/2
  * @description:
  */
-public class TemplateTest extends IotApplicationTests{
+public class TemplateTest extends IotApplicationTests {
 
     @Autowired
     TemplateRepository templateRepository;
@@ -23,7 +23,7 @@ public class TemplateTest extends IotApplicationTests{
     @Test
     @Ignore
     //添加数据
-    public void test1(){
+    public void test1() {
         TemplateForm templateForm = new TemplateForm();
         templateForm.setName("product_test");
         templateForm.setConnectionType("MQTT");
@@ -32,7 +32,7 @@ public class TemplateTest extends IotApplicationTests{
 
     //查找数据
     @Test
-    public void test2(){
+    public void test2() {
         System.out.println(templateRepository.findById(3));
     }
 
@@ -40,7 +40,7 @@ public class TemplateTest extends IotApplicationTests{
      * 用来测试模板的按名查找功能
      */
     @Test
-    public void test3(){
+    public void test3() {
         System.out.println(templateService.getTemplateListByName("est"));
     }
 
@@ -48,7 +48,7 @@ public class TemplateTest extends IotApplicationTests{
      * 测试模板的分页功能
      */
     @Test
-    public void test4(){
-        System.out.println(templateService.getTemplateList(0,5).getContent());
+    public void test4() {
+        System.out.println(templateService.getTemplateList(0, 5).getContent());
     }
 }
