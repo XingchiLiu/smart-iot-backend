@@ -1,5 +1,6 @@
 package com.example.iot.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.IotApplicationTests;
 import com.example.iot.domain.Rule;
@@ -31,8 +32,12 @@ class RuleServiceTest extends IotApplicationTests {
         when(ruleRepository.getAllByDeviceId(10)).thenReturn(rules);
 
         JSONObject data = new JSONObject();
+        JSONArray messages = new JSONArray();
+        JSONObject string = new JSONObject();
+        string.put("string", 70);
+        messages.add(string);
         data.put("deviceId", 10);
-        data.put("string", 70);
+        data.put("messages", messages);
         ruleService.filterAndExecute(data);
     }
 }

@@ -1,6 +1,15 @@
 package com.example.iot.service.RuleService;
 
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 /**
  * @author Karson
@@ -14,8 +23,15 @@ public class ForwardAction extends Action {
 
     @Override
     public void execute() {
-        //TODO:向数据库转发数据。
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://" + this.target;
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+        HttpEntity<String> formEntity = new HttpEntity<String>(data.toString(), headers);
+        ResponseEntity<String> res= restTemplate.postForEntity(url,formEntity,String.class);
 
-        System.out.println("targetDB: " + target + ", data: " + data);
+        System.out.println(res.getBody());
     }
 }
