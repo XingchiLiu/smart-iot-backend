@@ -44,6 +44,7 @@ public class DeviceVO extends Device {
     /**
      * 下面是比类Device多增加的部分
      */
+    private String templateName;
     //最后联络时间，值设备最后一次上报数据的时间
     private Date lastContactTime;
 }

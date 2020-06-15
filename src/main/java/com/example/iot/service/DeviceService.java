@@ -159,6 +159,11 @@ public class DeviceService {
 
         DeviceVO deviceVO = new DeviceVO();
         BeanUtils.copyProperties(device, deviceVO);
+        //查询模板名
+        Optional<DeviceTemplate> deviceTemplateOptional = templateRepository.findById(device.getTemplateId());
+        if(deviceTemplateOptional.isPresent()){
+            deviceVO.setTemplateName(deviceTemplateOptional.get().getName());
+        }
         //TODO 查询最近的数据上报时间
         Date lastTime = null;
         deviceVO.setLastContactTime(lastTime);

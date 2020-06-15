@@ -4,6 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+    # useUnicode=true&amp&characterEncoding=utf-8
     url: jdbc:mysql://101.37.80.37:3306/smart_iot?useSSL=false&&serverTimezone=GMT%2B8&useLegacyDatetimeCode=false
     username: root
     password: 123456
