@@ -26,7 +26,7 @@ public class TimingAnalysisForm {
     /**
      * 时间间隔，以分钟为单位
      */
-    private Long interval;
+    private Long intervalMinutes;
     /**
      * 度量结点
      */

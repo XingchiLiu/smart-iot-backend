@@ -1,7 +1,9 @@
 package com.example.iot.repository.analysis.mapper;
 
+import com.example.iot.domain.ChannelDataField;
 import com.example.iot.domain.analysis.DeviceData;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,4 +18,11 @@ public interface DeviceMapper {
      * @return 设备信息列表，{@link DeviceData}
      */
     List<DeviceData> getAllDevicesInfo();
+
+    /**
+     * 根据字段id获取数据通道字段
+     * @param fieldId 字段id
+     * @return 数据通道字段
+     */
+    ChannelDataField getChannelDataFieldById(@Param("fieldId") Integer fieldId);
 }

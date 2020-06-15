@@ -40,7 +40,7 @@ public class TimingAnalysisController {
      */
     @PostMapping("/line-chart")
     public ResultVO analysisByLineChart(@RequestBody TimingAnalysisForm form) {
-        if (form.getInterval() == null || form.getInterval() <= 0) {
+        if (form.getIntervalMinutes() == null || form.getIntervalMinutes() <= 0) {
             return ResultVO.getFailed(TIME_INTERVAL_PARAM_ERROR);
         }
         if (form.getStartTime() == null || form.getEndTime() == null
@@ -56,6 +56,6 @@ public class TimingAnalysisController {
         if (lineChart == null) {
             return ResultVO.getFailed(TIMING_ANALYSIS_ERROR);
         }
-        return ResultVO.getSuccess(form);
+        return ResultVO.getSuccess(lineChart);
     }
 }

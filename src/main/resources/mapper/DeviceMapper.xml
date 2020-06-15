@@ -5,10 +5,12 @@
         select
         <include refid="deviceColumns">
             <property name="alias" value="d"/>
-        </include>,
+        </include>
+        ,
         <include refid="deviceChannelColumns">
             <property name="alias" value="dc"/>
-        </include>,
+        </include>
+        ,
         <include refid="channelDataFieldColumns">
             <property name="alias" value="cdf"/>
         </include>
@@ -17,6 +19,16 @@
         left join channel_data_field cdf on dc.id = cdf.channel_id
         where cdf.channel_type = 0;
     </select>
+
+    <select id="getChannelDataFieldById" resultMap="ChannelDataField">
+        select
+        <include refid="channelDataFieldColumns">
+            <property name="alias" value="cdf"/>
+        </include>
+        from channel_data_field cdf
+        where cdf.id = #{fieldId};
+    </select>
+
 
     <resultMap id="DeviceData" type="com.example.iot.domain.analysis.DeviceData">
         <constructor>

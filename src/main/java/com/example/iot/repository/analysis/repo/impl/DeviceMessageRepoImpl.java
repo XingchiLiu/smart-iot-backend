@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,16 +26,24 @@ public class DeviceMessageRepoImpl implements DeviceMessageRepo {
 
     @Override
     public DeviceMessage getLastMsgByTopic(String topic) {
-        Criteria criteria = Criteria.where("topic");
-        Query query = Query.query(criteria.is(topic))
+        Criteria criteria = Criteria.where("topic").is(topic);
+        Query query = Query.query(criteria)
                 .with(Sort.by("date").descending());
         return mongoTemplate.findOne(query, DeviceMessage.class, "device_message");
     }
 
     @Override
     public List<DeviceMessage> getAllMsgByTopic(String topic) {
-        Criteria criteria = Criteria.where("topic");
-        Query query = Query.query(criteria.is(topic));
+        Criteria criteria = Criteria.where("topic").is(topic);
+        Query query = Query.query(criteria);
+        return mongoTemplate.find(query, DeviceMessage.class, "device_message");
+    }
+
+    @Override
+    public List<DeviceMessage> getMsgByTopicAndTimeInterval(String topic, LocalDateTime startTime, LocalDateTime endTime) {
+        Criteria criteria = Criteria.where("topic").is(topic)
+                .andOperator(Criteria.where("date").gte(startTime).lte(endTime));
+        Query query = Query.query(criteria);
         return mongoTemplate.find(query, DeviceMessage.class, "device_message");
     }
 }

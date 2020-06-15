@@ -4,6 +4,7 @@ import com.example.iot.util.AggregationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,7 @@ public class LineChartVO {
     /**
      * 横轴：时间
      */
-    private List<LocalDateTime> times;
+    private List<LocalDateTime> timePoints;
     /**
      * 纵轴：度量值
      */
@@ -33,5 +34,10 @@ public class LineChartVO {
         private Integer fieldId;
         private AggregationType aggregationType;
         private List<Double> values;
+
+        public Metric(TimingAnalysisForm.MeasurePoint measurePoint, List<Double> values) {
+            BeanUtils.copyProperties(measurePoint, this);
+            this.values = values;
+        }
     }
 }
