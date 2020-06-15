@@ -11,9 +11,7 @@ import javax.persistence.Id;
  * @author: lxc
  * @email 171250576@smail.nju.edu.cn
  * @date: 2020/6/1
- * @description:
- *
- * 大坑！！！group是mysql关键字，表名字如果是group会失败
+ * @description: 大坑！！！group是mysql关键字，表名字如果是group会失败
  */
 @Entity
 @Data

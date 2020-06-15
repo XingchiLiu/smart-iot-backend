@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date: 2020/6/2
  * @description:
  */
-public class DeviceTest extends IotApplicationTests{
+public class DeviceTest extends IotApplicationTests {
 
     @Autowired
     DeviceService deviceService;
@@ -23,7 +23,7 @@ public class DeviceTest extends IotApplicationTests{
      * 创建设备
      */
     @Test
-    public void test1(){
+    public void test1() {
         DeviceForm deviceForm = new DeviceForm();
         deviceForm.setName("test02");
         deviceForm.setTemplateId(8);
@@ -34,15 +34,15 @@ public class DeviceTest extends IotApplicationTests{
      * 分页查询设备
      */
     @Test
-    public void test2(){
-        System.out.println(deviceService.getDeviceList(0,5).getContent());
+    public void test2() {
+        System.out.println(deviceService.getDeviceList(0, 5).getContent());
     }
 
     /**
      * 测试按名查询设备
      */
     @Test
-    public void test3(){
+    public void test3() {
         System.out.println(deviceService.getDeviceListByName("test"));
     }
 }

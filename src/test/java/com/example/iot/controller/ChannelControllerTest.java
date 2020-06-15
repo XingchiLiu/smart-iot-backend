@@ -28,8 +28,8 @@ class ChannelControllerTest extends IotApplicationTests {
 
     boolean connectionEnabled = false;
 
-    private void enableMqttConnection(){
-        if(!connectionEnabled){
+    private void enableMqttConnection() {
+        if (!connectionEnabled) {
             mqttService.getConnection();
             connectionEnabled = true;
         }
@@ -42,9 +42,9 @@ class ChannelControllerTest extends IotApplicationTests {
         ResultVO<Integer> resultVO = channelController.addDataField(channelDataFieldForm);
         ChannelDataField result = channelDataFieldService.getDataFieldById(resultVO.getData());
         assertNotNull(result);
-        assertEquals(0,result.getChannelType());
+        assertEquals(0, result.getChannelType());
         assertEquals("test", result.getFieldName());
-        assertEquals(2,result.getFieldType());
+        assertEquals(2, result.getFieldType());
         assertEquals(1, result.getChannelId());
     }
 
@@ -56,7 +56,7 @@ class ChannelControllerTest extends IotApplicationTests {
         ResultVO<Integer> resultVO = channelController.addTemplateChannel(templateChannelForm);
         TemplateChannel result = channelService.getTemplateChannelById(resultVO.getData());
         assertNotNull(result);
-        assertEquals(1,result.getTemplateId());
+        assertEquals(1, result.getTemplateId());
         assertEquals(0, result.getChannelType());
         assertEquals("test", result.getChannelName());
     }
@@ -65,48 +65,48 @@ class ChannelControllerTest extends IotApplicationTests {
     void addDeviceChannel() {
         enableMqttConnection();
 
-        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
+        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0, 1, -1, "test");
         ResultVO<Integer> resultVO = channelController.addDeviceChannel(deviceChannelForm);
         DeviceChannel result = channelService.getDeviceChannelById(resultVO.getData());
         assertNotNull(result);
-        assertEquals(0,result.getChannelType());
-        assertEquals(1,result.getDeviceId());
+        assertEquals(0, result.getChannelType());
+        assertEquals(1, result.getDeviceId());
         assertEquals(-1, result.getTemplateChannelId());
         assertEquals("test", result.getChannelName());
     }
 
     @Test
-    void modifyDataFieldOfTemplateChannel(){
+    void modifyDataFieldOfTemplateChannel() {
         ChannelDataFieldForm channelDataFieldForm = createChannelDataFieldForm("test", 2, 1, 0);
         int id = channelController.addDataField(channelDataFieldForm).getData();
 
-        ChannelDataFieldForm changedChannelDataFieldForm = createChannelDataFieldForm("test1",2,1,0,id);
-        channelController.modifyDataField(id,changedChannelDataFieldForm);
+        ChannelDataFieldForm changedChannelDataFieldForm = createChannelDataFieldForm("test1", 2, 1, 0, id);
+        channelController.modifyDataField(id, changedChannelDataFieldForm);
 
         ChannelDataField result = channelDataFieldService.getDataFieldById(id);
         assertNotNull(result);
-        assertEquals(0,result.getChannelType());
+        assertEquals(0, result.getChannelType());
         assertEquals("test1", result.getFieldName());
-        assertEquals(2,result.getFieldType());
+        assertEquals(2, result.getFieldType());
         assertEquals(1, result.getChannelId());
     }
 
     @Test
-    void modifyNameOfTemplateChannel(){
+    void modifyNameOfTemplateChannel() {
         enableMqttConnection();
 
         TemplateChannelForm templateChannelForm = createTemplateChannelForm(0, 1, "test");
         int id = channelController.addTemplateChannel(templateChannelForm).getData();
 
-        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,id, "test");
+        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0, 1, id, "test");
         int deviceChannelId = channelController.addDeviceChannel(deviceChannelForm).getData();
 
-        TemplateChannelForm templateChannelForm1 = createTemplateChannelForm(0,1, "test1", id);
+        TemplateChannelForm templateChannelForm1 = createTemplateChannelForm(0, 1, "test1", id);
         channelController.modifyNameOfTemplateChannel(id, templateChannelForm1);
 
         TemplateChannel templateChannelResult = channelService.getTemplateChannelById(id);
         assertNotNull(templateChannelResult);
-        assertEquals(1,templateChannelResult.getTemplateId());
+        assertEquals(1, templateChannelResult.getTemplateId());
         assertEquals(0, templateChannelResult.getChannelType());
         assertEquals("test1", templateChannelResult.getChannelName());
 
@@ -119,22 +119,22 @@ class ChannelControllerTest extends IotApplicationTests {
     void modifyNameOfDeviceChannel() {
         enableMqttConnection();
 
-        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
+        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0, 1, -1, "test");
         int id = channelController.addDeviceChannel(deviceChannelForm).getData();
 
-        DeviceChannelForm deviceChannelForm1 = createDeviceChannelForm(0,1, -1,"test1", id);
+        DeviceChannelForm deviceChannelForm1 = createDeviceChannelForm(0, 1, -1, "test1", id);
         channelController.modifyNameOfDeviceChannel(id, deviceChannelForm1);
 
         DeviceChannel result = channelService.getDeviceChannelById(id);
         assertNotNull(result);
-        assertEquals(0,result.getChannelType());
-        assertEquals(1,result.getDeviceId());
+        assertEquals(0, result.getChannelType());
+        assertEquals(1, result.getDeviceId());
         assertEquals(-1, result.getTemplateChannelId());
         assertEquals("test1", result.getChannelName());
     }
 
     @Test
-    void deleteDataField(){
+    void deleteDataField() {
         ChannelDataFieldForm channelDataFieldForm = createChannelDataFieldForm("test", 2, 1, 0);
         int id = channelController.addDataField(channelDataFieldForm).getData();
         assertNotNull(channelDataFieldService.getDataFieldById(id));
@@ -144,17 +144,17 @@ class ChannelControllerTest extends IotApplicationTests {
     }
 
     @Test
-    void deleteTemplateChannel(){
+    void deleteTemplateChannel() {
         enableMqttConnection();
 
         TemplateChannelForm templateChannelForm = createTemplateChannelForm(0, 1, "test");
         int id = channelController.addTemplateChannel(templateChannelForm).getData();
 
-        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,id, "test");
+        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0, 1, id, "test");
         deviceChannelForm.setDeviceName("test");
         int deviceChannelId = channelController.addDeviceChannel(deviceChannelForm).getData();
 
-        ChannelDataFieldForm channelDataFieldForm = createChannelDataFieldForm("field",0,id,0);
+        ChannelDataFieldForm channelDataFieldForm = createChannelDataFieldForm("field", 0, id, 0);
         int dataFieldId = channelController.addDataField(channelDataFieldForm).getData();
 
         assertNotNull(channelService.getTemplateChannelById(id));
@@ -171,7 +171,7 @@ class ChannelControllerTest extends IotApplicationTests {
     void deleteDeviceChannel() {
         enableMqttConnection();
 
-        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0,1,-1,"test");
+        DeviceChannelForm deviceChannelForm = createDeviceChannelForm(0, 1, -1, "test");
         int id = channelController.addDeviceChannel(deviceChannelForm).getData();
         assertNotNull(channelService.getDeviceChannelById(id));
 
@@ -179,7 +179,7 @@ class ChannelControllerTest extends IotApplicationTests {
         assertNull(channelService.getDeviceChannelById(id));
     }
 
-    private ChannelDataFieldForm createChannelDataFieldForm(String fieldName, int fieldType, int channelId, int channelType){
+    private ChannelDataFieldForm createChannelDataFieldForm(String fieldName, int fieldType, int channelId, int channelType) {
         ChannelDataFieldForm channelDataFieldForm = new ChannelDataFieldForm();
         channelDataFieldForm.setChannelType(channelType);
         channelDataFieldForm.setFieldName(fieldName);
@@ -188,7 +188,7 @@ class ChannelControllerTest extends IotApplicationTests {
         return channelDataFieldForm;
     }
 
-    private ChannelDataFieldForm createChannelDataFieldForm(String fieldName, int fieldType, int channelId, int channelType, int id){
+    private ChannelDataFieldForm createChannelDataFieldForm(String fieldName, int fieldType, int channelId, int channelType, int id) {
         ChannelDataFieldForm channelDataFieldForm = new ChannelDataFieldForm();
         channelDataFieldForm.setChannelType(channelType);
         channelDataFieldForm.setFieldName(fieldName);
@@ -198,7 +198,7 @@ class ChannelControllerTest extends IotApplicationTests {
         return channelDataFieldForm;
     }
 
-    private DeviceChannelForm createDeviceChannelForm(int channelType, int deviceId, int templateChannelId, String channelName){
+    private DeviceChannelForm createDeviceChannelForm(int channelType, int deviceId, int templateChannelId, String channelName) {
         DeviceChannelForm deviceChannelForm = new DeviceChannelForm();
         deviceChannelForm.setChannelType(channelType);
         deviceChannelForm.setDeviceId(deviceId);
@@ -207,7 +207,7 @@ class ChannelControllerTest extends IotApplicationTests {
         return deviceChannelForm;
     }
 
-    private DeviceChannelForm createDeviceChannelForm(int channelType, int deviceId, int templateChannelId, String channelName, int id){
+    private DeviceChannelForm createDeviceChannelForm(int channelType, int deviceId, int templateChannelId, String channelName, int id) {
         DeviceChannelForm deviceChannelForm = new DeviceChannelForm();
         deviceChannelForm.setChannelType(channelType);
         deviceChannelForm.setDeviceId(deviceId);
@@ -217,7 +217,7 @@ class ChannelControllerTest extends IotApplicationTests {
         return deviceChannelForm;
     }
 
-    private TemplateChannelForm createTemplateChannelForm(int channelType, int templateId, String channelName){
+    private TemplateChannelForm createTemplateChannelForm(int channelType, int templateId, String channelName) {
         TemplateChannelForm templateChannelForm = new TemplateChannelForm();
         templateChannelForm.setChannelType(channelType);
         templateChannelForm.setTemplateId(templateId);
@@ -225,7 +225,7 @@ class ChannelControllerTest extends IotApplicationTests {
         return templateChannelForm;
     }
 
-    private TemplateChannelForm createTemplateChannelForm(int channelType, int templateId, String channelName, int id){
+    private TemplateChannelForm createTemplateChannelForm(int channelType, int templateId, String channelName, int id) {
         TemplateChannelForm templateChannelForm = new TemplateChannelForm();
         templateChannelForm.setChannelType(channelType);
         templateChannelForm.setTemplateId(templateId);

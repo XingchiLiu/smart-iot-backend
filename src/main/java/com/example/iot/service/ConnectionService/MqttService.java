@@ -20,66 +20,66 @@ public class MqttService implements ApplicationRunner {
         try {
             pubClient.connect();
             subClient.connect();
-        }catch (MqttException e){
+        } catch (MqttException e) {
             e.printStackTrace();
         }
     }
 
-    public boolean addSub(String[] topics, int qos){
+    public boolean addSub(String[] topics, int qos) {
         try {
-            if(qos != 0 && qos != 1 && qos != 2){
+            if (qos != 0 && qos != 1 && qos != 2) {
                 qos = 0;
             }
             subClient.addSub(topics, qos);
             return true;
-        }catch (MqttException e) {
+        } catch (MqttException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean addSub(String topic, int qos){
+    public boolean addSub(String topic, int qos) {
         try {
-            if(qos != 0 && qos != 1 && qos != 2){
+            if (qos != 0 && qos != 1 && qos != 2) {
                 qos = 0;
             }
             subClient.addSub(topic, qos);
             System.out.println("Sub: Topic " + topic + " Added!");
             return true;
-        }catch (MqttException e) {
+        } catch (MqttException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean addPub(String topic, int qos, String msg){
+    public boolean addPub(String topic, int qos, String msg) {
         try {
-            if(qos != 0 && qos != 1 && qos != 2){
+            if (qos != 0 && qos != 1 && qos != 2) {
                 qos = 0;
             }
             pubClient.addPub(topic, qos, msg);
             return true;
-        }catch (MqttException e) {
+        } catch (MqttException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean removeSub(String[] topics){
+    public boolean removeSub(String[] topics) {
         try {
             subClient.removeSub(topics);
             return true;
-        }catch (MqttException e) {
+        } catch (MqttException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean removeSub(String topic){
+    public boolean removeSub(String topic) {
         try {
             subClient.removeSub(topic);
             return true;
-        }catch (MqttException e) {
+        } catch (MqttException e) {
             e.printStackTrace();
             return false;
         }

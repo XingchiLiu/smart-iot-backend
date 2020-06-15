@@ -4,16 +4,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.IotApplicationTests;
 import com.example.iot.domain.Rule;
-import com.example.iot.repository.DeviceChannelRepository;
-import com.example.iot.repository.RuleRepository;
 import com.example.iot.service.RuleService.RuleService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-
-import static org.mockito.Mockito.when;
 
 /**
  * @author Karson

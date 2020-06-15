@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class DateUtil {
 
-    public static void example(){
+    public static void example() {
         // 使用format()方法将日期转换为指定格式的文本
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy/MM/dd HH:mm");

@@ -40,17 +40,17 @@ public class SubClient {
         options.setKeepAliveInterval(1800);
         options.setAutomaticReconnect(true);
 
-        options.setWill("close", "offline".getBytes(),0,true);
+        options.setWill("close", "offline".getBytes(), 0, true);
 
         mqttClient.setCallback(subCallBack);
         mqttClient.connect(options);
     }
 
-    public void addSub(String[] topics, int qos) throws MqttException{
+    public void addSub(String[] topics, int qos) throws MqttException {
         SubTopicHandler.addSub(topics, qos);
     }
 
-    public void addSub(String topic, int qos) throws MqttException{
+    public void addSub(String topic, int qos) throws MqttException {
         SubTopicHandler.addSub(topic, qos);
     }
 

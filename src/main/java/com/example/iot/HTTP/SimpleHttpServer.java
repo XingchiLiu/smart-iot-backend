@@ -1,11 +1,12 @@
 package com.example.iot.HTTP;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 
 /*
  * a simple static http server
@@ -22,7 +23,7 @@ public class SimpleHttpServer {
 
     static class MyHandler implements HttpHandler {
         public void handle(HttpExchange t) throws IOException {
-            byte [] response = "Welcome Real's HowTo test page".getBytes();
+            byte[] response = "Welcome Real's HowTo test page".getBytes();
             t.sendResponseHeaders(200, response.length);
             OutputStream os = t.getResponseBody();
             os.write(response);

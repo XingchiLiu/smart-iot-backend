@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class InfoController {
 
     @GetMapping("/")
-    public String index(){
+    public String index() {
         return "redirect:/swagger-ui.html";
     }
 
     @GetMapping("/info")
-    public String info(){
+    public String info() {
         return "info";
     }
 
     @GetMapping("/api")
-    public String api(){
+    public String api() {
         return "redirect:/swagger-ui.html";
     }
 

@@ -29,11 +29,11 @@ public class RuleService {
             JSONArray messages = data.getJSONArray("messages");
             double val = 0;
             String key = rule.getFieldName();
-            for(int i = 0; i < messages.size(); i++){
+            for (int i = 0; i < messages.size(); i++) {
                 JSONObject message = messages.getJSONObject(i);
                 val = message.containsKey(key) ? message.getDoubleValue(key) : val;
             }
-            
+
             double threshold = rule.getThresholdVal();
             RuleType ruleType = rule.getRuleType();
             Method compare = null;

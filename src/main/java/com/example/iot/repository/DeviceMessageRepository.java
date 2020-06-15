@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DeviceMessageRepository extends MongoRepository<DeviceMessage,String> {
+public interface DeviceMessageRepository extends MongoRepository<DeviceMessage, String> {
 }

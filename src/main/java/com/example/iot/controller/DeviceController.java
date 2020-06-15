@@ -28,12 +28,12 @@ public class DeviceController {
     DeviceService deviceService;
 
     @GetMapping("/add")
-    public ResultVO<Integer> add(@RequestBody DeviceForm deviceForm){
+    public ResultVO<Integer> add(@RequestBody DeviceForm deviceForm) {
         return deviceService.addDevice(deviceForm);
     }
 
     @GetMapping("/delete/{id}")
-    public void delete(@PathVariable int id){
+    public void delete(@PathVariable int id) {
         deviceService.deleteDevice(id);
     }
 
@@ -41,23 +41,23 @@ public class DeviceController {
     修改设备，但是只允许修改设备的名称和描述
      */
     @PostMapping("/update/{id}")
-    public ResultVO update(@PathVariable int id, DeviceForm deviceForm){
+    public ResultVO update(@PathVariable int id, DeviceForm deviceForm) {
         return deviceService.updateDevice(id, deviceForm);
     }
 
     @GetMapping("/get/{id}")
-    public DeviceVO get(@PathVariable int id){
+    public DeviceVO get(@PathVariable int id) {
         return deviceService.getDeviceById(id);
     }
 
     @GetMapping("/list")
     public Page<DeviceVO> list(@RequestParam(value = "page", defaultValue = "0") int page,
-                               @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+                               @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return deviceService.getDeviceList(page, pageSize);
     }
 
     @GetMapping("/search")
-    public List<DeviceVO> searchByName(@RequestParam("name") String name){
+    public List<DeviceVO> searchByName(@RequestParam("name") String name) {
         return deviceService.getDeviceListByName(name);
     }
 

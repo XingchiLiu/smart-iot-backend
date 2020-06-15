@@ -6,27 +6,27 @@ package com.example.iot.util;
  */
 public class CompareUtil {
 
-    public static boolean GT(double val, double threshold){
+    public static boolean GT(double val, double threshold) {
         return val > threshold;
     }
 
-    public static boolean LT(double val, double threshold){
+    public static boolean LT(double val, double threshold) {
         return val < threshold;
     }
 
-    public static boolean EQ(double val, double threshold){
+    public static boolean EQ(double val, double threshold) {
         return val == threshold;
     }
 
-    public static boolean GE(double val, double threshold){
+    public static boolean GE(double val, double threshold) {
         return val >= threshold;
     }
 
-    public static boolean LE(double val, double threshold){
+    public static boolean LE(double val, double threshold) {
         return val <= threshold;
     }
 
-    public static boolean NE(double val, double threshold){
+    public static boolean NE(double val, double threshold) {
         return val != threshold;
     }
 }

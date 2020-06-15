@@ -3,9 +3,10 @@ package com.example.iot.domain;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Document(collection = "device_message")
 @Data

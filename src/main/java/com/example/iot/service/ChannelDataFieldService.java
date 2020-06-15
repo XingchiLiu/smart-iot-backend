@@ -17,9 +17,9 @@ public class ChannelDataFieldService {
     @Autowired
     ChannelDataFieldRepository channelDataFieldRepository;
 
-    public ResultVO<Integer> addDataFields(HashMap<String, Integer> dataFields, int channelId, int channelType){
+    public ResultVO<Integer> addDataFields(HashMap<String, Integer> dataFields, int channelId, int channelType) {
         int latestSuccessfulId = 0;
-        for(Map.Entry<String, Integer> dataField: dataFields.entrySet()){
+        for (Map.Entry<String, Integer> dataField : dataFields.entrySet()) {
             ChannelDataField channelDataField = new ChannelDataField();
             channelDataField.setChannelId(channelId);
             channelDataField.setChannelType(channelType);
@@ -30,7 +30,7 @@ public class ChannelDataFieldService {
         return ResultVO.getSuccess("创建成功", latestSuccessfulId);
     }
 
-    public int addDataField(ChannelDataField channelDataField){
+    public int addDataField(ChannelDataField channelDataField) {
         return channelDataFieldRepository.save(channelDataField).getId();
     }
 
@@ -39,12 +39,12 @@ public class ChannelDataFieldService {
         return result;
     }
 
-    public List<ChannelDataField> getDataFieldsByChannelId(int channelId){
+    public List<ChannelDataField> getDataFieldsByChannelId(int channelId) {
         List<ChannelDataField> result = channelDataFieldRepository.getAllByChannelId(channelId);
         return result;
     }
 
-    public int addDataField(String fieldName, int fieldType, int channelId, int channelType){
+    public int addDataField(String fieldName, int fieldType, int channelId, int channelType) {
         ChannelDataField channelDataField = new ChannelDataField();
         channelDataField.setFieldName(fieldName);
         channelDataField.setFieldType(fieldType);
@@ -53,32 +53,32 @@ public class ChannelDataFieldService {
         return channelDataFieldRepository.save(channelDataField).getId();
     }
 
-    public int addDataField(ChannelDataFieldForm channelDataFieldForm){
+    public int addDataField(ChannelDataFieldForm channelDataFieldForm) {
         ChannelDataField channelDataField = createChannelDataField(channelDataFieldForm);
         return channelDataFieldRepository.save(channelDataField).getId();
     }
 
-    public int updateDataField(ChannelDataFieldForm channelDataFieldForm){
+    public int updateDataField(ChannelDataFieldForm channelDataFieldForm) {
         ChannelDataField channelDataField = createChannelDataField(channelDataFieldForm);
         channelDataField.setId(channelDataFieldForm.getId());
         return channelDataFieldRepository.save(channelDataField).getId();
     }
 
-    public void deleteDataField(int id){
+    public void deleteDataField(int id) {
         channelDataFieldRepository.deleteById(id);
     }
 
-    public void deleteChannelRelatedFields(int channelId, int channelType){
+    public void deleteChannelRelatedFields(int channelId, int channelType) {
         ArrayList<ChannelDataField> channelDataFields = (ArrayList<ChannelDataField>)
-                channelDataFieldRepository.getAllByChannelIdAndChannelType(channelId,channelType);
-        if(channelDataFields != null && channelDataFields.size() > 0){
-            for(int i = 0; i < channelDataFields.size(); i++){
+                channelDataFieldRepository.getAllByChannelIdAndChannelType(channelId, channelType);
+        if (channelDataFields != null && channelDataFields.size() > 0) {
+            for (int i = 0; i < channelDataFields.size(); i++) {
                 channelDataFieldRepository.deleteById(channelDataFields.get(i).getId());
             }
         }
     }
 
-    public ChannelDataField createChannelDataField(ChannelDataFieldForm channelDataFieldForm){
+    public ChannelDataField createChannelDataField(ChannelDataFieldForm channelDataFieldForm) {
         ChannelDataField channelDataField = new ChannelDataField();
         channelDataField.setChannelType(channelDataFieldForm.getChannelType());
         channelDataField.setChannelId(channelDataFieldForm.getChannelId());

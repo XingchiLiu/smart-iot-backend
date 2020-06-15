@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class MessageControllerTest extends IotApplicationTests {
     @Autowired
     MessageController messageController;
@@ -24,11 +22,11 @@ class MessageControllerTest extends IotApplicationTests {
     void sendMessageToDevice() {
         MessageForm messageForm = new MessageForm();
         Map<String, Object> map = new HashMap<>();
-        map.put("test",1);
+        map.put("test", 1);
         List<Map<String, Object>> list = new ArrayList<>();
         list.add(map);
         messageForm.setData(list);
 
-        messageController.sendMessageToDevice(messageForm,0);
+        messageController.sendMessageToDevice(messageForm, 0);
     }
 }

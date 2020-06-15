@@ -28,12 +28,12 @@ public class TemplateController {
     TemplateService templateService;
 
     @PostMapping("/add")
-    public ResultVO<Integer> add(@RequestBody TemplateForm templateForm){
+    public ResultVO<Integer> add(@RequestBody TemplateForm templateForm) {
         return templateService.addTemplate(templateForm);
     }
 
     @GetMapping("/delete/{id}")
-    public void delete(@PathVariable(name = "id") int id){
+    public void delete(@PathVariable(name = "id") int id) {
         templateService.deleteTemplate(id);
     }
 
@@ -41,13 +41,13 @@ public class TemplateController {
     修改模板，但是只允许修改模板的名称和描述
      */
     @PostMapping("/update/{id}")
-    public ResultVO update(@PathVariable(name = "id")int id,@RequestBody TemplateForm templateForm){
+    public ResultVO update(@PathVariable(name = "id") int id, @RequestBody TemplateForm templateForm) {
         return templateService.updateTemplate(id, templateForm);
     }
 
     //返回模板信息
     @GetMapping("/get/{id}")
-    public TemplateVO get(@PathVariable(name = "id") int id){
+    public TemplateVO get(@PathVariable(name = "id") int id) {
 
         return templateService.getTemplate(id);
     }
@@ -55,12 +55,12 @@ public class TemplateController {
     //备注：page从0开始
     @GetMapping("/list")
     public Page<TemplateVO> list(@RequestParam(value = "page", defaultValue = "0") int page,
-                                 @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+                                 @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return templateService.getTemplateList(page, pageSize);
     }
 
     @GetMapping("/search")
-    public List<TemplateVO> searchByName(@RequestParam("name")String name){
+    public List<TemplateVO> searchByName(@RequestParam("name") String name) {
         return templateService.getTemplateListByName(name);
     }
 }

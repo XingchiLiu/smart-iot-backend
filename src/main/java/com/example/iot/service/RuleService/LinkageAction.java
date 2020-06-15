@@ -2,19 +2,10 @@ package com.example.iot.service.RuleService;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.controller.VO.MessageForm;
-import com.example.iot.controller.VO.ResultVO;
 import com.example.iot.service.ChannelService;
 import com.example.iot.service.OutMessageService;
 import com.example.iot.util.SpringContextUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -40,7 +31,7 @@ public class LinkageAction extends Action {
 
         try {
             channelId = channelService.getChannelIdByDeviceIdAndChannelTypeAndChannelName(deviceId, 1, "send_to_device_" + deviceId);
-        }catch(Exception e) {
+        } catch (Exception e) {
             channelId = channelService.addDeviceChannel(1, deviceId, -1, "send_to_device_" + deviceId);
         }
 
@@ -57,15 +48,15 @@ public class LinkageAction extends Action {
         messageForm.setDirection(1);
         messageForm.setData(data);
 
-        if(messageForm.getDeviceId() != deviceId){
+        if (messageForm.getDeviceId() != deviceId) {
             throw new Exception("设备ID不一致");
         }
 
         OutMessageService outMessageService = SpringContextUtil.getBean(OutMessageService.class);
 
-        try{
-            outMessageService.sendMessageToDevice(deviceId,messageForm);
-        }catch (Exception e){
+        try {
+            outMessageService.sendMessageToDevice(deviceId, messageForm);
+        } catch (Exception e) {
             throw new Exception("发送数据给设备失败！");
         }
     }

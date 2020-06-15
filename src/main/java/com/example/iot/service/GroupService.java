@@ -18,7 +18,7 @@ public class GroupService {
     @Autowired
     GroupRepository groupRepository;
 
-    public void createProductGroup(DeviceTemplate deviceTemplate){
+    public void createProductGroup(DeviceTemplate deviceTemplate) {
         DeviceGroup group = new DeviceGroup();
         group.setTemplateId(deviceTemplate.getId());
         group.setName(deviceTemplate.getName());

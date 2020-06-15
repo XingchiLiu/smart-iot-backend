@@ -19,7 +19,7 @@ public class HttpService {
     @Autowired
     DeviceMessageAndDemandService deviceMessageAndDemandService;
 
-    public void sendMessageToDevice(MessageForm messageForm){
+    public void sendMessageToDevice(MessageForm messageForm) {
         RestTemplate restTemplate = new RestTemplate();
         // TODO get url of the device
         String url = "http://127.0.0.1:8000/test";
@@ -27,14 +27,14 @@ public class HttpService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, Object> test = new LinkedMultiValueMap<>();
-        for(int i = 0; i < messageForm.getData().size(); i++){
-            for(Map.Entry<String, Object> entry : messageForm.getData().get(i).entrySet()){
-                test.add(entry.getKey(),entry.getValue());
+        for (int i = 0; i < messageForm.getData().size(); i++) {
+            for (Map.Entry<String, Object> entry : messageForm.getData().get(i).entrySet()) {
+                test.add(entry.getKey(), entry.getValue());
             }
         }
 
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(test, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         System.out.println(response.getBody());
 
         deviceMessageAndDemandService.generateAndSaveDemandMessageFromMessageForm(messageForm);

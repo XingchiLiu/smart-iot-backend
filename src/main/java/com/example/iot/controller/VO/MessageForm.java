@@ -4,7 +4,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @ApiModel
@@ -26,6 +28,6 @@ public class MessageForm {
     private int direction;
 
     @ApiModelProperty(value = "要发送的数据")
-    private List<Map<String,Object>> data;
+    private List<Map<String, Object>> data;
 
 }

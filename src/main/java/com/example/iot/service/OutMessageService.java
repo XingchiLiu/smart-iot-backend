@@ -16,12 +16,11 @@ public class OutMessageService {
     @Autowired
     HttpService httpService;
 
-    public void sendMessageToDevice(int deviceId,MessageForm messageForm){
+    public void sendMessageToDevice(int deviceId, MessageForm messageForm) {
         String connectionType = deviceService.getDeviceById(deviceId).getConnectionType();
-        if(connectionType.equals("HTTP")){
+        if (connectionType.equals("HTTP")) {
             httpService.sendMessageToDevice(messageForm);
-        }
-        else if(connectionType.equals("MQTT")){
+        } else if (connectionType.equals("MQTT")) {
             String message = JSON.toJSONString(messageForm);
             mqttService.addPub(messageForm.getTopic(), 0, message);
         }

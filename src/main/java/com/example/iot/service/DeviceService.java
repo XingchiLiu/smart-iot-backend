@@ -40,33 +40,33 @@ public class DeviceService {
 
     /**
      * 增加一个设备，如果成功返回设备id
+     *
      * @param deviceForm
      * @return
      */
     @Transactional
-    public ResultVO<Integer> addDevice(DeviceForm deviceForm){
+    public ResultVO<Integer> addDevice(DeviceForm deviceForm) {
         int templateId = deviceForm.getTemplateId();
         Optional<DeviceTemplate> deviceTemplateOptional = templateRepository.findById(templateId);
         //确保模板存在
-        if(!deviceTemplateOptional.isPresent()){
+        if (!deviceTemplateOptional.isPresent()) {
             return ResultVO.getFailed("模板不存在");
         }
         DeviceTemplate deviceTemplate = deviceTemplateOptional.get();
         Device device = new Device();
-        BeanUtils.copyProperties(deviceTemplate, device,"id", "name", "description");
+        BeanUtils.copyProperties(deviceTemplate, device, "id", "name", "description");
         //如果没填名字，设置名字
-        if(StringUtils.isEmpty(deviceForm.getName())){
+        if (StringUtils.isEmpty(deviceForm.getName())) {
             long time = System.currentTimeMillis();
             //通过随机来创造的伪唯一
-            String name = deviceTemplate.getName()+"_device_" + (int) time % 100000;
+            String name = deviceTemplate.getName() + "_device_" + (int) time % 100000;
             device.setName(name);
-        }
-        else {
+        } else {
             //有名字，需要判断名字在模板内唯一
             String name = deviceForm.getName();
             Optional<Device> optionalDevice = deviceRepository.findFirstByTemplateIdAndName(templateId, name);
             //同一模板内名字重复
-            if(optionalDevice.isPresent()){
+            if (optionalDevice.isPresent()) {
                 return ResultVO.getFailed("模板内有相同名称的设备，请重命名");
             }
             device.setName(deviceForm.getName());
@@ -91,10 +91,11 @@ public class DeviceService {
 
     /**
      * 删除一个设备，必定成功
+     *
      * @param deviceId
      */
     @Transactional
-    public void deleteDevice(int deviceId){
+    public void deleteDevice(int deviceId) {
         //删除设备信息
         deviceRepository.deleteById(deviceId);
         //TODO 删除设备通道、物模型、影子设备
@@ -102,14 +103,15 @@ public class DeviceService {
 
     /**
      * 更新设备信息，只能修改设备名和描述，如果成功返回成功
+     *
      * @param deviceId
      * @return
      */
-    public ResultVO updateDevice(int deviceId, DeviceForm deviceForm){
+    public ResultVO updateDevice(int deviceId, DeviceForm deviceForm) {
         Optional<Device> optionalDevice = deviceRepository.findFirstByTemplateIdAndName(
                 deviceForm.getTemplateId(), deviceForm.getName());
         //同一模板内名字重复
-        if(optionalDevice.isPresent()){
+        if (optionalDevice.isPresent()) {
             return ResultVO.getFailed("模板内有相同名称的设备，请重命名");
         }
 
@@ -123,19 +125,21 @@ public class DeviceService {
 
     /**
      * 获取设备基本信息
+     *
      * @return
      */
-    public DeviceVO getDeviceById(int id){
+    public DeviceVO getDeviceById(int id) {
         return deviceToVO(deviceRepository.findById(id).get());
     }
 
     /**
      * 按页返回设备列表
+     *
      * @param page
      * @param pageSize
      * @return
      */
-    public Page<DeviceVO> getDeviceList(int page, int pageSize){
+    public Page<DeviceVO> getDeviceList(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "id");
         Page<Device> devicePage = deviceRepository.findAll(pageable);
         return devicePage.map(this::deviceToVO);
@@ -143,10 +147,11 @@ public class DeviceService {
 
     /**
      * 根据名字查询设备
+     *
      * @param name
      * @return
      */
-    public List<DeviceVO> getDeviceListByName(String name){
+    public List<DeviceVO> getDeviceListByName(String name) {
         List<DeviceVO> result = new ArrayList<>();
         List<Device> found = deviceRepository.findAllByNameContaining(name);
         found.forEach(device -> {
@@ -155,7 +160,7 @@ public class DeviceService {
         return result;
     }
 
-    private DeviceVO deviceToVO(Device device){
+    private DeviceVO deviceToVO(Device device) {
 
         DeviceVO deviceVO = new DeviceVO();
         BeanUtils.copyProperties(device, deviceVO);
