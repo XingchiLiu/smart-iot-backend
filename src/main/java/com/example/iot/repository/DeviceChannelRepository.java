@@ -21,4 +21,6 @@ public interface DeviceChannelRepository extends JpaRepository<DeviceChannel, In
     void deleteAllByTemplateChannelId(int templateChannelId);
 
     DeviceChannel getById(int id);
+
+    DeviceChannel getByDeviceIdAndChannelTypeAndChannelName(int deviceId, int channelType, String channelName);
 }

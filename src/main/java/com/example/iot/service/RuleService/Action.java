@@ -15,5 +15,5 @@ public abstract class Action {
         this.data = data;
     }
 
-    public abstract void execute();
+    public abstract void execute() throws Exception;
 }

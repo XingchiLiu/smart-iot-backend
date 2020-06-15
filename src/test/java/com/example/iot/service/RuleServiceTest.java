@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.IotApplicationTests;
 import com.example.iot.domain.Rule;
+import com.example.iot.repository.DeviceChannelRepository;
 import com.example.iot.repository.RuleRepository;
 import com.example.iot.service.RuleService.RuleService;
 import org.junit.jupiter.api.Test;
@@ -23,14 +24,13 @@ class RuleServiceTest extends IotApplicationTests {
     @Autowired
     RuleService ruleService;
 
-    RuleRepository ruleRepository = Mockito.mock(RuleRepository.class);
+    @Autowired
+    ChannelService channelService;
 
     ArrayList<Rule> rules;
 
     @Test
     void filterAndExecute() {
-        when(ruleRepository.getAllByDeviceId(10)).thenReturn(rules);
-
         JSONObject data = new JSONObject();
         JSONArray messages = new JSONArray();
         JSONObject string = new JSONObject();

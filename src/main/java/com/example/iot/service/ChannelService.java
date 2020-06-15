@@ -183,6 +183,10 @@ public class ChannelService {
         inMessageService.removeSub(String.valueOf(deviceChannelId));
     }
 
+    public int getChannelIdByDeviceIdAndChannelTypeAndChannelName(int deviceId, int channelType, String channelName){
+        return deviceChannelRepository.getByDeviceIdAndChannelTypeAndChannelName(deviceId, channelType, channelName).getId();
+    }
+
     private TemplateChannel createTemplateChannel(TemplateChannelForm templateChannelForm){
         TemplateChannel templateChannel = new TemplateChannel();
         templateChannel.setChannelType(templateChannelForm.getChannelType());
