@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.example.iot.controller.VO.MessageForm;
 import com.example.iot.controller.VO.ResultVO;
 import com.example.iot.service.InMessageService;
+import com.example.iot.service.MessageFilterService.MessageFilterExceptions.DataFieldException;
+import com.example.iot.service.MessageFilterService.MessageFilterExceptions.DeviceChannelException;
+import com.example.iot.service.MessageFilterService.MessageFilterService;
 import com.example.iot.service.OutMessageService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ public class MessageController {
     InMessageService inMessageService;
     @Autowired
     OutMessageService outMessageService;
+    @Autowired
+    MessageFilterService messageFilterService;
 
     @PostMapping("/send-to-platform")
     public ResultVO<Integer> sendMessageToPlatform(@RequestBody MessageForm messageForm) {
@@ -41,9 +46,16 @@ public class MessageController {
         }
 
         try {
+            messageFilterService.validateForm(messageForm);
             outMessageService.sendMessageToDevice(deviceId, messageForm);
             return ResultVO.getSuccess("发送数据给设备成功！");
-        } catch (Exception e) {
+        }catch (DeviceChannelException deviceChannelException){
+            return ResultVO.getFailed(deviceChannelException.getMsg());
+        }
+        catch(DataFieldException dataFieldException){
+            return ResultVO.getFailed(dataFieldException.getMsg());
+        }
+        catch (Exception e) {
             return ResultVO.getFailed("发送数据给设备失败！");
         }
     }

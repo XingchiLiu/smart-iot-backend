@@ -2,6 +2,7 @@ package com.example.iot.service;
 
 import com.example.iot.controller.VO.DeviceChannelForm;
 import com.example.iot.controller.VO.TemplateChannelForm;
+import com.example.iot.domain.Device;
 import com.example.iot.domain.DeviceChannel;
 import com.example.iot.domain.TemplateChannel;
 import com.example.iot.repository.DeviceChannelRepository;
@@ -66,7 +67,14 @@ public class ChannelService {
 
     public int addTemplateChannel(TemplateChannelForm templateChannelForm) {
         TemplateChannel templateChannel = createTemplateChannel(templateChannelForm);
-        // TODO 下属设备数据通道和消息订阅添加
+        List<Device> devices = deviceService.getDeviceByTemplateId(templateChannelForm.getId());
+        if(devices != null && devices.size() > 0){
+            for(int i = 0; i < devices.size(); i++){
+                addDeviceChannel(templateChannelForm.getChannelType(),
+                        devices.get(i).getId(),templateChannelForm.getId(),
+                        templateChannelForm.getChannelName());
+            }
+        }
         return addTemplateChannel(templateChannel);
     }
 
@@ -112,6 +120,10 @@ public class ChannelService {
 
     public DeviceChannel getDeviceChannelById(int deviceChannelId) {
         return deviceChannelRepository.getById(deviceChannelId);
+    }
+
+    public DeviceChannel getDeviceChannelByIdAndDeviceIdAndChannelType(int id, int deviceId, int channelType){
+        return deviceChannelRepository.getByIdAndDeviceIdAndChannelType(id, deviceId, channelType);
     }
 
     public List<TemplateChannel> getAllTemplateChannels() {
@@ -186,6 +198,16 @@ public class ChannelService {
         deviceChannelRepository.deleteById(deviceChannelId);
         channelDataFieldService.deleteChannelRelatedFields(deviceChannelId, 1);
         inMessageService.removeSub(String.valueOf(deviceChannelId));
+    }
+
+
+    public void deleteDeviceOwnDeviceChannel(int deviceId){
+        ArrayList<DeviceChannel> deviceChannels = deviceChannelRepository.getAllByDeviceIdAndTemplateChannelId(deviceId,-1);
+        if(deviceChannels != null && deviceChannels.size() > 0){
+            for(int i = 0; i < deviceChannels.size(); i++) {
+                deviceChannelRepository.deleteById(deviceChannels.get(i).getId());
+            }
+        }
     }
 
     public int getChannelIdByDeviceIdAndChannelTypeAndChannelName(int deviceId, int channelType, String channelName) {
