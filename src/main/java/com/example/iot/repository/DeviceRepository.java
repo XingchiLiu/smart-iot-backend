@@ -21,4 +21,7 @@ public interface DeviceRepository extends JpaRepository<Device, Integer> {
 
     //根据设备名查找设备
     List<Device> findAllByNameContaining(String name);
+
+    // 根据模板获得其下所有设备
+    List<Device> getAllByTemplateId(int templateId);
 }

@@ -17,7 +17,7 @@ public class ChannelDataField {
     // 此项数据的名称
     private String fieldName;
 
-    // 此项数据的类型：0 boolean 1 int 2 string
+    // 此项数据的类型：0 boolean 1 double 2 string 3 int
     private int fieldType;
 
     // 此项数据项对应的通道id

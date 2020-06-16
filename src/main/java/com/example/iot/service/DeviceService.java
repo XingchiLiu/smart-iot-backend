@@ -99,6 +99,8 @@ public class DeviceService {
         //删除设备信息
         deviceRepository.deleteById(deviceId);
         //TODO 删除设备通道、物模型、影子设备
+
+        channelService.deleteDeviceOwnDeviceChannel(deviceId);
     }
 
     /**
@@ -130,6 +132,10 @@ public class DeviceService {
      */
     public ResultVO<DeviceVO> getDeviceById(int id) {
         return ResultVO.getSuccess(deviceToVO(deviceRepository.findById(id).get()));
+    }
+
+    public List<Device> getDeviceByTemplateId(int templateId){
+        return deviceRepository.getAllByTemplateId(templateId);
     }
 
     /**
