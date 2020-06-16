@@ -2,6 +2,7 @@ package com.example.iot.repository;
 
 import com.example.iot.domain.Rule;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -16,5 +17,6 @@ public interface RuleRepository extends JpaRepository<Rule, Integer> {
 
     ArrayList<Rule> getAllByDeviceId(int deviceId);
 
-    ArrayList<Rule> getAll();
+    @Query("select r from Rule r")
+    ArrayList<Rule> get();
 }

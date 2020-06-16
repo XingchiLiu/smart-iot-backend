@@ -87,6 +87,6 @@ public class RuleService {
     }
 
     public ArrayList<Rule> getAll() {
-        return ruleRepository.getAll();
+        return ruleRepository.get();
     }
 }
