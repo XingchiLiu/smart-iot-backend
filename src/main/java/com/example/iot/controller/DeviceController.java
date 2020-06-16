@@ -27,7 +27,7 @@ public class DeviceController {
     @Autowired
     DeviceService deviceService;
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public ResultVO<Integer> add(@RequestBody DeviceForm deviceForm) {
         return deviceService.addDevice(deviceForm);
     }
