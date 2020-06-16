@@ -35,7 +35,7 @@ public class DeviceTest extends IotApplicationTests {
      */
     @Test
     public void test2() {
-        System.out.println(deviceService.getDeviceList(0, 5).getContent());
+        System.out.println(deviceService.getDeviceList(0, 5).getData().getContent());
     }
 
     /**

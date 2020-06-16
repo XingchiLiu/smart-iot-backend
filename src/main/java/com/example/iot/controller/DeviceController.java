@@ -33,8 +33,9 @@ public class DeviceController {
     }
 
     @GetMapping("/delete/{id}")
-    public void delete(@PathVariable int id) {
+    public ResultVO delete(@PathVariable int id) {
         deviceService.deleteDevice(id);
+        return ResultVO.getSuccess("删除成功");
     }
 
     /*
@@ -46,18 +47,18 @@ public class DeviceController {
     }
 
     @GetMapping("/get/{id}")
-    public DeviceVO get(@PathVariable int id) {
+    public ResultVO<DeviceVO> get(@PathVariable int id) {
         return deviceService.getDeviceById(id);
     }
 
     @GetMapping("/list")
-    public Page<DeviceVO> list(@RequestParam(value = "page", defaultValue = "0") int page,
+    public ResultVO<Page<DeviceVO>> list(@RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return deviceService.getDeviceList(page, pageSize);
     }
 
     @GetMapping("/search")
-    public List<DeviceVO> searchByName(@RequestParam("name") String name) {
+    public ResultVO<List<DeviceVO>> searchByName(@RequestParam("name") String name) {
         return deviceService.getDeviceListByName(name);
     }
 

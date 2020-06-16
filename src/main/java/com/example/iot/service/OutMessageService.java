@@ -17,7 +17,7 @@ public class OutMessageService {
     HttpService httpService;
 
     public void sendMessageToDevice(int deviceId, MessageForm messageForm) {
-        String connectionType = deviceService.getDeviceById(deviceId).getConnectionType();
+        String connectionType = deviceService.getDeviceById(deviceId).getData().getConnectionType();
         if (connectionType.equals("HTTP")) {
             httpService.sendMessageToDevice(messageForm);
         } else if (connectionType.equals("MQTT")) {
