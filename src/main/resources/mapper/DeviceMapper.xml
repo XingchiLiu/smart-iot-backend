@@ -16,8 +16,8 @@
         </include>
         from device d
         left join device_channel dc on d.id = dc.device_id
-        left join channel_data_field cdf on dc.id = cdf.channel_id
-        where cdf.channel_type = 0;
+        left join channel_data_field cdf on dc.id = cdf.channel_id and cdf.channel_type = 1
+        where dc.channel_type = 0;
     </select>
 
     <select id="getChannelDataFieldById" resultMap="ChannelDataField">
