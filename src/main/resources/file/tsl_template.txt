@@ -1,0 +1,121 @@
+{
+    "schema": "http://101.37.80.37:8081/tsl",
+    "templateId":"",
+    "properties": [
+        {
+            "identifier": "status",
+            "name": "状态",
+    		"desc": "表示设备状态。一个默认的属性，方便测试。有ok和error。",
+            "accessMode": "r",
+            "dataType": {
+                "type": "string",
+                "specs": {
+                    "maxLength": 10
+                }
+            }
+        },
+        {
+            "identifier": "mode",
+            "name": "运行模式",
+    		"desc": "运行模式。一个默认的属性，方便测试。值可以是0、1、2、3",
+            "accessMode": "rw",
+            "dataType": {
+                "type": "int",
+                "specs": {
+                    "min": 0,
+                    "max": 3,
+                    "unitName": ""
+                }
+            }
+        }
+
+    ],
+    "events": [
+        {
+            "identifier": "post",
+            "name": "属性上报",
+            "desc": "一个默认的事件，属性上报，可以上报部分属性",
+            "type": "info",
+            "outputData": [
+                {
+            "identifier": "status",
+            "name": "状态",
+    		"desc": "表示设备状态。一个默认的属性，方便测试。有ok和error。",
+            "accessMode": "r",
+            "dataType": {
+                "type": "string",
+                "specs": {
+                    "maxLength": 10
+                }
+            }
+        },
+        {
+            "identifier": "mode",
+            "name": "运行模式",
+    		"desc": "运行模式。一个默认的属性，方便测试。值可以是0、1、2、3",
+            "accessMode": "rw",
+            "dataType": {
+                "type": "int",
+                "specs": {
+                    "min": 0,
+                    "max": 3,
+                    "unitName": ""
+                }
+            }
+        }
+            ]
+        }
+    ],
+    "services": [
+        {
+            "identifier": "set",
+            "name": "属性设置",
+            "desc": "可以设置属性",
+            "callType": "async",
+            "inputData": [
+                {
+            		"identifier": "status",
+            		"name": "状态",
+    				"desc": "表示设备状态。一个默认的属性，方便测试。有ok和error。",
+            		"accessMode": "r",
+            		"dataType": {
+                		"type": "string",
+                		"specs": {
+                    		"maxLength": 10
+                		}
+            		}
+        		},
+        		{
+            		"identifier": "mode",
+            		"name": "运行模式",
+    				"desc": "运行模式。一个默认的属性，方便测试。值可以是0、1、2、3",
+            		"accessMode": "rw",
+            		"dataType": {
+                		"type": "int",
+                		"specs": {
+                    		"min": 0,
+                    		"max": 3,
+                    		"unitName": ""
+                		}
+            		}
+        		}
+            ],
+            "outputData": [
+                {
+            		"identifier": "result",
+            		"name": "结果",
+    				"desc": "表示是否成功。0代表失败，1代表成功",
+            		"accessMode": "r",
+            		"dataType": {
+                		"type": "int",
+                		"specs": {
+                    		"min": 0,
+                    		"max": 1,
+                    		"unitName": ""
+                		}
+            		}
+        		}
+            ]
+        }
+    ]
+}

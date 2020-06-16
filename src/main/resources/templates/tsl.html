@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>TSL Definition</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+</head>
+<body>
+<h1>TSL Definition</h1>
+<p id="show_p" hidden>
+    {
+    "schema": "http://101.37.80.37:8081/tsl",
+    "templateId":"",
+    "properties": [
+    {
+    "identifier": "属性唯一标识符（产品下唯一）",
+    "name": "属性名称",
+    "desc": "描述",
+    "accessMode": "属性读写类型：只读（r）或读写（rw）。",
+    "dataType": {
+    "type": "属性类型: int（原生）、double（原生）、string（原生）、struct（结构体类型，可包含前面3种类型）",
+    "specs": {
+    "min": "参数最小值（int、double类型特有）",
+    "max": "参数最大值（int、double类型特有）",
+    "unitName": "单位名称（int、double类型特有）",
+    "maxLength": "字符串大小（string型特有）"
+    }
+    }
+    }
+    ],
+    "events": [
+    {
+    "identifier": "事件唯一标识符（产品下唯一，其中post是默认生成的属性上报事件。）",
+    "name": "事件名称",
+    "desc": "事件描述",
+    "type": "事件类型（info、alert、error）",
+    "outputData": [
+    ]
+    }
+    ],
+    "services": [
+    {
+    "identifier": "服务唯一标识符（产品下唯一，其中set/get是根据属性的accessMode默认生成的服务。）",
+    "name": "服务名称",
+    "desc": "服务描述",
+    "callType": "async（异步调用）或sync（同步调用）",
+    "inputData": [
+    ],
+    "outputData": [
+    ]
+    }
+    ]
+    }
+</p>
+<pre id="out_pre"></pre>
+</body>
+<script>
+    var text = document.getElementById('show_p').innerText;
+    var result = JSON.stringify(JSON.parse(text), null, 2);
+    document.getElementById('out_pre').innerText= result;
+</script>
+</html>
