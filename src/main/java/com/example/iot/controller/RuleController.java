@@ -25,6 +25,11 @@ public class RuleController {
         return ResultVO.getSuccess("成功", ruleService.getAllByDeviceId(deviceId));
     }
 
+    @GetMapping("/get/all")
+    public ResultVO get() {
+        return ResultVO.getSuccess("成功", ruleService.getAll());
+    }
+
     @PostMapping("/add")
     public ResultVO add(@RequestBody RuleForm ruleForm) {
         int id;

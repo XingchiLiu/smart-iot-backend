@@ -85,4 +85,8 @@ public class RuleService {
     public void deleteRule(int ruleId) {
         ruleRepository.deleteById(ruleId);
     }
+
+    public ArrayList<Rule> getAll() {
+        return ruleRepository.getAll();
+    }
 }

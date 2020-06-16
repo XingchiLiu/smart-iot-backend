@@ -15,4 +15,6 @@ import java.util.ArrayList;
 public interface RuleRepository extends JpaRepository<Rule, Integer> {
 
     ArrayList<Rule> getAllByDeviceId(int deviceId);
+
+    ArrayList<Rule> getAll();
 }
