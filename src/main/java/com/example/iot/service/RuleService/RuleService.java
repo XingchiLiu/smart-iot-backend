@@ -79,6 +79,8 @@ public class RuleService {
         rule.setRuleType(ruleForm.getRuleType());
         rule.setFieldName(ruleForm.getFieldName());
         rule.setThresholdVal(ruleForm.getThresholdVal());
+        rule.setRuleActionType(ruleForm.getRuleActionType());
+        rule.setTarget(ruleForm.getTarget());
         return rule;
     }
 

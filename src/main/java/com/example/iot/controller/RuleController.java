@@ -50,7 +50,7 @@ public class RuleController {
             int id = ruleService.updateRule(ruleForm);
             return ResultVO.getSuccess("更新成功", id);
         } catch (Exception e) {
-            return ResultVO.getFailed("更新失败");
+            return ResultVO.getFailed("更新失败", e);
         }
     }
 
