@@ -42,6 +42,14 @@ public interface OnlineAnalysisService {
      */
     boolean deletePMMLModel(Integer modelId);
 
+    /**
+     * 获取PMML模型的输入字段
+     *
+     * @param modelId 模型id
+     * @return 输入字段列表，{@link ModelFieldVO}
+     */
+    List<ModelFieldVO> getPMMLModelInputFields(Integer modelId);
+
     /*------ 算子 ------*/
 
     /**
