@@ -40,7 +40,6 @@ public class ChannelController {
     public ResultVO<Integer> addTemplateChannel(@RequestBody TemplateChannelForm templateChannelForm) {
         try {
             int templateChannelId = channelService.addTemplateChannel(templateChannelForm);
-            //TODO 给这个模板下的所有device加上对应的数据通道
             return ResultVO.getSuccess("模板数据通道创建成功", templateChannelId);
         } catch (Exception e) {
             return ResultVO.getFailed("模板数据通道创建失败", e);
