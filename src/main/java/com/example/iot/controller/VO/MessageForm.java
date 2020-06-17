@@ -17,7 +17,7 @@ public class MessageForm {
     @ApiModelProperty(value = "设备的id")
     private int deviceId;
 
-    @ApiModelProperty(value = "通道的id")
+    @ApiModelProperty(value = "设备通道的id")
     private int channelId;
 
     @ApiModelProperty(value = "发送的时间")

@@ -121,6 +121,26 @@ public class OnlineAnalysisController {
         return ResultVO.getSuccess(DELETE_SUCCESS);
     }
 
+    /**
+     * 获取PMML模型的输入字段
+     *
+     * @param modelId 模型id
+     * @return 输入字段列表，{@link ModelFieldVO}
+     */
+    @GetMapping("/model/inputs")
+    public ResultVO getPMMLModelInputFields(@RequestParam("modelId") Integer modelId) {
+        if (modelId == null || modelId <= 0) {
+            return ResultVO.getFailed(ID_ERROR);
+        }
+
+        List<ModelFieldVO> modelFieldS = onlineAnalysisService.getPMMLModelInputFields(modelId);
+
+        if (modelFieldS == null) {
+            return ResultVO.getFailed(SERVER_ERROR);
+        }
+        return ResultVO.getSuccess(modelFieldS);
+    }
+
     /*------ 算子 ------*/
 
     /**

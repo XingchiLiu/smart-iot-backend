@@ -1,7 +1,9 @@
 package com.example.iot.controller;
 
+import com.example.iot.domain.thing.TSL;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author: lxc
@@ -22,9 +24,22 @@ public class InfoController {
         return "info";
     }
 
+    @GetMapping("/tsl")
+    public String tsl(){
+        return "tsl";
+    }
+
     @GetMapping("/api")
     public String api() {
         return "redirect:/swagger-ui.html";
+    }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public TSL test(){
+        TSL tsl = new TSL(0);
+        tsl.setJSONObjWithStr("{\"name\":\"hello\"}");
+        return tsl;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.example.iot;
 
+import com.alibaba.fastjson.JSON;
+import com.example.iot.domain.thing.TSL;
 import com.example.iot.model.TestForMongo;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +34,11 @@ public class MongoTest extends IotApplicationTests {
         assertNotNull(result);
         System.out.println(result);
         assertEquals("test", result.getInfo());
+    }
+
+    @Test
+    public void test2(){
+        TSL tsl = new TSL(0);
+        mongoTemplate.save(tsl);
     }
 }

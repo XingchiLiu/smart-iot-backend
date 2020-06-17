@@ -16,11 +16,11 @@ public interface DeviceChannelRepository extends JpaRepository<DeviceChannel, In
 
     ArrayList<DeviceChannel> getAllByChannelType(int channelType);
 
-    @Modifying
-    @Query("delete from DeviceChannel where templateChannelId = ?1")
-    void deleteAllByTemplateChannelId(int templateChannelId);
+    DeviceChannel getByIdAndDeviceIdAndChannelType(int id, int deviceId, int channelType);
 
     DeviceChannel getById(int id);
+
+    ArrayList<DeviceChannel> getAllByDeviceIdAndTemplateChannelId(int deviceId, int templateChannelId);
 
     DeviceChannel getByDeviceIdAndChannelTypeAndChannelName(int deviceId, int channelType, String channelName);
 }
