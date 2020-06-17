@@ -4,6 +4,7 @@ import com.example.iot.controller.VO.ChannelDataFieldForm;
 import com.example.iot.controller.VO.DeviceChannelForm;
 import com.example.iot.controller.VO.ResultVO;
 import com.example.iot.controller.VO.TemplateChannelForm;
+import com.example.iot.domain.ChannelDataField;
 import com.example.iot.domain.DeviceChannel;
 import com.example.iot.domain.TemplateChannel;
 import com.example.iot.service.ChannelDataFieldService;
@@ -59,6 +60,22 @@ public class ChannelController {
     @GetMapping("/list/template-channel")
     public List<TemplateChannel> getAllTemplateChannels() {
         return channelService.getAllTemplateChannels();
+    }
+
+    @GetMapping("/get/template-channel/{templateId}")
+    public List<TemplateChannel> getTemplateChannelsByTemplateId(@PathVariable int templateId){
+        return channelService.getTemplateChannelsByTemplateId(templateId);
+    }
+
+    @GetMapping("/get/device-channel/{deviceId}")
+    public List<DeviceChannel> getDeviceChannelByDeviceId(@PathVariable int deviceId){
+        return channelService.getDeviceChanelByDeviceId(deviceId);
+    }
+
+    @GetMapping("/get/data")
+    public List<ChannelDataField> getChannelDataFieldsByChannelTypeAndChannelId
+            (@RequestParam int channelType, @RequestParam int channelId){
+        return channelDataFieldService.getDataFieldsByChannelIdAndChannelType(channelId, channelType);
     }
 
     @GetMapping("/list/device-channel")

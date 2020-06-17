@@ -122,6 +122,10 @@ public class ChannelService {
         return deviceChannelRepository.getById(deviceChannelId);
     }
 
+    public ArrayList<DeviceChannel> getDeviceChanelByDeviceId(int deviceId){
+        return deviceChannelRepository.getAllByDeviceId(deviceId);
+    }
+
     public DeviceChannel getDeviceChannelByIdAndDeviceIdAndChannelType(int id, int deviceId, int channelType){
         return deviceChannelRepository.getByIdAndDeviceIdAndChannelType(id, deviceId, channelType);
     }
