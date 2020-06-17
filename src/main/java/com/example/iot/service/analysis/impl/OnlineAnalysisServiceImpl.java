@@ -173,6 +173,23 @@ public class OnlineAnalysisServiceImpl implements OnlineAnalysisService {
         return true;
     }
 
+    @Override
+    public List<ModelFieldVO> getPMMLModelInputFields(Integer modelId) {
+        try {
+            List<ModelField> modelFields = modelMapper.getInputFieldsByModelId(modelId);
+            if (modelFields == null) {
+                return null;
+            }
+            return modelFields.stream()
+                    .map(ModelFieldVO::new)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Server Error: getPMMLModelInputFields(" + modelId + ")");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /*------ 算子 ------*/
 
     @Override
