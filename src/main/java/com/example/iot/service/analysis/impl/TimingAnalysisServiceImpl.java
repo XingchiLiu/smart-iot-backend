@@ -56,7 +56,7 @@ public class TimingAnalysisServiceImpl implements TimingAnalysisService {
                 Metric metric = analysisMeasurePoint(measurePoint,
                         form.getIntervalMinutes(), timePoints.size(), startTime, endTime);
                 if (metric == null) {
-                    continue;
+                    metric = new Metric(measurePoint, Arrays.asList(new Double[timePoints.size()]));
                 }
                 metrics.add(metric);
             }
@@ -76,7 +76,7 @@ public class TimingAnalysisServiceImpl implements TimingAnalysisService {
                 .getMsgByTopicAndTimeInterval(topic, startTime, endTime);
         // Step 2: 根据时间聚合
         ChannelDataField field = deviceMapper.getChannelDataFieldById(measurePoint.getFieldId());
-        if (FieldType.valueOf(field.getFieldType()) != FieldType.DECIMAL) {
+        if (field == null || FieldType.valueOf(field.getFieldType()) != FieldType.DECIMAL) {
             return null;
         }
         ZoneId defaultZoneId = ZoneId.systemDefault();
