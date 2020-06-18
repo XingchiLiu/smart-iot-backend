@@ -24,9 +24,11 @@ public class MessageFilterService {
         }
 
         int channelType = 1;
+        int channelId = deviceChannel.getId();
         if(deviceChannel.getTemplateChannelId() != -1){
             channelType = 0;
+            channelId = deviceChannel.getTemplateChannelId();
         }
-        channelDataFieldService.verifyDataFieldsInMessageForm(deviceChannel.getId(),channelType,messageForm.getData());
+        channelDataFieldService.verifyDataFieldsInMessageForm(channelId,channelType,messageForm.getData());
     }
 }
