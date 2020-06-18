@@ -97,7 +97,14 @@ public class TimingAnalysisServiceImpl implements TimingAnalysisService {
             List<Double> doubleValues = messages.stream()
                     .map(deviceMessage -> {
                         Map<String, Object> fieldMap = deviceMessage.getDataMap();
-                        return (Double) fieldMap.get(field.getFieldName());
+                        Object val =fieldMap.get(field.getFieldName());
+                        if (val.getClass().equals(Integer.class)) {
+                            return ((Integer) val).doubleValue();
+                        } else if(val.getClass().equals(Double.class)){
+                            return (Double) val;
+                        } else {
+                            return 0.0;
+                        }
                     })
                     .collect(Collectors.toList());
             values[i] = aggregateMsg(doubleValues, measurePoint.getAggregationType());
