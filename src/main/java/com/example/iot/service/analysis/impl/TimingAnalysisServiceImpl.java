@@ -74,6 +74,9 @@ public class TimingAnalysisServiceImpl implements TimingAnalysisService {
         // Step 1: 获取数据
         List<DeviceMessage> deviceMessages = deviceMessageRepo
                 .getMsgByTopicAndTimeInterval(topic, startTime, endTime);
+        if (deviceMessages == null || deviceMessages.size() == 0) {
+            return null;
+        }
         // Step 2: 根据时间聚合
         ChannelDataField field = deviceMapper.getChannelDataFieldById(measurePoint.getFieldId());
         if (field == null || FieldType.valueOf(field.getFieldType()) != FieldType.DECIMAL) {
@@ -90,23 +93,21 @@ public class TimingAnalysisServiceImpl implements TimingAnalysisService {
         Double[] values = new Double[size];
         for (int i = 0; i < size; i++) {
             List<DeviceMessage> messages = timedMsgs.get((long) i);
-            if (messages == null) {
+            if (messages == null || messages.size() == 0) {
                 values[i] = null;
                 continue;
             }
-            List<Double> doubleValues = messages.stream()
-                    .map(deviceMessage -> {
-                        Map<String, Object> fieldMap = deviceMessage.getDataMap();
-                        Object val =fieldMap.get(field.getFieldName());
-                        if (val.getClass().equals(Integer.class)) {
-                            return ((Integer) val).doubleValue();
-                        } else if(val.getClass().equals(Double.class)){
-                            return (Double) val;
-                        } else {
-                            return 0.0;
-                        }
-                    })
-                    .collect(Collectors.toList());
+            List<Double> doubleValues = new ArrayList<>(messages.size());
+            for (DeviceMessage deviceMessage : messages) {
+                Map<String, Object> fieldMap = deviceMessage.getDataMap();
+                Object val = fieldMap.get(field.getFieldName());
+                if (val == null) {
+                } else if (val.getClass().equals(Integer.class)) {
+                    doubleValues.add(((Integer) val).doubleValue());
+                } else if (val.getClass().equals(Double.class)) {
+                    doubleValues.add((Double) val);
+                }
+            }
             values[i] = aggregateMsg(doubleValues, measurePoint.getAggregationType());
         }
         return new Metric(measurePoint, Arrays.asList(values));
