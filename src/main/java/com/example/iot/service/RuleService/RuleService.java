@@ -26,7 +26,7 @@ public class RuleService {
         int deviceId = data.getIntValue("deviceId");
         ArrayList<Rule> rules = ruleRepository.getAllByDeviceId(deviceId);
         for (Rule rule : rules) {
-            JSONArray messages = data.getJSONArray("messages");
+            JSONArray messages = data.getJSONArray("data");
             double val = 0;
             String key = rule.getFieldName();
             for (int i = 0; i < messages.size(); i++) {
