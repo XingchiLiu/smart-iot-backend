@@ -1,6 +1,7 @@
 package com.example.iot.service.ConnectionService;
 
 
+import com.example.iot.service.ChannelService;
 import com.example.iot.service.ConnectionService.connection.MQTT.PubClient;
 import com.example.iot.service.ConnectionService.connection.MQTT.SubClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -15,6 +16,8 @@ public class MqttService implements ApplicationRunner {
     private PubClient pubClient;
     @Autowired
     private SubClient subClient;
+    @Autowired
+    ChannelService channelService;
 
     public void getConnection() {
         try {
@@ -85,8 +88,13 @@ public class MqttService implements ApplicationRunner {
         }
     }
 
+    public void addInitialSub(){
+        addSub(channelService.getInitialTopic(),0);
+    }
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         this.getConnection();
+        this.addInitialSub();
     }
 }
