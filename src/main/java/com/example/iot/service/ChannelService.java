@@ -67,15 +67,16 @@ public class ChannelService {
 
     public int addTemplateChannel(TemplateChannelForm templateChannelForm) {
         TemplateChannel templateChannel = createTemplateChannel(templateChannelForm);
-        List<Device> devices = deviceService.getDeviceByTemplateId(templateChannelForm.getId());
+        List<Device> devices = deviceService.getDeviceByTemplateId(templateChannelForm.getTemplateId());
+        int id = addTemplateChannel(templateChannel);
         if(devices != null && devices.size() > 0){
             for(int i = 0; i < devices.size(); i++){
                 addDeviceChannel(templateChannelForm.getChannelType(),
-                        devices.get(i).getId(),templateChannelForm.getId(),
+                        devices.get(i).getId(),id,
                         templateChannelForm.getChannelName());
             }
         }
-        return addTemplateChannel(templateChannel);
+        return id;
     }
 
     public int addDeviceChannel(DeviceChannelForm deviceChannelForm) {
