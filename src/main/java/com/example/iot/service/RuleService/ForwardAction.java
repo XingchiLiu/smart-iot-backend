@@ -27,7 +27,5 @@ public class ForwardAction extends Action {
         headers.add("Accept", MediaType.APPLICATION_JSON.toString());
         HttpEntity<String> formEntity = new HttpEntity<String>(data.toString(), headers);
         ResponseEntity<String> res = restTemplate.postForEntity(url, formEntity, String.class);
-
-        System.out.println(res.getBody());
     }
 }

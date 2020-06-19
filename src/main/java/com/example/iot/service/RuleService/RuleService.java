@@ -21,6 +21,8 @@ import java.util.ArrayList;
 public class RuleService {
     @Autowired
     RuleRepository ruleRepository;
+    @Autowired
+    RuleLogService ruleLogService;
 
     public void filterAndExecute(JSONObject data) {
         int deviceId = data.getIntValue("deviceId");
@@ -43,8 +45,13 @@ public class RuleService {
                 result = (boolean) compare.invoke(CompareUtil.class, val, threshold);
 
                 if (result) {
-                    Action action = ActionFactory.getAction(rule.getRuleActionType(), rule.getTarget(), data);
-                    action.execute();
+                    try {
+                        Action action = ActionFactory.getAction(rule.getRuleActionType(), rule.getTarget(), data);
+                        action.execute();
+                        ruleLogService.saveSuccessRuleLog(rule.getId(), data);
+                    } catch (Exception e) {
+                        ruleLogService.saveFailureRuleLog(rule.getId(), data);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -2,6 +2,7 @@ package com.example.iot.controller;
 
 import com.example.iot.controller.VO.ResultVO;
 import com.example.iot.controller.VO.RuleForm;
+import com.example.iot.service.RuleService.RuleLogService;
 import com.example.iot.service.RuleService.RuleService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,13 @@ import org.springframework.web.bind.annotation.*;
 public class RuleController {
     @Autowired
     RuleService ruleService;
+    @Autowired
+    RuleLogService ruleLogService;
+
+    @GetMapping("/log/{deviceId}")
+    public ResultVO getRuleLog(@PathVariable int ruleId){
+        return ResultVO.getSuccess("成功", ruleLogService.getRuleLogByRuleId(ruleId));
+    }
 
     @GetMapping("/get/{deviceId}")
     public ResultVO get(@PathVariable int deviceId) {
