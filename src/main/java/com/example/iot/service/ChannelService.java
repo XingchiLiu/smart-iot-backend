@@ -118,6 +118,10 @@ public class ChannelService {
         return templateChannelRepository.getById(templateChannelId);
     }
 
+    public ArrayList<DeviceChannel> getDeviceChanelByDeviceId(int deviceId){
+        return deviceChannelRepository.getAllByDeviceId(deviceId);
+    }
+
     public DeviceChannel getDeviceChannelById(int deviceChannelId) {
         return deviceChannelRepository.getById(deviceChannelId);
     }
@@ -212,6 +216,17 @@ public class ChannelService {
 
     public int getChannelIdByDeviceIdAndChannelTypeAndChannelName(int deviceId, int channelType, String channelName) {
         return deviceChannelRepository.getByDeviceIdAndChannelTypeAndChannelName(deviceId, channelType, channelName).getId();
+    }
+
+    public String[] getInitialTopic(){
+        ArrayList<DeviceChannel> deviceChannels = (ArrayList<DeviceChannel>) deviceChannelRepository.findAll();
+        ArrayList<String> topics = new ArrayList<>();
+        if(deviceChannels != null && deviceChannels.size() > 0){
+            for(int i = 0; i < deviceChannels.size(); i++){
+                topics.add(String.valueOf(deviceChannels.get(i).getId()));
+            }
+        }
+        return topics.toArray(new String[topics.size()]);
     }
 
     private TemplateChannel createTemplateChannel(TemplateChannelForm templateChannelForm) {
