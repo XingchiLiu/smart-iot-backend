@@ -32,10 +32,17 @@ public class RuleService {
         for (Rule rule : rules) {
             JSONArray messages = data.getJSONArray("data");
             double val = 0;
+            boolean flag = true;
             String key = rule.getFieldName();
             for (int i = 0; i < messages.size(); i++) {
                 JSONObject message = messages.getJSONObject(i);
-                val = message.containsKey(key) ? message.getDoubleValue(key) : val;
+                if(message.containsKey(key)){
+                    val = message.getDoubleValue(key);
+                    flag = false;
+                }
+            }
+            if(flag){
+                continue;
             }
 
             double threshold = rule.getThresholdVal();
