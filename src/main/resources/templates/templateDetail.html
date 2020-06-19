@@ -211,7 +211,10 @@
                             </table>
                         </div>
                     </div>
-                    <div id="template_shadow" v-if="currentLocation=='template_shadow'"></div>
+<!--                    影子设备-->
+                    <div id="template_shadow" v-if="currentLocation=='template_shadow'">
+                        <textarea class="form-control" rows="20">{{shadow}}</textarea>
+                    </div>
                     <div id="template_channel" v-if="currentLocation=='template_channel'"></div>
                 </div>
             </div>
@@ -365,7 +368,8 @@
                         }
                     }
                 }
-            }
+            },
+            shadow: "",
         },
         methods: {
             changeLocation: function (location) {
@@ -386,6 +390,14 @@
                     templateDetail.template_tsl.tslObj = response.data.data;
                     templateDetail.template_tsl.tsl = response.data.data.content;
                     templateDetail.template_tsl.tsl_JSONStr = JSON.stringify(response.data.data.content, null, "\t");
+                }).catch(function (err) {
+                    alert(err);
+                });
+                //获取影子设备
+            },
+            getShadow: function(){
+                axios.get(url + '/shadow').then(function (response) {
+                    templateDetail.shadow = JSON.stringify(response.data.data.content, null, "\t");
                 }).catch(function (err) {
                     alert(err);
                 });
@@ -444,6 +456,7 @@
 
     //初始化
     templateDetail.getTemplate();
+    templateDetail.getShadow();
 </script>
 
 </html>

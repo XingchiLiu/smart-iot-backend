@@ -1,6 +1,7 @@
 package com.example.iot.controller;
 
 import com.example.iot.domain.thing.TSL;
+import com.example.iot.util.FileUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,12 +35,11 @@ public class InfoController {
         return "redirect:/swagger-ui.html";
     }
 
-    @GetMapping("/test")
+    @GetMapping("/shadow")
     @ResponseBody
-    public TSL test(){
-        TSL tsl = new TSL(0);
-        tsl.setJSONObjWithStr("{\"name\":\"hello\"}");
-        return tsl;
+    public String test(){
+        String shadow = FileUtil.readTxt("src/main/resources/file/shadow.txt");
+        return shadow;
     }
 
 }

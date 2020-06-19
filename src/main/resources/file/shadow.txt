@@ -1,0 +1,12 @@
+{
+  "state": {
+    "reported": {},
+    "desired": {}
+  },
+  "metadata": {
+    "reported": {},
+    "desired": {}
+  },
+  "timestamp": 0,
+  "version": 0
+}

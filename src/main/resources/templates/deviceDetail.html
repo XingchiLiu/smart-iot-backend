@@ -230,7 +230,10 @@
                             服务
                         </div>
                     </div>
-                    <div id="template_shadow" v-if="currentLocation=='template_shadow'"></div>
+<!--                    影子设备-->
+                    <div id="template_shadow" v-if="currentLocation=='template_shadow'">
+                        <textarea class="form-control" rows="20">{{shadow}}</textarea>
+                    </div>
                     <div id="template_channel" v-if="currentLocation=='template_channel'"></div>
                 </div>
             </div>
@@ -300,7 +303,8 @@
             propertyList: [],
             currentProperty: {},
             propertyHistoryList: [],
-            eventHistoryList: []
+            eventHistoryList: [],
+            shadow: ""
         },
         methods: {
             changeLocation: function (location) {
@@ -344,7 +348,14 @@
                 }).catch(function (err) {
                     alert(err);
                 });
-            }
+            },
+            getShadow: function(){
+                axios.get(url + '/shadow').then(function (response) {
+                    deviceDetail.shadow = JSON.stringify(response.data.data.content, null, "\t");
+                }).catch(function (err) {
+                    alert(err);
+                });
+            },
         }
     });
 
@@ -352,6 +363,7 @@
     deviceDetail.getDevice();
     deviceDetail.getPropertyList();
     deviceDetail.getEventHistory();
+    deviceDetail.getShadow();
 </script>
 
 </html>

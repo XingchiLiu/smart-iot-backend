@@ -39,6 +39,9 @@ public class PropertyService {
         int templateId = device.getTemplateId();
         Query query = new Query(Criteria.where("templateId").is(templateId));
         TSL templateTSL = mongoTemplate.findOne(query, TSL.class);
+        if(templateTSL==null){
+            return new JSONArray();
+        }
         JSONArray propertyList = templateTSL.getContent().getJSONArray("properties");
         for(Object property: propertyList){
             JSONObject propertyJSON = (JSONObject) property;
