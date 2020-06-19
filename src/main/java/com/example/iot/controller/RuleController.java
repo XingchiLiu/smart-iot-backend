@@ -23,7 +23,7 @@ public class RuleController {
     @Autowired
     RuleLogService ruleLogService;
 
-    @GetMapping("/log/{deviceId}")
+    @GetMapping("/log/{ruleId}")
     public ResultVO getRuleLog(@PathVariable int ruleId){
         return ResultVO.getSuccess("成功", ruleLogService.getRuleLogByRuleId(ruleId));
     }
