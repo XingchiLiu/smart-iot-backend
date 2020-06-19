@@ -123,12 +123,12 @@ public class ChannelService {
         return deviceChannelRepository.getById(deviceChannelId);
     }
 
-    public ArrayList<DeviceChannel> getDeviceChanelByDeviceId(int deviceId){
-        return deviceChannelRepository.getAllByDeviceId(deviceId);
-    }
-
     public DeviceChannel getDeviceChannelByIdAndDeviceIdAndChannelType(int id, int deviceId, int channelType){
         return deviceChannelRepository.getByIdAndDeviceIdAndChannelType(id, deviceId, channelType);
+    }
+
+    public ArrayList<DeviceChannel> getDeviceChanelByDeviceId(int deviceId){
+        return deviceChannelRepository.getAllByDeviceId(deviceId);
     }
 
     public List<TemplateChannel> getAllTemplateChannels() {
@@ -229,6 +229,8 @@ public class ChannelService {
         }
         return topics.toArray(new String[topics.size()]);
     }
+
+
 
     private TemplateChannel createTemplateChannel(TemplateChannelForm templateChannelForm) {
         TemplateChannel templateChannel = new TemplateChannel();

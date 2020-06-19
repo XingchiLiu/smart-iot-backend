@@ -1,8 +1,10 @@
 package com.example.iot.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.controller.VO.ResultVO;
 import com.example.iot.domain.thing.TSL;
+import com.example.iot.service.ThingService.PropertyService;
 import com.example.iot.service.ThingService.TSLService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;

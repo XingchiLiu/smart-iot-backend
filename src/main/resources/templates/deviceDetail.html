@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <!--    注意，自己写的要放在后面方便覆盖-->
+    <link rel="stylesheet" href="/css/iot.css">
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!--axios的js-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+<!--顶部导航条-->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://47.100.220.26:3000/">Smart Iot</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="deviceDetail">
+    <div class="container-fluid">
+        <div class="row">
+            <!--        左侧导航条-->
+            <div class="col-md-2">
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="active"><a href="/template">设备模板</a></li>
+                    <li role="presentation"><a href="/device">设备</a></li>
+                    <li role="presentation"><a href="/group">分组</a></li>
+                </ul>
+            </div>
+            <!--        模板详情-->
+            <div class="col-md-10">
+                <a href="/device"><span class="glyphicon glyphicon-arrow-left"
+                                        aria-hidden="false"></span>Come Back</a>
+                <h2>设备详情</h2>
+                <!-- 模板基础信息 -->
+                <div>
+                    <!-- 模板名称 -->
+                    <div>
+                        <b>设备名称：</b>{{device.name}}
+                    </div>
+                    <!-- 模板id -->
+                    <div>
+                        <b>设备id：</b>{{device.id}}
+                    </div>
+                    <div>
+                        <b>模板名称：</b>{{device.templateName}}
+                    </div>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li role="presentation" :class="currentLocation=='template_info'?'active':''"><a href="#"
+                                                                                                     @click="changeLocation('template_info')">基础信息</a>
+                    </li>
+                    <li role="presentation" :class="currentLocation=='template_tsl'?'active':''"><a href="#"
+                                                                                                    @click="changeLocation('template_tsl')">物模型</a>
+                    </li>
+                    <li role="presentation" :class="currentLocation=='template_shadow'?'active':''"><a href="#"
+                                                                                                       @click="changeLocation('template_shadow')">影子设备</a>
+                    </li>
+                    <li role="presentation" :class="currentLocation=='template_channel'?'active':''"><a href="#"
+                                                                                                        @click="changeLocation('template_channel')">数据通道</a>
+                    </li>
+                </ul>
+
+                <!-- 具体的四个模块 -->
+                <div>
+                    <!-- 基础信息 -->
+                    <div id="template_info" v-if="currentLocation=='template_info'">
+                        <table class="table table-condensed">
+                            <tbody>
+                            <tr>
+                                <th scope="row">设备id</th>
+                                <td>{{device.id}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">设备名称</th>
+                                <td>{{device.name}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">模板名称</th>
+                                <td>{{device.templateName}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">连接方式</th>
+                                <td>{{device.connectionType}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">数据格式</th>
+                                <td>{{device.dataFormatType}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">创建时间</th>
+                                <td>{{device.createTime}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">修改时间</th>
+                                <td>{{device.updateTime}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">描述</th>
+                                <td>{{device.description}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 物模型 -->
+                    <div id="template_tsl" v-if="currentLocation=='template_tsl'">
+                        <br>
+                        <!--                        小导航栏-->
+                        <ul class="nav nav-pills">
+                            <li role="presentation" :class="thingLocation=='property'?'active':''"
+                                @click="changeThingLocation('property')"><a href="#">属性上报</a></li>
+                            <li role="presentation" :class="thingLocation=='event'?'active':''"
+                                @click="changeThingLocation('event')"><a href="#">事件通知</a></li>
+                            <li role="presentation" :class="thingLocation=='service'?'active':''"
+                                @click="changeThingLocation('service')"><a href="#">服务调用</a></li>
+                        </ul>
+                        <!--                        属性-->
+                        <div v-if="thingLocation=='property'">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>属性名称</th>
+                                    <th>标识符</th>
+                                    <th>属性描述</th>
+                                    <th>条数</th>
+                                    <th>最近上报时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--                            物模型-属性-->
+                                <tr v-for="(property, index) in propertyList">
+                                    <th scope="row">{{index + 1}}</th>
+                                    <td>{{property.name}}</td>
+                                    <td>{{property.identifier}}</td>
+                                    <td>{{property.desc}}</td>
+                                    <td>{{property.num}}</td>
+                                    <td>{{property.lastPost}}</td>
+                                    <!--                                操作按钮-->
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                                @click="getPropertyHistory(property)">查看历史数据
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--                        事件-->
+                        <div v-if="thingLocation=='event'">
+<!--                            事件列表-->
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>事件名称</th>
+                                    <th>标识符</th>
+                                    <th>事件类型</th>
+                                    <th>事件描述</th>
+                                    <th>上报时间</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--                            物模型-属性-->
+                                <tr v-for="(event, index) in eventHistoryList">
+                                    <th scope="row">{{index + 1}}</th>
+                                    <td>{{event.functionInfo.name}}</td>
+                                    <td>{{event.functionInfo.identifier}}</td>
+                                    <td>{{event.functionInfo.type}}</td>
+                                    <td>{{event.functionInfo.desc}}</td>
+                                    <td>{{event.time}}</td>
+                                    <td>{{event.data}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--                        服务-->
+                        <div v-if="thingLocation=='service'">
+                            服务
+                        </div>
+                    </div>
+<!--                    影子设备-->
+                    <div id="template_shadow" v-if="currentLocation=='template_shadow'">
+                        <textarea class="form-control" rows="20">{{shadow}}</textarea>
+                    </div>
+                    <div id="template_channel" v-if="currentLocation=='template_channel'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="operation">
+
+        <!-- 模拟框 查看属性的历史数据 -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">{{currentProperty.name}}历史数据</h4>
+                        <p>共{{currentProperty.num}}条</p>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>属性名称</th>
+                                <th>标识符</th>
+                                <th>上报时间</th>
+                                <th>内容</th>
+                                <th>单位</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--                            物模型-属性-->
+                            <tr v-for="(property, index) in propertyHistoryList">
+                                <th scope="row">{{index + 1}}</th>
+                                <td>{{property.functionInfo.name}}</td>
+                                <td>{{property.functionInfo.identifier}}</td>
+                                <td>{{property.time}}</td>
+                                <td>{{property.data}}</td>
+                                <td>{{property.functionInfo.dataType.specs.unitName}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+</body>
+
+<script>
+    const url = 'http://101.37.80.37:8081';
+
+    var deviceDetail = new Vue({
+        el: "#deviceDetail",
+        data: {
+            deviceId: 0,
+            device: {},
+            currentLocation: "template_info",
+            thingLocation: "property",
+            propertyList: [],
+            currentProperty: {},
+            propertyHistoryList: [],
+            eventHistoryList: [],
+            shadow: ""
+        },
+        methods: {
+            changeLocation: function (location) {
+                this.currentLocation = location;
+            },
+            changeThingLocation: function (location) {
+                this.thingLocation = location;
+            },
+            getDevice: function () {
+                //获取当前设备id
+                var current_url = window.location.href;
+                var param_arr = current_url.split("/");
+                this.deviceId = param_arr[param_arr.length - 1];
+                axios.get(url + '/device/get/' + this.deviceId).then(function (response) {
+                    deviceDetail.device = response.data.data;
+                }).catch(function (err) {
+                    alert(err);
+                });
+            },
+            todoFunction: function (what) {
+                alert(what + '：界面未完成');
+            },
+            getPropertyList: function () {
+                axios.get(url + '/thing/property/list?deviceId=' + this.deviceId).then(function (response) {
+                    deviceDetail.propertyList = response.data.data;
+                }).catch(function (err) {
+                    alert(err);
+                });
+            },
+            getPropertyHistory: function (property) {
+                deviceDetail.currentProperty = property;
+                axios.get(url + '/thing/property/history?deviceId=' + this.deviceId + '&identifier=' + property.identifier).then(function (response) {
+                    deviceDetail.propertyHistoryList = response.data.data;
+                }).catch(function (err) {
+                    alert(err);
+                });
+            },
+            getEventHistory: function () {
+                axios.get(url + '/thing/event/history?deviceId=' + this.deviceId).then(function (response) {
+                    deviceDetail.eventHistoryList = response.data.data;
+                }).catch(function (err) {
+                    alert(err);
+                });
+            },
+            getShadow: function(){
+                axios.get(url + '/shadow').then(function (response) {
+                    deviceDetail.shadow = JSON.stringify(response.data.data.content, null, "\t");
+                }).catch(function (err) {
+                    alert(err);
+                });
+            },
+        }
+    });
+
+    //初始化
+    deviceDetail.getDevice();
+    deviceDetail.getPropertyList();
+    deviceDetail.getEventHistory();
+    deviceDetail.getShadow();
+</script>
+
+</html>

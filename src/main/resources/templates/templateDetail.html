@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <!--    注意，自己写的要放在后面方便覆盖-->
+    <link rel="stylesheet" href="/css/iot.css">
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!--axios的js-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+<!--顶部导航条-->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://47.100.220.26:3000/">Smart Iot</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="templateDetail">
+    <div class="container-fluid">
+        <div class="row">
+            <!--        左侧导航条-->
+            <div class="col-md-2">
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="active"><a href="/template">设备模板</a></li>
+                    <li role="presentation"><a href="/device">设备</a></li>
+                    <li role="presentation"><a href="/group">分组</a></li>
+                </ul>
+            </div>
+            <!--        模板详情-->
+            <div class="col-md-10">
+                <a href="/template"><span class="glyphicon glyphicon-arrow-left"
+                                                           aria-hidden="false"></span>Come Back</a>
+                <h2>模板详情</h2>
+                <!-- 模板基础信息 -->
+                <div>
+                    <!-- 模板名称 -->
+                    <div>
+                        <b>模板名称：</b>{{template.name}}
+                    </div>
+                    <!-- 模板id -->
+                    <div>
+                        <b>模板id：</b>{{template.id}}
+                    </div>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li role="presentation" :class="currentLocation=='template_info'?'active':''"><a href="#"
+                                                                                                     @click="changeLocation('template_info')">基础信息</a>
+                    </li>
+                    <li role="presentation" :class="currentLocation=='template_tsl'?'active':''"><a href="#"
+                                                                                                    @click="changeLocation('template_tsl')">物模型</a>
+                    </li>
+                    <li role="presentation" :class="currentLocation=='template_shadow'?'active':''"><a href="#"
+                                                                                                       @click="changeLocation('template_shadow')">影子设备</a>
+                    </li>
+                    <li role="presentation" :class="currentLocation=='template_channel'?'active':''"><a href="#"
+                                                                                                        @click="changeLocation('template_channel')">数据通道</a>
+                    </li>
+                </ul>
+
+                <!-- 具体的四个模块 -->
+                <div>
+                    <!-- 基础信息 -->
+                    <div id="template_info" v-if="currentLocation=='template_info'">
+                        <table class="table table-condensed">
+                            <tbody>
+                            <tr>
+                                <th scope="row">模板id</th>
+                                <td>{{template.id}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">模板名称</th>
+                                <td>{{template.name}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">连接方式</th>
+                                <td>{{template.connectionType}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">数据格式</th>
+                                <td>{{template.dataFormatType}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">创建时间</th>
+                                <td>{{template.createTime}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">修改时间</th>
+                                <td>{{template.updateTime}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">描述</th>
+                                <td>{{template.description}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 物模型 -->
+                    <div id="template_tsl" v-if="currentLocation=='template_tsl'">
+                        <!-- 四个操作按钮 -->
+                        <div>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tslModal">物模型TSL
+                            </button>
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addPropertyModal">新增属性</button>
+                            <button type="button" class="btn btn-default" @click="todoFunction('新增事件')">新增事件</button>
+                            <button type="button" class="btn btn-default" @click="todoFunction('新增服务')">新增服务</button>
+                        </div>
+                        <!--                    物模型功能列表-->
+                        <div>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>功能类型</th>
+                                    <th>功能名称</th>
+                                    <th>标识符</th>
+                                    <th>功能描述</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--                            物模型-属性-->
+                                <tr v-for="(property, index) in template_tsl.tsl.properties">
+                                    <th scope="row">property {{index + 1}}</th>
+                                    <td>属性</td>
+                                    <td>{{property.name}}</td>
+                                    <td>{{property.identifier}}</td>
+                                    <td>{{property.desc}}</td>
+                                    <!--                                操作按钮-->
+                                    <td>
+                                        <button type="button" class="btn btn-primary" @click="todoFunction('修改')">修改</button>
+                                        <button type="button" class="btn btn-danger" @click="deleteProperty(index)">删除</button>
+                                    </td>
+                                </tr>
+                                <!--                            物模型-事件-->
+                                <tr v-for="(event, index) in template_tsl.tsl.events">
+                                    <th scope="row">event {{index + 1}}</th>
+                                    <td>事件</td>
+                                    <td>{{event.name}}</td>
+                                    <td>{{event.identifier}}</td>
+                                    <td>{{event.desc}}</td>
+                                    <!--                                操作按钮-->
+                                    <td>
+                                        <button type="button" class="btn btn-primary" @click="todoFunction('修改')">修改</button>
+                                        <button type="button" class="btn btn-danger" @click="deleteEvent(index)">删除</button>
+                                    </td>
+                                </tr>
+                                <!--                            物模型-服务-->
+                                <tr v-for="(service, index) in template_tsl.tsl.services">
+                                    <th scope="row">service {{index + 1}}</th>
+                                    <td>服务</td>
+                                    <td>{{service.name}}</td>
+                                    <td>{{service.identifier}}</td>
+                                    <td>{{service.desc}}</td>
+                                    <!--                                操作按钮-->
+                                    <td>
+                                        <button type="button" class="btn btn-primary" @click="todoFunction('修改')">修改</button>
+                                        <button type="button" class="btn btn-danger" @click="deleteService(index)">删除</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+<!--                    影子设备-->
+                    <div id="template_shadow" v-if="currentLocation=='template_shadow'">
+                        <textarea class="form-control" rows="20">{{shadow}}</textarea>
+                    </div>
+                    <div id="template_channel" v-if="currentLocation=='template_channel'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="operation">
+        <!-- 修改物模型TSL -->
+        <div class="modal fade" id="tslModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">物模型TSL</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="form-control" rows="20" v-model="template_tsl.tsl_JSONStr"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" @click="updateTSL_Whole">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 确认删除 -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">删除模板</h4>
+                    </div>
+                    <div class="modal-body">
+                        确认要删除吗？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger">删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 进行添加 -->
+        <div class="modal fade" id="addPropertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">添加物模型-属性</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 表单 -->
+                        <form>
+                            <div class="form-group">
+                                <label>属性名称</label>
+                                <input type="text" class="form-control" v-model="template_tsl.newProperty.name" placeholder="模板内唯一">
+                            </div>
+                            <div class="form-group">
+                                <label>标识符</label>
+                                <input type="text" class="form-control" v-model="template_tsl.newProperty.identifier" placeholder="模板内唯一">
+                            </div>
+                            <div class="form-group">
+                                <label>描述</label>
+                                <textarea class="form-control" rows="4" v-model="template_tsl.newProperty.desc"
+                                          placeholder="对物模型-属性的描述"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>可读写性</label>（可写代表设备属性值可以被平台设置）
+                                <br>
+                                <input type="radio" id="male" value="r" v-model="template_tsl.newProperty.accessMode"> r（可读）
+                                <input type="radio" id="female" value="rw" v-model="template_tsl.newProperty.accessMode"> rw（可读写）
+                            </div>
+                            <div class="form-group">
+                                <label>类型</label>
+                                <select class="form-control" v-model="template_tsl.newProperty.dataType.type">
+                                    <option value="int">int（整形）</option>
+                                    <option value="double">double（双精度浮点型）</option>
+                                    <option value="string">string（字符型）</option>
+                                    <option value="struct">struct（结构体）</option>
+                                </select>
+                            </div>
+<!--                            数值型界面-->
+                            <div v-if="template_tsl.newProperty.dataType.type=='int' || template_tsl.newProperty.dataType.type=='double'">
+                                <div class="form-group">
+                                    <label>最小值</label>
+                                    <input type="text" class="form-control" v-model="template_tsl.newProperty.dataType.specs.min" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                    <label>最大值</label>
+                                    <input type="text" class="form-control" v-model="template_tsl.newProperty.dataType.specs.max" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                    <label>单位（填写字符串即可）</label>
+                                    <input type="text" class="form-control" v-model="template_tsl.newProperty.dataType.specs.unitName" placeholder="">
+                                </div>
+                            </div>
+<!--                            字符型界面-->
+                            <div v-if="template_tsl.newProperty.dataType.type=='string'">
+                                <div class="form-group">
+                                    <label>最大长度（单位字节）</label>
+                                    <input type="text" class="form-control" v-model="template_tsl.newProperty.dataType.specs.maxLength" placeholder="">
+                                </div>
+                            </div>
+                            <div v-if="template_tsl.newProperty.dataType.type=='struct'">
+                                结构体型，界面未完成
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="addProperty">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+
+<script>
+    const url = 'http://101.37.80.37:8081';
+
+    var templateDetail = new Vue({
+        el: "#templateDetail",
+        data: {
+            template: {},
+            currentLocation: "template_info",
+            template_tsl: {
+                //物模型的jsonStr
+                tsl_JSONStr:"",
+                //物模型的json
+                tsl: {},
+                //全部，还包含设备、创建时间等
+                tslObj: {},
+                newProperty: {
+                    identifier:"",
+                    name:"",
+                    desc:"",
+                    accessMode:"r",
+                    dataType: {
+                        type: "string",
+                        specs: {
+                        }
+                    }
+                }
+            },
+            shadow: "",
+        },
+        methods: {
+            changeLocation: function (location) {
+                this.currentLocation = location;
+            },
+            getTemplate: function () {
+                //获取当前模板id
+                var current_url = window.location.href;
+                var param_arr = current_url.split("/");
+                var templateId = param_arr[param_arr.length - 1];
+                axios.get(url + '/template/get/' + templateId).then(function (response) {
+                    templateDetail.template = response.data.data;
+                }).catch(function (err) {
+                    alert(err);
+                });
+                //获取物模型
+                axios.get(url + '/tsl/' + templateId + '/get').then(function (response) {
+                    templateDetail.template_tsl.tslObj = response.data.data;
+                    templateDetail.template_tsl.tsl = response.data.data.content;
+                    templateDetail.template_tsl.tsl_JSONStr = JSON.stringify(response.data.data.content, null, "\t");
+                }).catch(function (err) {
+                    alert(err);
+                });
+                //获取影子设备
+            },
+            getShadow: function(){
+                axios.get(url + '/shadow').then(function (response) {
+                    templateDetail.shadow = JSON.stringify(response.data.data.content, null, "\t");
+                }).catch(function (err) {
+                    alert(err);
+                });
+            },
+
+            //物模型方法区
+            //整体更新物模型
+            updateTSL_Whole:function (){
+                this.template_tsl.tsl = JSON.parse(this.template_tsl.tsl_JSONStr);
+                this.updateTSL();
+                $("#tslModal").modal('hide');
+            },
+            //删除属性
+            deleteProperty: function(index) {
+                this.template_tsl.tsl.properties.splice(index, 1);
+                this.updateTSL();
+            },
+            //删除事件
+            deleteEvent: function(index) {
+                this.template_tsl.tsl.events.splice(index, 1);
+                this.updateTSL();
+            },
+            //删除服务
+            deleteService: function(index) {
+                this.template_tsl.tsl.services.splice(index, 1);
+                this.updateTSL();
+            },
+            //增加属性
+            addProperty: function(){
+                if(this.template_tsl.newProperty.dataType.type==='int'|| this.template_tsl.newProperty.dataType.type==='double'){
+                    delete this.template_tsl.newProperty.dataType.specs.maxLength;
+                }
+                else if(this.template_tsl.newProperty.dataType.type==='string'){
+                    delete this.template_tsl.newProperty.dataType.specs.min;
+                    delete this.template_tsl.newProperty.dataType.specs.max;
+                    delete this.template_tsl.newProperty.dataType.specs.unitName;
+                }
+                this.template_tsl.tsl.properties.push(this.template_tsl.newProperty);
+                this.updateTSL();
+                $("#addPropertyModal").modal('hide');
+            },
+            //使用api，更新物模型
+            updateTSL: function () {
+                axios.post(url + '/tsl/' + this.template.id + '/update', this.template_tsl.tsl).then(function (response) {
+                    alert("物模型更新成功");
+                    templateDetail.getTemplate();
+                }).catch(function (err) {
+                    alert(err);
+                });
+            },
+            todoFunction: function (what) {
+                alert(what+'：界面未完成');
+            }
+        }
+    });
+
+    //初始化
+    templateDetail.getTemplate();
+    templateDetail.getShadow();
+</script>
+
+</html>

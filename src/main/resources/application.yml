@@ -21,7 +21,7 @@ spring:
 
 logging:
   file:
-    name: log/iot.log
+    name: /var/log/iot.log
 
 mybatis:
   mapper-locations: classpath:mapper/*

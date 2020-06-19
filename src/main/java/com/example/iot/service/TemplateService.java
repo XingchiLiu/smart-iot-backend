@@ -5,6 +5,7 @@ import com.example.iot.controller.VO.TemplateForm;
 import com.example.iot.controller.VO.TemplateVO;
 import com.example.iot.domain.DeviceTemplate;
 import com.example.iot.repository.TemplateRepository;
+import com.example.iot.service.ThingService.TSLService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,8 @@ public class TemplateService {
     ChannelService channelService;
     @Autowired
     ChannelDataFieldService channelDataFieldService;
+    @Autowired
+    TSLService tslService;
 
 
     public ResultVO addTemplate(TemplateForm templateForm) {
@@ -57,6 +60,11 @@ public class TemplateService {
         DeviceTemplate result = templateRepository.save(deviceTemplate);
         //创建产品组
         groupService.createProductGroup(result);
+
+        /*
+        创建物模型，影子设备
+         */
+        tslService.createTSL(result.getId());
 
         //如果设置了数据通道
         if (templateForm.getChannelType() != -1) {
