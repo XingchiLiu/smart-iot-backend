@@ -29,6 +29,11 @@ public class TSLService {
         return result;
     }
 
+    public void createTSL(int templateId){
+        TSL tsl = new TSL(templateId);
+        mongoTemplate.save(tsl);
+    }
+
     public TSL updateTSL(int templateId, JSONObject content){
         Query query = new Query(Criteria.where("templateId").is(templateId));
         TSL result = mongoTemplate.findOne(query, TSL.class);

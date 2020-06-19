@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!--    在本地快速测试需要改成相对路径-->
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" >
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css">
+    <!--    注意，自己写的要放在后面方便覆盖-->
+    <link rel="stylesheet" href="../static/css/iot.css">
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../static/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../static/js/bootstrap.min.js" ></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!--axios的js-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+<!--顶部导航条-->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://47.100.220.26:3000/">Smart Iot</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+<!--        左侧导航条-->
+        <div class="col-md-2">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="active"><a href="101.37.80.37:8081/template">设备模板</a></li>
+                <li role="presentation"><a href="101.37.80.37:8081/device">设备</a></li>
+                <li role="presentation"><a href="101.37.80.37:8081/group">分组</a></li>
+            </ul>
+        </div>
+<!--        模板列表-->
+        <div class="col-md-10" id="templateTable">
+            <h2>设备模板</h2>
+<!--            添加模板按钮和搜索栏-->
+            <div class="row">
+                <div class="col-lg-6">
+                    <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#addModal">创建模板</button>
+                </div><!-- /.col-lg-6 -->
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="模板名称">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="button">搜索模板</button>
+                        </span>
+                      </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+<!--            列表-->
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>模板名</th>
+                    <th>模板id</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(template, index) in itemList">
+                    <th scope="row">{{index + 1}}</th>
+                    <td>{{template.name}}</td>
+                    <td>{{template.id}}</td>
+                    <td>{{template.createTime}}</td>
+                    <!-- 三个操作按钮 -->
+                    <td>
+                        <button type="button" class="btn btn-default" @click="goToDetail(template)">详情</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" @click="goToDelete(template)">删除</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- 翻页工具 -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                  <li :class="currentPage==0?'disabled':''">
+                    <a href="#" aria-label="Previous" @click="prevPage">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <li><a href="#" v-text="currentPage+1"></a></li>
+                  <li :class="currentPage==totalPages-1?'disabled':''">
+                    <a href="#" aria-label="Next" @click="nextPage">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                  <span>共{{totalPages}}页</span>
+                </ul>
+              </nav>
+        </div>
+    </div>
+</div>
+
+<div id="operation">
+    <!-- 确认删除 -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">删除模板</h4>
+            </div>
+            <div class="modal-body">
+              确认要删除吗？
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" @click="deleteTemplate">删除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- 进行添加 -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">添加模板</h4>
+            </div>
+            <div class="modal-body">
+              <!-- 表单 -->
+              <form>
+                <div class="form-group">
+                  <label>模板名称</label>
+                  <input type="text" class="form-control" v-model="newTemplate.name" placeholder="唯一">
+                </div>
+                <div class="form-group">
+                    <label>描述</label>
+                    <textarea class="form-control" rows="4" v-model="newTemplate.description" placeholder="对模板的描述"></textarea>
+                  </div>
+                <div class="form-group">
+                    <input type="radio" id="male" value="MQTT" v-model="newTemplate.connectionType"> MQTT
+                    <input type="radio" id="female" value="HTTP" v-model="newTemplate.connectionType"> HTTP
+                </div>
+
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" @click="addTemplate">确认</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+</body>
+
+<script>
+    const url = 'http://101.37.80.37:8081';
+
+    var templateTable = new Vue({
+        el: "#templateTable",
+        data: {
+            itemList: [],
+            currentPage: 0,
+            pageSize: 10,
+            totalPages: 0,
+        },
+        methods: {
+            //获得某一页
+            getPage: function(page){
+                // 异步请求
+                axios.get(url+'/template/list?page='+page+'&pageSize=10').then(function (response) {
+                    templateTable.itemList = response.data.data.content;
+                    templateTable.totalPages = response.data.data.totalPages;
+                }).catch(function (err) {
+                    console.log(err);
+                })
+            },
+            //前一页
+            prevPage: function(){
+                this.currentPage--;
+                this.getPage(this.currentPage);
+            },
+            //后一页
+            nextPage: function () {
+                this.currentPage++;
+                this.getPage(this.currentPage);
+            },
+
+            goToDelete(template){
+                templateOperation.chosenTemplate = template;
+            },
+            //跳转到新的页面
+            goToDetail(template){
+                window.location.href = url + '/template/detail/' + template.id; 
+            }
+        }
+    })
+
+    var templateOperation = new Vue({
+        el: "#operation",
+        data: {
+            chosenTemplate:{},
+            newTemplate: {
+                name:"",
+                description: "",
+                connectionType: "MQTT"
+            }
+        },
+        methods:{
+            deleteTemplate: function(){
+                //删除模板
+                axios.get(url+'/template/delete/'+this.chosenTemplate.id).then(function(response){
+                    alert("删除成功");
+                    //刷新
+                    templateTable.getPage(0);
+                }).catch(function(err){
+                    console.log(err);
+                });
+                $("#deleteModal").modal('hide');
+            },
+            addTemplate: function(){
+                axios.post(url+'/template/add', this.newTemplate).then(function(response){
+                    alert("创建成功");
+                    //刷新
+                    templateTable.getPage(0);
+                }).catch(function(err){
+                    console.log(err);
+                });
+                $("#addModal").modal('hide');
+            }
+
+        }
+    })
+    
+    // 初始化页面
+    templateTable.getPage(0);
+</script>
+
+</html>

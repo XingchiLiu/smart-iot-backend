@@ -78,11 +78,9 @@ public class DeviceService {
         //默认为管理员1
         device.setUserId(1);
 
-        /*
-        TODO 复制数据通道、物模型、影子设备
-         */
-
         Device result = deviceRepository.save(device);
+
+        //TODO 影子设备
 
         channelService.addChannelsToNewlyAddedDevice(result.getId(), templateId);
 
@@ -98,7 +96,8 @@ public class DeviceService {
     public void deleteDevice(int deviceId) {
         //删除设备信息
         deviceRepository.deleteById(deviceId);
-        //TODO 删除设备通道、物模型、影子设备
+
+        //TODO 删除设备通道、影子设备
 
         channelService.deleteDeviceOwnDeviceChannel(deviceId);
     }
