@@ -67,15 +67,16 @@ public class ChannelService {
 
     public int addTemplateChannel(TemplateChannelForm templateChannelForm) {
         TemplateChannel templateChannel = createTemplateChannel(templateChannelForm);
-        List<Device> devices = deviceService.getDeviceByTemplateId(templateChannelForm.getId());
+        List<Device> devices = deviceService.getDeviceByTemplateId(templateChannelForm.getTemplateId());
+        int id = addTemplateChannel(templateChannel);
         if(devices != null && devices.size() > 0){
             for(int i = 0; i < devices.size(); i++){
                 addDeviceChannel(templateChannelForm.getChannelType(),
-                        devices.get(i).getId(),templateChannelForm.getId(),
+                        devices.get(i).getId(),id,
                         templateChannelForm.getChannelName());
             }
         }
-        return addTemplateChannel(templateChannel);
+        return id;
     }
 
     public int addDeviceChannel(DeviceChannelForm deviceChannelForm) {
@@ -118,16 +119,16 @@ public class ChannelService {
         return templateChannelRepository.getById(templateChannelId);
     }
 
-    public ArrayList<DeviceChannel> getDeviceChanelByDeviceId(int deviceId){
-        return deviceChannelRepository.getAllByDeviceId(deviceId);
-    }
-
     public DeviceChannel getDeviceChannelById(int deviceChannelId) {
         return deviceChannelRepository.getById(deviceChannelId);
     }
 
     public DeviceChannel getDeviceChannelByIdAndDeviceIdAndChannelType(int id, int deviceId, int channelType){
         return deviceChannelRepository.getByIdAndDeviceIdAndChannelType(id, deviceId, channelType);
+    }
+
+    public ArrayList<DeviceChannel> getDeviceChanelByDeviceId(int deviceId){
+        return deviceChannelRepository.getAllByDeviceId(deviceId);
     }
 
     public List<TemplateChannel> getAllTemplateChannels() {
@@ -228,6 +229,8 @@ public class ChannelService {
         }
         return topics.toArray(new String[topics.size()]);
     }
+
+
 
     private TemplateChannel createTemplateChannel(TemplateChannelForm templateChannelForm) {
         TemplateChannel templateChannel = new TemplateChannel();

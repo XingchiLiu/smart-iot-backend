@@ -6,7 +6,7 @@
     <title>Good Thymes Virtual Grocery</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<!--    在本地快速测试需要改成相对路径-->
+    <!--    在本地快速测试需要改成相对路径-->
 
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="../static/css/bootstrap.min.css" >
@@ -67,52 +67,54 @@
 
 <div class="container-fluid">
     <div class="row">
-<!--        左侧导航条-->
+        <!--        左侧导航条-->
         <div class="col-md-2">
             <ul class="nav nav-pills nav-stacked">
-                <li role="presentation" class="active"><a href="/template">设备模板</a></li>
-                <li role="presentation"><a href="/device">设备</a></li>
+                <li role="presentation"><a href="/template">设备模板</a></li>
+                <li role="presentation" class="active"><a href="/device">设备</a></li>
                 <li role="presentation"><a href="/group">分组</a></li>
             </ul>
         </div>
-<!--        模板列表-->
-        <div class="col-md-10" id="templateTable">
-            <h2>设备模板</h2>
-<!--            添加模板按钮和搜索栏-->
+        <!--        设备列表-->
+        <div class="col-md-10" id="deviceTable">
+            <h2>设备列表</h2>
+            <!--            添加设备按钮和搜索栏-->
             <div class="row">
                 <div class="col-lg-6">
-                    <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#addModal">创建模板</button>
+                    <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#addModal">创建设备</button>
                 </div><!-- /.col-lg-6 -->
                 <div class="col-lg-6">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="模板名称">
+                        <input type="text" class="form-control" placeholder="设备名称">
                         <span class="input-group-btn">
-                          <button class="btn btn-default" type="button">搜索模板</button>
+                          <button class="btn btn-default" type="button">搜索设备</button>
                         </span>
-                      </div><!-- /input-group -->
+                    </div><!-- /input-group -->
                 </div><!-- /.col-lg-6 -->
             </div><!-- /.row -->
-<!--            列表-->
+            <!--            列表-->
             <table class="table table-hover">
                 <thead>
                 <tr>
                     <th>#</th>
+                    <th>设备名</th>
+                    <th>设备id</th>
                     <th>模板名</th>
-                    <th>模板id</th>
                     <th>创建时间</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(template, index) in itemList">
+                <tr v-for="(device, index) in itemList">
                     <th scope="row">{{index + 1}}</th>
-                    <td>{{template.name}}</td>
-                    <td>{{template.id}}</td>
-                    <td>{{template.createTime}}</td>
+                    <td>{{device.name}}</td>
+                    <td>{{device.id}}</td>
+                    <td>{{device.templateName}}</td>
+                    <td>{{device.createTime}}</td>
                     <!-- 三个操作按钮 -->
                     <td>
-                        <button type="button" class="btn btn-default" @click="goToDetail(template)">详情</button>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" @click="goToDelete(template)">删除</button>
+                        <button type="button" class="btn btn-default" @click="goToDetail(device)">详情</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" @click="goToDelete(device)">删除</button>
                     </td>
                 </tr>
                 </tbody>
@@ -120,20 +122,20 @@
             <!-- 翻页工具 -->
             <nav aria-label="Page navigation">
                 <ul class="pagination">
-                  <li :class="currentPage==0?'disabled':''">
-                    <a href="#" aria-label="Previous" @click="prevPage">
-                      <span aria-hidden="true">&laquo;</span>
-                    </a>
-                  </li>
-                  <li><a href="#" v-text="currentPage+1"></a></li>
-                  <li :class="currentPage==totalPages-1?'disabled':''">
-                    <a href="#" aria-label="Next" @click="nextPage">
-                      <span aria-hidden="true">&raquo;</span>
-                    </a>
-                  </li>
-                  <span>共{{totalPages}}页</span>
+                    <li :class="currentPage==0?'disabled':''">
+                        <a href="#" aria-label="Previous" @click="prevPage">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="#" v-text="currentPage+1"></a></li>
+                    <li :class="currentPage==totalPages-1?'disabled':''">
+                        <a href="#" aria-label="Next" @click="nextPage">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <span>共{{totalPages}}页</span>
                 </ul>
-              </nav>
+            </nav>
         </div>
     </div>
 </div>
@@ -142,55 +144,55 @@
     <!-- 确认删除 -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">删除模板</h4>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">删除模板</h4>
+                </div>
+                <div class="modal-body">
+                    确认要删除吗？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" @click="deleteDevice">删除</button>
+                </div>
             </div>
-            <div class="modal-body">
-              确认要删除吗？
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger" @click="deleteTemplate">删除</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
 
     <!-- 进行添加 -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">添加模板</h4>
-            </div>
-            <div class="modal-body">
-              <!-- 表单 -->
-              <form>
-                <div class="form-group">
-                  <label>模板名称</label>
-                  <input type="text" class="form-control" v-model="newTemplate.name" placeholder="唯一">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加模板</h4>
                 </div>
-                <div class="form-group">
-                    <label>描述</label>
-                    <textarea class="form-control" rows="4" v-model="newTemplate.description" placeholder="对模板的描述"></textarea>
-                  </div>
-                <div class="form-group">
-                    <input type="radio" id="male" value="MQTT" v-model="newTemplate.connectionType"> MQTT
-                    <input type="radio" id="female" value="HTTP" v-model="newTemplate.connectionType"> HTTP
-                </div>
+                <div class="modal-body">
+                    <!-- 表单 -->
+                    <form>
+                        <div class="form-group">
+                            <label>模板名称</label>
+                            <input type="text" class="form-control" v-model="newDevice.name" placeholder="唯一">
+                        </div>
+                        <div class="form-group">
+                            <label>描述</label>
+                            <textarea class="form-control" rows="4" v-model="newDevice.description" placeholder="对模板的描述"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" id="male" value="MQTT" v-model="newDevice.connectionType"> MQTT
+                            <input type="radio" id="female" value="HTTP" v-model="newDevice.connectionType"> HTTP
+                        </div>
 
-              </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" @click="addDevice">确认</button>
+                </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" @click="addTemplate">确认</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
 
 </div>
 
@@ -199,8 +201,8 @@
 <script>
     const url = 'http://101.37.80.37:8081';
 
-    var templateTable = new Vue({
-        el: "#templateTable",
+    var deviceTable = new Vue({
+        el: "#deviceTable",
         data: {
             itemList: [],
             currentPage: 0,
@@ -211,9 +213,9 @@
             //获得某一页
             getPage: function(page){
                 // 异步请求
-                axios.get(url+'/template/list?page='+page+'&pageSize=10').then(function (response) {
-                    templateTable.itemList = response.data.data.content;
-                    templateTable.totalPages = response.data.data.totalPages;
+                axios.get(url+'/device/list?page='+page+'&pageSize=10').then(function (response) {
+                    deviceTable.itemList = response.data.data.content;
+                    deviceTable.totalPages = response.data.data.totalPages;
                 }).catch(function (err) {
                     console.log(err);
                 })
@@ -229,43 +231,43 @@
                 this.getPage(this.currentPage);
             },
 
-            goToDelete(template){
-                templateOperation.chosenTemplate = template;
+            goToDelete(device){
+                deviceOperation.chosenDevice = device;
             },
             //跳转到新的页面
-            goToDetail(template){
-                window.location.href = '/template/detail/' + template.id;
+            goToDetail(device){
+                window.location.href = '/device/detail/' + device.id;
             }
         }
-    })
+    });
 
-    var templateOperation = new Vue({
+    var deviceOperation = new Vue({
         el: "#operation",
         data: {
-            chosenTemplate:{},
-            newTemplate: {
+            chosenDevice:{},
+            newDevice: {
                 name:"",
                 description: "",
                 connectionType: "MQTT"
             }
         },
         methods:{
-            deleteTemplate: function(){
-                //删除模板
-                axios.get(url+'/template/delete/'+this.chosenTemplate.id).then(function(response){
+            deleteDevice: function(){
+                //删除设备
+                axios.get(url+'/device/delete/'+this.chosenDevice.id).then(function(response){
                     alert("删除成功");
                     //刷新
-                    templateTable.getPage(0);
+                    DeviceTable.getPage(0);
                 }).catch(function(err){
                     console.log(err);
                 });
                 $("#deleteModal").modal('hide');
             },
-            addTemplate: function(){
-                axios.post(url+'/template/add', this.newTemplate).then(function(response){
+            addDevice: function(){
+                axios.post(url+'/device/add', this.newDevice).then(function(response){
                     alert("创建成功");
                     //刷新
-                    templateTable.getPage(0);
+                    deviceTable.getPage(0);
                 }).catch(function(err){
                     console.log(err);
                 });
@@ -274,9 +276,9 @@
 
         }
     })
-    
+
     // 初始化页面
-    templateTable.getPage(0);
+    deviceTable.getPage(0);
 </script>
 
 </html>
