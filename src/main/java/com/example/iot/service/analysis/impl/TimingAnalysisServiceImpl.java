@@ -114,7 +114,7 @@ public class TimingAnalysisServiceImpl implements TimingAnalysisService {
     }
 
     private Double aggregateMsg(List<Double> values, AggregationType type) {
-        if (values == null || values.size() == 0) {
+        if (values == null) {
             return null;
         }
         Double result;
