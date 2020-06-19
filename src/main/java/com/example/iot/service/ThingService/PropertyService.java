@@ -1,7 +1,9 @@
 package com.example.iot.service.ThingService;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.domain.Device;
+import com.example.iot.domain.thing.Property;
 import com.example.iot.domain.thing.TSL;
 import com.example.iot.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author: lxc
@@ -29,26 +34,40 @@ public class PropertyService {
      * @param deviceId
      * @return
      */
-    public JSONObject getPropertyList(int deviceId){
+    public JSONArray getPropertyList(int deviceId){
         Device device = deviceRepository.findById(deviceId).get();
         int templateId = device.getTemplateId();
         Query query = new Query(Criteria.where("templateId").is(templateId));
         TSL templateTSL = mongoTemplate.findOne(query, TSL.class);
-        JSONObject jsonObject = templateTSL.getContent();
-        jsonObject.remove("events");
-        jsonObject.remove("services");
-        jsonObject.remove("schema");
-        return jsonObject;
+        JSONArray propertyList = templateTSL.getContent().getJSONArray("properties");
+        for(Object property: propertyList){
+            JSONObject propertyJSON = (JSONObject) property;
+            String identifier = propertyJSON.getString("identifier");
+            List<Property> propertyHistory = getPropertyHistory(deviceId, identifier);
+            //获得条数
+            propertyJSON.put("num", propertyHistory.size());
+            //获得最近更新时间
+            Date lastPost = new Date(0);
+            for(Property property1: propertyHistory){
+                if(property1.getTime().after(lastPost)){
+                    lastPost = property1.getTime();
+                }
+            }
+            propertyJSON.put("lastPost", lastPost);
+        }
+        return propertyList;
     }
 
     /**
-     * 根据设备id、属性标识符、时间上下限获取上报的属性历史
+     * 根据设备id、属性标识符获取上报的属性历史
      * @param deviceId
      * @param identifier
-     * @param days 最近多少天的数据
      * @return
      */
-    public JSONObject getPropertyHistory(int deviceId, String identifier, int days){
-        return null;
+    public List<Property> getPropertyHistory(int deviceId, String identifier){
+        Query query = new Query(Criteria.where("deviceId").is(deviceId));
+        query.addCriteria(Criteria.where("functionInfo.identifier").is(identifier));
+        List<Property> propertyList = mongoTemplate.find(query, Property.class);
+        return propertyList;
     }
 }

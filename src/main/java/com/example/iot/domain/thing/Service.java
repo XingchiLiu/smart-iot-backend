@@ -21,6 +21,7 @@ public class Service {
     private int deviceId;
     private Date time;
     /*
+    functionInfo
     {
     		"timestamp":"",
             "identifier": "服务唯一标识符（产品下唯一，其中set/get是根据属性的accessMode默认生成的服务。）",
@@ -30,14 +31,9 @@ public class Service {
     		"category": "request",
             "callType": "async（异步调用）或sync（同步调用）",
             "inputData": [
-                {
-            		"identifier":"",
-            		"name":"",
-            		"data":""
-        		},
-        		{}
             ],
         }
      */
-    private JSONObject content;
+    private JSONObject functionInfo;
+    private JSONObject data;
 }

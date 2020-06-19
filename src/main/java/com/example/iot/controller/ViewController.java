@@ -3,7 +3,6 @@ package com.example.iot.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author: lxc
@@ -20,7 +19,7 @@ public class ViewController {
     }
 
     @GetMapping("/template/detail/{id}")
-    public String templateDetail(@PathVariable int templateId){
+    public String templateDetail(@PathVariable(name = "id") int templateId){
         return "templateDetail";
     }
 
@@ -30,7 +29,7 @@ public class ViewController {
     }
 
     @GetMapping("/device/detail/{id}")
-    public String deviceDetail(@PathVariable int deviceId){
+    public String deviceDetail(@PathVariable(name = "id") int deviceId){
         return "deviceDetail";
     }
 }

@@ -1,6 +1,7 @@
 package com.example.iot.domain.thing;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,8 +20,10 @@ public class Event {
     @Id
     private String id;
     private int deviceId;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date time;
     /*
+    functionInfo
     {
     		"timestamp":"",
             "identifier": "事件唯一标识符（产品下唯一，其中post是默认生成的属性上报事件。）",
@@ -28,14 +31,10 @@ public class Event {
             "desc": "事件描述",
             "type": "事件类型（info、alert、error）",
             "outputData": [
-                {
-            		"identifier":"",
-            		"name":"",
-            		"data":""
-        		},
-        		{}
+
             ],
         }
      */
-    private JSONObject content;
+    private JSONObject functionInfo;
+    private JSONObject data;
 }
