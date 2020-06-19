@@ -23,4 +23,14 @@ public class ViewController {
     public String templateDetail(@PathVariable int templateId){
         return "templateDetail";
     }
+
+    @GetMapping("/device")
+    public String device(){
+        return "device";
+    }
+
+    @GetMapping("/device/detail/{id}")
+    public String deviceDetail(@PathVariable int deviceId){
+        return "deviceDetail";
+    }
 }
