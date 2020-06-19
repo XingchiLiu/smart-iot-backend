@@ -324,7 +324,7 @@
                 alert(what + '：界面未完成');
             },
             getPropertyList: function () {
-                axios.get(url + 'thing/property/list?deviceId=' + this.deviceId).then(function (response) {
+                axios.get(url + '/thing/property/list?deviceId=' + this.deviceId).then(function (response) {
                     deviceDetail.propertyList = response.data.data;
                 }).catch(function (err) {
                     alert(err);
@@ -332,14 +332,14 @@
             },
             getPropertyHistory: function (property) {
                 deviceDetail.currentProperty = property;
-                axios.get(url + 'thing/property/history?deviceId=' + this.deviceId + '&identifier=' + property.identifier).then(function (response) {
+                axios.get(url + '/thing/property/history?deviceId=' + this.deviceId + '&identifier=' + property.identifier).then(function (response) {
                     deviceDetail.propertyHistoryList = response.data.data;
                 }).catch(function (err) {
                     alert(err);
                 });
             },
             getEventHistory: function () {
-                axios.get(url + 'thing/event/history?deviceId=' + this.deviceId).then(function (response) {
+                axios.get(url + '/thing/event/history?deviceId=' + this.deviceId).then(function (response) {
                     deviceDetail.eventHistoryList = response.data.data;
                 }).catch(function (err) {
                     alert(err);
