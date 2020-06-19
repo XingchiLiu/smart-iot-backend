@@ -2,11 +2,10 @@ package com.example.iot.service.RuleService;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.iot.domain.RuleLog;
-import com.example.iot.repository.RuleLogRepository;
+import com.example.iot.domain.rule.RuleLog;
+import com.example.iot.repository.rule.RuleLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
 

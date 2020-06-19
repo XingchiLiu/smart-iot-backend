@@ -3,7 +3,7 @@ package com.example.iot.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.IotApplicationTests;
-import com.example.iot.domain.Rule;
+import com.example.iot.domain.rule.Rule;
 import com.example.iot.service.RuleService.RuleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

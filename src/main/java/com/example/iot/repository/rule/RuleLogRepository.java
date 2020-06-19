@@ -1,6 +1,6 @@
-package com.example.iot.repository;
+package com.example.iot.repository.rule;
 
-import com.example.iot.domain.RuleLog;
+import com.example.iot.domain.rule.RuleLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

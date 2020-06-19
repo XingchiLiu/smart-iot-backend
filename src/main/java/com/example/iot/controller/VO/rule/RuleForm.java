@@ -1,4 +1,4 @@
-package com.example.iot.controller.VO;
+package com.example.iot.controller.VO.rule;
 
 import com.example.iot.util.RuleActionType;
 import com.example.iot.util.RuleType;

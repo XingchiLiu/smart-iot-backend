@@ -1,4 +1,4 @@
-package com.example.iot.domain;
+package com.example.iot.domain.rule;
 
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;

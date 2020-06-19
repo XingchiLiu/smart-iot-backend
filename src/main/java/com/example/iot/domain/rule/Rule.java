@@ -1,4 +1,4 @@
-package com.example.iot.domain;
+package com.example.iot.domain.rule;
 
 import com.example.iot.util.RuleActionType;
 import com.example.iot.util.RuleType;

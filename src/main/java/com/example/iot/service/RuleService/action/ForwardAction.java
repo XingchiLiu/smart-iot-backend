@@ -1,4 +1,4 @@
-package com.example.iot.service.RuleService;
+package com.example.iot.service.RuleService.action;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpEntity;

@@ -1,6 +1,6 @@
-package com.example.iot.repository;
+package com.example.iot.repository.rule;
 
-import com.example.iot.domain.Rule;
+import com.example.iot.domain.rule.Rule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;

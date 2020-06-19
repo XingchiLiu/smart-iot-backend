@@ -1,7 +1,7 @@
-package com.example.iot.controller;
+package com.example.iot.controller.rule;
 
 import com.example.iot.controller.VO.ResultVO;
-import com.example.iot.controller.VO.RuleForm;
+import com.example.iot.controller.VO.rule.RuleForm;
 import com.example.iot.service.RuleService.RuleLogService;
 import com.example.iot.service.RuleService.RuleService;
 import io.swagger.annotations.Api;
