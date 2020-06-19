@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.iot.domain.rule.RuleLog;
 import com.example.iot.repository.rule.RuleLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class RuleLogService {
     RuleLogRepository ruleLogRepository;
 
     public List<RuleLog> getRuleLogByRuleId(int ruleId){
-        return ruleLogRepository.getAllByRuleIdOrderByCreateTimeDesc(ruleId);
+        return ruleLogRepository.getAllByRuleIdOrderByCreateTimeDesc(PageRequest.of(0, 20), ruleId);
     }
 
     public void saveSuccessRuleLog(int ruleId, JSONObject data){
