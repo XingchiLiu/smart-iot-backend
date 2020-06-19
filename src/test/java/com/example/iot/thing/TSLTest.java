@@ -28,4 +28,12 @@ public class TSLTest extends IotApplicationTests {
         System.out.println(tslService.getTSLByTemplateId(0));
     }
 
+    /**
+     * 创建物模型
+     */
+    @Test
+    public void test2(){
+        tslService.createTSL(34);
+    }
+
 }
