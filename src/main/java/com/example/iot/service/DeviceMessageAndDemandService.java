@@ -10,6 +10,7 @@ import com.example.iot.repository.DeviceMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,16 @@ public class DeviceMessageAndDemandService {
         deviceMessage.setTopic(message.getString("topic"));
         deviceMessage.setDeviceId(message.getIntValue("deviceId"));
         deviceMessage.setChannelId(message.getIntValue("channelId"));
-        deviceMessage.setData((List<Map<String, Object>>) JSONArray.parse(message.getJSONArray("data").toJSONString()));
+        List<Map<String,Object>> data = (List<Map<String, Object>>) JSONArray.parse(message.getJSONArray("data").toJSONString());
+        for(int i = 0; i < data.size(); i++){
+            for(Map.Entry<String,Object> entry:data.get(i).entrySet()){
+                if(entry.getValue().getClass().toString().equals("class java.math.BigDecimal")) {
+                    Double value_D = new Double(((BigDecimal) entry.getValue()).doubleValue());
+                    entry.setValue(value_D);
+                }
+            }
+        }
+        deviceMessage.setData(data);
         deviceMessage.setDate(message.getDate("date"));
         saveMessage(deviceMessage);
     }
@@ -44,8 +54,16 @@ public class DeviceMessageAndDemandService {
         deviceDemand.setTopic(message.getString("topic"));
         deviceDemand.setDeviceId(message.getIntValue("deviceId"));
         deviceDemand.setChannelId(message.getIntValue("channelId"));
-        deviceDemand.setData((List<Map<String, Object>>) JSONArray.parse(message.getJSONArray("data").toJSONString()));
-        deviceDemand.setDate(message.getDate("date"));
+        List<Map<String,Object>> data = (List<Map<String, Object>>) JSONArray.parse(message.getJSONArray("data").toJSONString());
+        for(int i = 0; i < data.size(); i++){
+            for(Map.Entry<String,Object> entry:data.get(i).entrySet()){
+                if(entry.getValue().getClass().toString().equals("class java.math.BigDecimal")) {
+                    Double value_D = new Double(((BigDecimal) entry.getValue()).doubleValue());
+                    entry.setValue(value_D);
+                }
+            }
+        }
+        deviceDemand.setData(data);        deviceDemand.setDate(message.getDate("date"));
         saveDemand(deviceDemand);
     }
 
