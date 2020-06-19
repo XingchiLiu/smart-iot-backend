@@ -166,14 +166,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">添加模板</h4>
+                    <h4 class="modal-title">添加设备</h4>
                 </div>
                 <div class="modal-body">
                     <!-- 表单 -->
                     <form>
                         <div class="form-group">
-                            <label>模板名称</label>
-                            <input type="text" class="form-control" v-model="newDevice.name" placeholder="唯一">
+                            <label>设备名称</label>
+                            <input type="text" class="form-control" v-model="newDevice.name" placeholder="模板下唯一">
                         </div>
                         <div class="form-group">
                             <label>描述</label>
@@ -208,6 +208,7 @@
             currentPage: 0,
             pageSize: 10,
             totalPages: 0,
+            templateList:[],
         },
         methods: {
             //获得某一页
@@ -216,6 +217,11 @@
                 axios.get(url+'/device/list?page='+page+'&pageSize=10').then(function (response) {
                     deviceTable.itemList = response.data.data.content;
                     deviceTable.totalPages = response.data.data.totalPages;
+                }).catch(function (err) {
+                    console.log(err);
+                });
+                axios.get(url+'/template/list?page='+page+'&pageSize=10').then(function (response) {
+                    deviceTable.templateList = response.data.data.content;
                 }).catch(function (err) {
                     console.log(err);
                 })
