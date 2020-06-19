@@ -67,15 +67,16 @@ public class ChannelService {
 
     public int addTemplateChannel(TemplateChannelForm templateChannelForm) {
         TemplateChannel templateChannel = createTemplateChannel(templateChannelForm);
-        List<Device> devices = deviceService.getDeviceByTemplateId(templateChannelForm.getId());
+        List<Device> devices = deviceService.getDeviceByTemplateId(templateChannelForm.getTemplateId());
+        int id = addTemplateChannel(templateChannel);
         if(devices != null && devices.size() > 0){
             for(int i = 0; i < devices.size(); i++){
                 addDeviceChannel(templateChannelForm.getChannelType(),
-                        devices.get(i).getId(),templateChannelForm.getId(),
+                        devices.get(i).getId(),id,
                         templateChannelForm.getChannelName());
             }
         }
-        return addTemplateChannel(templateChannel);
+        return id;
     }
 
     public int addDeviceChannel(DeviceChannelForm deviceChannelForm) {
@@ -124,6 +125,10 @@ public class ChannelService {
 
     public DeviceChannel getDeviceChannelByIdAndDeviceIdAndChannelType(int id, int deviceId, int channelType){
         return deviceChannelRepository.getByIdAndDeviceIdAndChannelType(id, deviceId, channelType);
+    }
+
+    public ArrayList<DeviceChannel> getDeviceChanelByDeviceId(int deviceId){
+        return deviceChannelRepository.getAllByDeviceId(deviceId);
     }
 
     public List<TemplateChannel> getAllTemplateChannels() {
@@ -213,6 +218,19 @@ public class ChannelService {
     public int getChannelIdByDeviceIdAndChannelTypeAndChannelName(int deviceId, int channelType, String channelName) {
         return deviceChannelRepository.getByDeviceIdAndChannelTypeAndChannelName(deviceId, channelType, channelName).getId();
     }
+
+    public String[] getInitialTopic(){
+        ArrayList<DeviceChannel> deviceChannels = (ArrayList<DeviceChannel>) deviceChannelRepository.findAll();
+        ArrayList<String> topics = new ArrayList<>();
+        if(deviceChannels != null && deviceChannels.size() > 0){
+            for(int i = 0; i < deviceChannels.size(); i++){
+                topics.add(String.valueOf(deviceChannels.get(i).getId()));
+            }
+        }
+        return topics.toArray(new String[topics.size()]);
+    }
+
+
 
     private TemplateChannel createTemplateChannel(TemplateChannelForm templateChannelForm) {
         TemplateChannel templateChannel = new TemplateChannel();
