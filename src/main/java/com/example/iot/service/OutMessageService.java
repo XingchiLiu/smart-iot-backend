@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.example.iot.controller.VO.MessageForm;
 import com.example.iot.service.ConnectionService.HttpService;
 import com.example.iot.service.ConnectionService.MqttService;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class OutMessageService {
     @Autowired
     HttpService httpService;
 
-    public void sendMessageToDevice(int deviceId, MessageForm messageForm) {
+    public void sendMessageToDevice(int deviceId, MessageForm messageForm) throws MqttException {
         String connectionType = deviceService.getDeviceById(deviceId).getData().getConnectionType();
         if (connectionType.equals("HTTP")) {
             httpService.sendMessageToDevice(messageForm);

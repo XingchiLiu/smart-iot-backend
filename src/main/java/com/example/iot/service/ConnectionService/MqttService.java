@@ -55,7 +55,7 @@ public class MqttService implements ApplicationRunner {
         }
     }
 
-    public boolean addPub(String topic, int qos, String msg) {
+    public boolean addPub(String topic, int qos, String msg) throws MqttException{
         try {
             if (qos != 0 && qos != 1 && qos != 2) {
                 qos = 0;
@@ -64,7 +64,7 @@ public class MqttService implements ApplicationRunner {
             return true;
         } catch (MqttException e) {
             e.printStackTrace();
-            return false;
+            throw e;
         }
     }
 
