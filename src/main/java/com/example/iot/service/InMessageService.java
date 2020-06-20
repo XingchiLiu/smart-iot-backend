@@ -1,6 +1,7 @@
 package com.example.iot.service;
 
 import com.example.iot.service.ConnectionService.MqttService;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class InMessageService {
         return mqttService.addSub(topic, qos);
     }
 
-    public boolean addPub(String topic, int qos, String msg) {
+    public boolean addPub(String topic, int qos, String msg) throws MqttException {
         return mqttService.addPub(topic, qos, msg);
     }
 
