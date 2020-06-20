@@ -4,6 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 /**
  * @author: lxc
  * @email 171250576@smail.nju.edu.cn
@@ -19,7 +23,10 @@ public class ViewController {
     }
 
     @GetMapping("/template/detail/{id}")
-    public String templateDetail(@PathVariable(name = "id") int templateId){
+    public String templateDetail(@PathVariable(name = "id") int templateId, HttpSession httpSession){
+
+        httpSession.setAttribute("templateId", templateId);
+
         return "templateDetail";
     }
 
@@ -29,7 +36,8 @@ public class ViewController {
     }
 
     @GetMapping("/device/detail/{id}")
-    public String deviceDetail(@PathVariable(name = "id") int deviceId){
+    public String deviceDetail(@PathVariable(name = "id") int deviceId, HttpSession httpSession){
+        httpSession.setAttribute("deviceId", deviceId);
         return "deviceDetail";
     }
 }

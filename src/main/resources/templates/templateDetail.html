@@ -24,6 +24,7 @@
 </head>
 
 <body>
+<input type="text" th:value="${session.templateId}" id="templateId" hidden="hidden"/>
 <!--顶部导航条-->
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -213,7 +214,7 @@
                     </div>
 <!--                    影子设备-->
                     <div id="template_shadow" v-if="currentLocation=='template_shadow'">
-                        <textarea class="form-control" rows="20">{{shadow}}</textarea>
+                        <textarea class="form-control" rows="20" v-model="shadow"></textarea>
                     </div>
                     <div id="template_channel" v-if="currentLocation=='template_channel'"></div>
                 </div>
@@ -363,7 +364,7 @@
                     desc:"",
                     accessMode:"r",
                     dataType: {
-                        type: "string",
+                        type: "int",
                         specs: {
                         }
                     }
@@ -377,16 +378,16 @@
             },
             getTemplate: function () {
                 //获取当前模板id
-                var current_url = window.location.href;
-                var param_arr = current_url.split("/");
-                var templateId = param_arr[param_arr.length - 1];
+                var templateId = document.getElementById("templateId").getAttribute("value");
                 axios.get(url + '/template/get/' + templateId).then(function (response) {
                     templateDetail.template = response.data.data;
                 }).catch(function (err) {
                     alert(err);
                 });
                 //获取物模型
-                axios.get(url + '/tsl/' + templateId + '/get').then(function (response) {
+                var getTSLUrl = url + '/tsl/' + String(templateId) + '/get';
+                alert(getTSLUrl);
+                axios.get(getTSLUrl).then(function (response) {
                     templateDetail.template_tsl.tslObj = response.data.data;
                     templateDetail.template_tsl.tsl = response.data.data.content;
                     templateDetail.template_tsl.tsl_JSONStr = JSON.stringify(response.data.data.content, null, "\t");
@@ -397,7 +398,7 @@
             },
             getShadow: function(){
                 axios.get(url + '/shadow').then(function (response) {
-                    templateDetail.shadow = JSON.stringify(response.data.data.content, null, "\t");
+                    templateDetail.shadow = JSON.stringify(response.data, null, "\t");
                 }).catch(function (err) {
                     alert(err);
                 });
