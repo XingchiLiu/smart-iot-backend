@@ -1,0 +1,170 @@
+{
+  "schema": "http://101.37.80.37:8081/tsl",
+  "services": [
+    {
+      "outputData": [
+        {
+          "identifier": "result",
+          "dataType": {
+            "specs": {
+              "min": 0,
+              "unitName": "",
+              "max": 1
+            },
+            "type": "int"
+          },
+          "name": "结果",
+          "accessMode": "r",
+          "desc": "表示是否成功。0代表失败，1代表成功"
+        }
+      ],
+      "identifier": "set",
+      "inputData": [
+        {
+          "identifier": "status",
+          "dataType": {
+            "specs": {
+              "maxLength": 10
+            },
+            "type": "string"
+          },
+          "name": "状态",
+          "accessMode": "r",
+          "desc": "表示设备状态。一个默认的属性，方便测试。有ok和error。"
+        },
+        {
+          "identifier": "mode",
+          "dataType": {
+            "specs": {
+              "min": 0,
+              "unitName": "",
+              "max": 3
+            },
+            "type": "int"
+          },
+          "name": "运行模式",
+          "accessMode": "rw",
+          "desc": "运行模式。一个默认的属性，方便测试。值可以是0、1、2、3"
+        }
+      ],
+      "name": "属性设置",
+      "callType": "async",
+      "desc": "可以设置属性"
+    }
+  ],
+  "templateId": 7,
+  "properties": [
+    {
+      "identifier": "status",
+      "dataType": {
+        "specs": {
+          "maxLength": 10
+        },
+        "type": "string"
+      },
+      "name": "状态",
+      "accessMode": "r",
+      "desc": "表示设备状态。一个默认的属性，方便测试。有ok和error。"
+    },
+    {
+      "identifier": "mode",
+      "dataType": {
+        "specs": {
+          "min": 0,
+          "unitName": "",
+          "max": 3
+        },
+        "type": "int"
+      },
+      "name": "运行模式",
+      "accessMode": "rw",
+      "desc": "运行模式。一个默认的属性，方便测试。值可以是0、1、2、3"
+    },
+    {
+      "identifier": "temperature",
+      "name": "温度",
+      "desc": "来自于温度传感器1号的数据",
+      "accessMode": "r",
+      "dataType": {
+        "type": "double",
+        "specs": {
+          "min": "0",
+          "max": "50",
+          "unitName": "摄氏度/°C"
+        }
+      }
+    },
+    {
+      "identifier": "running_mode",
+      "name": "运行模式",
+      "desc": "空调运行模式。1代表低功率；2代表高功率。",
+      "accessMode": "rw",
+      "dataType": {
+        "type": "int",
+        "specs": {
+          "min": "1",
+          "max": "2",
+          "unitName": ""
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "outputData": [
+        {
+          "identifier": "status",
+          "dataType": {
+            "specs": {
+              "maxLength": 10
+            },
+            "type": "string"
+          },
+          "name": "状态",
+          "accessMode": "r",
+          "desc": "表示设备状态。一个默认的属性，方便测试。有ok和error。"
+        },
+        {
+          "identifier": "mode",
+          "dataType": {
+            "specs": {
+              "min": 0,
+              "unitName": "",
+              "max": 3
+            },
+            "type": "int"
+          },
+          "name": "运行模式",
+          "accessMode": "rw",
+          "desc": "运行模式。一个默认的属性，方便测试。值可以是0、1、2、3"
+        }
+      ],
+      "identifier": "post",
+      "name": "属性上报",
+      "type": "info",
+      "desc": "一个默认的事件，属性上报，可以上报部分属性"
+    },
+    {
+      "outputData": [
+        {
+          "identifier": "temperature",
+          "name": "温度",
+          "desc": "来自于温度传感器1号的数据",
+          "accessMode": "r",
+          "dataType": {
+            "type": "double",
+            "specs": {
+              "min": "0",
+              "max": "50",
+              "unitName": "摄氏度/°C"
+            }
+          }
+        }
+      ],
+      "identifier": "heat_warning",
+      "name": "高温警报",
+      "type": "alert",
+      "desc": "高温警报，当温度大于等于40度的时候触发。上报数据为温度。"
+    }
+  ]
+}

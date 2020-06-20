@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.iot.IotApplicationTests;
 import com.example.iot.domain.thing.Property;
 import com.example.iot.service.ThingService.PropertyService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -26,6 +27,7 @@ public class PropertyTest extends IotApplicationTests {
     /*
     测试，造一些空调的数据
      */
+    @Ignore
     @Test
     public void test1() {
         /*
