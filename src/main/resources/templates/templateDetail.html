@@ -386,7 +386,6 @@
                 });
                 //获取物模型
                 var getTSLUrl = url + '/tsl/' + String(templateId) + '/get';
-                alert(getTSLUrl);
                 axios.get(getTSLUrl).then(function (response) {
                     templateDetail.template_tsl.tslObj = response.data.data;
                     templateDetail.template_tsl.tsl = response.data.data.content;
