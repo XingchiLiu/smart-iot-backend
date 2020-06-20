@@ -1,5 +1,6 @@
 package com.example.iot.service.ThingService;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.iot.domain.Device;
@@ -13,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -44,7 +46,7 @@ public class PropertyService {
         }
         JSONArray propertyList = templateTSL.getContent().getJSONArray("properties");
         for(Object property: propertyList){
-            JSONObject propertyJSON = (JSONObject) property;
+            JSONObject propertyJSON = new JSONObject((LinkedHashMap)property);
             String identifier = propertyJSON.getString("identifier");
             List<Property> propertyHistory = getPropertyHistory(deviceId, identifier);
             //获得条数
