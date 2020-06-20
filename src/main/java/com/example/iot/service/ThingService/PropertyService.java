@@ -8,6 +8,7 @@ import com.example.iot.domain.thing.Property;
 import com.example.iot.domain.thing.TSL;
 import com.example.iot.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -72,6 +73,7 @@ public class PropertyService {
     public List<Property> getPropertyHistory(int deviceId, String identifier){
         Query query = new Query(Criteria.where("deviceId").is(deviceId));
         query.addCriteria(Criteria.where("functionInfo.identifier").is(identifier));
+        query.with(Sort.by(Sort.Direction.DESC, "time"));
         List<Property> propertyList = mongoTemplate.find(query, Property.class);
         return propertyList;
     }

@@ -3,6 +3,7 @@ package com.example.iot.service.ThingService;
 import com.example.iot.domain.thing.Event;
 import com.example.iot.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,6 +24,7 @@ public class EventService {
 
     public List<Event> getEventHistory(int deviceId){
         Query query = new Query(Criteria.where("deviceId").is(deviceId));
+        query.with(Sort.by(Sort.Direction.DESC, "time"));
         List<Event> eventList = mongoTemplate.find(query, Event.class);
         return eventList;
     }
