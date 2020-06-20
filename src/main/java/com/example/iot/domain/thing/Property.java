@@ -42,5 +42,5 @@ public class Property {
     }
      */
     private JSONObject functionInfo;
-    private JSONObject data;
+    private String data;
 }

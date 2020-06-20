@@ -36,5 +36,5 @@ public class Event {
         }
      */
     private JSONObject functionInfo;
-    private JSONObject data;
+    private String data;
 }

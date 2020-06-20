@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.iot.IotApplicationTests;
 import com.example.iot.domain.thing.Property;
 import com.example.iot.service.ThingService.PropertyService;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+
+import java.util.Date;
 
 /**
  * @author: lxc
@@ -26,10 +28,35 @@ public class PropertyTest extends IotApplicationTests {
      */
     @Test
     public void test1() {
-        Property testProperty = new Property();
-        testProperty.setDeviceId(14);
+        /*
+        空调设备，造数据，26度左右的温度随机数，
+        小于26就1低功率，大于26就高功率。
+         */
+        long aWeekAgo = new Date().getTime() - 7*24*60*60*1000;
         for (int i = 0; i < 100; i++) {
+            Property property_t = new Property();
+            property_t.setDeviceId(15);
+            Property property_r = new Property();
+            property_r.setDeviceId(15);
+//            过去了1min
+            Date date = new Date(aWeekAgo + i*60*1000);
+            double temperature = 24 + 4*Math.random();
+            int running_status = 0;
+            if(temperature>=26){
+                running_status = 2;
+            }
+            else {
+                running_status = 1;
+            }
+            property_t.setFunctionInfo(getTemperatureFormat());
+            property_t.setData(String.valueOf(temperature));
+            property_t.setTime(date);
+            property_r.setFunctionInfo(getRunningModeFormat());
+            property_r.setData(String.valueOf(running_status));
+            property_r.setTime(date);
 
+            mongoTemplate.save(property_r);
+            mongoTemplate.save(property_t);
         }
     }
 

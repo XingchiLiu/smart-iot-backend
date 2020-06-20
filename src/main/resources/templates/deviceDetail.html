@@ -190,7 +190,7 @@
                                     <td>{{property.lastPost}}</td>
                                     <!--                                操作按钮-->
                                     <td>
-                                        <button type="button" class="btn btn-primary"
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#propertyHistoryModal"
                                                 @click="getPropertyHistory(property)">查看历史数据
                                         </button>
                                     </td>
@@ -245,7 +245,7 @@
     <div id="operation">
 
         <!-- 模拟框 查看属性的历史数据 -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="propertyHistoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
