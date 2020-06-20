@@ -236,7 +236,10 @@
                     <div id="template_shadow" v-if="currentLocation=='template_shadow'">
                         <textarea class="form-control" rows="20" v-model="shadow"></textarea>
                     </div>
-                    <div id="template_channel" v-if="currentLocation=='template_channel'"></div>
+                    <div id="template_channel" v-if="currentLocation=='template_channel'">
+<!--                        跳转到数据通道页面-->
+                        <button type="button" class="btn btn-success" @click="goToChannel">去往数据通道</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -356,6 +359,9 @@
                     alert(err);
                 });
             },
+            goToChannel: function(){
+                window.location.href = "http://47.100.220.26:3000/Channel/Device?id=" + this.deviceId;
+            }
         }
     });
 

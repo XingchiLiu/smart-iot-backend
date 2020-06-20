@@ -115,6 +115,7 @@
                     <td>
                         <button type="button" class="btn btn-default" @click="goToDetail(device)">详情</button>
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" @click="goToDelete(device)">删除</button>
+                        <button type="button" class="btn btn-success" @click="goToChannel(device)">数据通道</button>
                     </td>
                 </tr>
                 </tbody>
@@ -245,6 +246,9 @@
             //跳转到新的页面
             goToDetail(device){
                 window.location.href = '/device/detail/' + device.id;
+            },
+            goToChannel: function(device){
+                window.location.href = "http://47.100.220.26:3000/Channel/Device?id=" + device.id;
             }
         }
     });
