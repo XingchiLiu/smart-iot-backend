@@ -50,7 +50,7 @@ public class TimingAnalysisServiceImpl implements TimingAnalysisService {
             timePoints = Stream
                     .iterate(startTime, t -> t.plusMinutes(form.getIntervalMinutes()))
                     .limit(duration.toMinutes() / form.getIntervalMinutes() + 1)
-                    .filter(t -> t.isAfter(startTime) && t.isBefore(endTime))
+                    .filter(t -> (t.isAfter(startTime) || t.isEqual(startTime)) && t.isBefore(endTime))
                     .collect(Collectors.toList());
             for (MeasurePoint measurePoint : form.getMeasurePoints()) {
                 Metric metric = analysisMeasurePoint(measurePoint,
@@ -102,7 +102,9 @@ public class TimingAnalysisServiceImpl implements TimingAnalysisService {
                 Map<String, Object> fieldMap = deviceMessage.getDataMap();
                 Object val = fieldMap.get(field.getFieldName());
                 if (val == null) {
-                } else if (val.getClass().equals(Integer.class)) {
+                    continue;
+                }
+                if (val.getClass().equals(Integer.class)) {
                     doubleValues.add(((Integer) val).doubleValue());
                 } else if (val.getClass().equals(Double.class)) {
                     doubleValues.add((Double) val);
